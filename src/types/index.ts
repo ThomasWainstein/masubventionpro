@@ -20,8 +20,25 @@ export interface MaSubventionProProfile {
   year_created: number | null;
   legal_form: string | null;
   company_category: string | null;
+  website_url: string | null;
+  description: string | null;
   certifications: string[];
   project_types: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProfileDocument {
+  id: string;
+  user_id: string;
+  profile_id: string;
+  file_name: string;
+  file_type: string;
+  file_size: number;
+  storage_path: string;
+  category: 'identity' | 'financial' | 'legal' | 'business' | 'other';
+  processing_status: 'pending' | 'processing' | 'completed' | 'failed';
+  extracted_data: Record<string, any> | null;
   created_at: string;
   updated_at: string;
 }
@@ -146,6 +163,35 @@ export const PROJECT_TYPES = [
   { value: 'creation', label: 'Creation / Reprise' },
   { value: 'investissement', label: 'Investissement' },
   { value: 'tresorerie', label: 'Tresorerie' },
+] as const;
+
+// Business sectors
+export const BUSINESS_SECTORS = [
+  { value: 'agriculture', label: 'Agriculture / Agroalimentaire' },
+  { value: 'industrie', label: 'Industrie / Manufacturing' },
+  { value: 'construction', label: 'Construction / BTP' },
+  { value: 'commerce', label: 'Commerce / Distribution' },
+  { value: 'transport', label: 'Transport / Logistique' },
+  { value: 'tourisme', label: 'Tourisme / Hotellerie / Restauration' },
+  { value: 'sante', label: 'Sante / Medical' },
+  { value: 'tech', label: 'Tech / Numerique / IT' },
+  { value: 'services', label: 'Services aux entreprises' },
+  { value: 'finance', label: 'Finance / Assurance' },
+  { value: 'immobilier', label: 'Immobilier' },
+  { value: 'culture', label: 'Culture / Media / Communication' },
+  { value: 'education', label: 'Education / Formation' },
+  { value: 'environnement', label: 'Environnement / Energie' },
+  { value: 'artisanat', label: 'Artisanat' },
+  { value: 'autre', label: 'Autre' },
+] as const;
+
+// Document categories
+export const DOCUMENT_CATEGORIES = [
+  { value: 'identity', label: 'Document d\'identite' },
+  { value: 'financial', label: 'Document financier' },
+  { value: 'legal', label: 'Document juridique' },
+  { value: 'business', label: 'Document commercial' },
+  { value: 'other', label: 'Autre' },
 ] as const;
 
 // Helper to extract French title from multilingual field

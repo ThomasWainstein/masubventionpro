@@ -16,7 +16,9 @@ import {
   EMPLOYEE_RANGES,
   LEGAL_FORMS,
   PROJECT_TYPES,
+  BUSINESS_SECTORS,
 } from '@/types';
+import { Textarea } from '@/components/ui/textarea';
 import { CompanySearch } from './CompanySearch';
 import { CompanySearchResult } from '@/lib/companySearch';
 
@@ -67,6 +69,7 @@ export function ProfileForm({
     naf_code: initialData.naf_code || '',
     naf_label: initialData.naf_label || '',
     sector: initialData.sector || '',
+    sub_sector: initialData.sub_sector || '',
     region: initialData.region || '',
     department: initialData.department || '',
     city: initialData.city || '',
@@ -77,6 +80,8 @@ export function ProfileForm({
     year_created: initialData.year_created?.toString() || '',
     legal_form: initialData.legal_form || '',
     company_category: initialData.company_category || '',
+    website_url: initialData.website_url || '',
+    description: initialData.description || '',
     project_types: initialData.project_types || [],
   });
 
@@ -127,6 +132,7 @@ export function ProfileForm({
         naf_code: formData.naf_code || null,
         naf_label: formData.naf_label || null,
         sector: formData.sector || null,
+        sub_sector: formData.sub_sector || null,
         region: formData.region || null,
         department: formData.department || null,
         city: formData.city || null,
@@ -137,6 +143,8 @@ export function ProfileForm({
         year_created: formData.year_created ? parseInt(formData.year_created) : null,
         legal_form: formData.legal_form || null,
         company_category: formData.company_category || null,
+        website_url: formData.website_url || null,
+        description: formData.description || null,
         project_types: formData.project_types,
       });
     } catch (err: any) {
@@ -268,13 +276,54 @@ export function ProfileForm({
         <Label htmlFor="sector" className="text-sm font-medium">
           Secteur d'activite
         </Label>
-        <Input
-          id="sector"
+        <Select
           value={formData.sector}
-          onChange={(e) => setFormData({ ...formData, sector: e.target.value })}
-          placeholder="Ex: Commerce, Industrie, Services..."
+          onValueChange={(value) => setFormData({ ...formData, sector: value })}
+        >
+          <SelectTrigger className="mt-1">
+            <SelectValue placeholder="Selectionnez un secteur" />
+          </SelectTrigger>
+          <SelectContent>
+            {BUSINESS_SECTORS.map((sector) => (
+              <SelectItem key={sector.value} value={sector.value}>
+                {sector.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Website URL */}
+      <div>
+        <Label htmlFor="website_url" className="text-sm font-medium">
+          Site web
+        </Label>
+        <Input
+          id="website_url"
+          type="url"
+          value={formData.website_url}
+          onChange={(e) => setFormData({ ...formData, website_url: e.target.value })}
+          placeholder="https://www.mon-entreprise.fr"
           className="mt-1"
         />
+      </div>
+
+      {/* Description */}
+      <div>
+        <Label htmlFor="description" className="text-sm font-medium">
+          Description de l'entreprise
+        </Label>
+        <Textarea
+          id="description"
+          value={formData.description}
+          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          placeholder="Decrivez votre activite, vos produits ou services..."
+          className="mt-1 min-h-[100px]"
+          rows={4}
+        />
+        <p className="text-xs text-slate-500 mt-1">
+          Une bonne description aide a trouver des subventions plus pertinentes
+        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -15,8 +15,11 @@ import {
   CheckCircle,
   Building,
   Hash,
+  Globe,
 } from 'lucide-react';
+import { BUSINESS_SECTORS } from '@/types';
 import { formatSIRET } from '@/lib/validation/siret';
+import { DocumentUpload } from '@/components/profile/DocumentUpload';
 
 export function ProfilePage() {
   const { profile, loading, hasProfile } = useProfile();
@@ -143,7 +146,7 @@ export function ProfilePage() {
           <InfoItem
             icon={Briefcase}
             label="Secteur d'activite"
-            value={profile.naf_label || profile.sector}
+            value={profile.naf_label || formatSector(profile.sector) || profile.sector}
           />
 
           {/* NAF Code */}
@@ -209,8 +212,33 @@ export function ProfilePage() {
               value={formatTurnover(profile.annual_turnover)}
             />
           )}
+
+          {/* Website URL */}
+          {profile.website_url && (
+            <InfoItem
+              icon={Globe}
+              label="Site web"
+              value={profile.website_url}
+              isLink
+            />
+          )}
         </div>
       </div>
+
+      {/* Description */}
+      {profile.description && (
+        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-slate-100">
+            <h2 className="font-semibold text-slate-900 flex items-center gap-2">
+              <FileText className="h-5 w-5 text-slate-400" />
+              Description de l'entreprise
+            </h2>
+          </div>
+          <div className="p-6">
+            <p className="text-slate-700 whitespace-pre-wrap">{profile.description}</p>
+          </div>
+        </div>
+      )}
 
       {/* Project Types */}
       {profile.project_types && profile.project_types.length > 0 && (
@@ -247,6 +275,19 @@ export function ProfilePage() {
           </div>
         </div>
       )}
+
+      {/* Documents */}
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-100">
+          <h2 className="font-semibold text-slate-900 flex items-center gap-2">
+            <FileText className="h-5 w-5 text-slate-400" />
+            Documents
+          </h2>
+        </div>
+        <div className="p-6">
+          <DocumentUpload />
+        </div>
+      </div>
     </div>
   );
 }
@@ -255,17 +296,31 @@ interface InfoItemProps {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: string | null | undefined;
+  isLink?: boolean;
 }
 
-function InfoItem({ icon: Icon, label, value }: InfoItemProps) {
+function InfoItem({ icon: Icon, label, value, isLink }: InfoItemProps) {
   return (
     <div className="flex items-start gap-3">
       <Icon className="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
       <div>
         <p className="text-sm text-slate-500">{label}</p>
-        <p className="text-slate-900 font-medium">
-          {value || <span className="text-slate-400 font-normal">Non renseigne</span>}
-        </p>
+        {value ? (
+          isLink ? (
+            <a
+              href={value.startsWith('http') ? value : `https://${value}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline font-medium"
+            >
+              {value}
+            </a>
+          ) : (
+            <p className="text-slate-900 font-medium">{value}</p>
+          )
+        ) : (
+          <p className="text-slate-400 font-normal">Non renseigne</p>
+        )}
       </div>
     </div>
   );
@@ -281,6 +336,8 @@ function calculateCompleteness(profile: any): number {
     'legal_form',
     'year_created',
     'naf_code',
+    'website_url',
+    'description',
   ];
 
   const filled = fields.filter((field) => {
@@ -289,6 +346,12 @@ function calculateCompleteness(profile: any): number {
   });
 
   return Math.round((filled.length / fields.length) * 100);
+}
+
+function formatSector(sectorValue: string | null | undefined): string | null {
+  if (!sectorValue) return null;
+  const sector = BUSINESS_SECTORS.find(s => s.value === sectorValue);
+  return sector ? sector.label : sectorValue;
 }
 
 function formatEmployees(employees: string | null | undefined): string | null {
