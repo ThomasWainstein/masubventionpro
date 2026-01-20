@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useSavedSubsidies } from '@/hooks/useSavedSubsidies';
 import { getSubsidyTitle, SavedSubsidy } from '@/types';
@@ -68,10 +68,37 @@ function getDeadlineStatus(deadline: string | null): {
 }
 
 export function SavedSubsidiesPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { savedSubsidies, loading, unsaveSubsidy, updateStatus, updateNotes } = useSavedSubsidies();
   const [expandedNotes, setExpandedNotes] = useState<Set<string>>(new Set());
   const [editingNotes, setEditingNotes] = useState<Record<string, string>>({});
   const [savingNotes, setSavingNotes] = useState<Set<string>>(new Set());
+  const [statusFilter, setStatusFilter] = useState<string | null>(
+    searchParams.get('status')
+  );
+
+  // Sync filter with URL params
+  useEffect(() => {
+    const urlStatus = searchParams.get('status');
+    if (urlStatus !== statusFilter) {
+      setStatusFilter(urlStatus);
+    }
+  }, [searchParams]);
+
+  // Update URL when filter changes
+  const handleStatusFilterChange = (status: string | null) => {
+    setStatusFilter(status);
+    if (status) {
+      setSearchParams({ status });
+    } else {
+      setSearchParams({});
+    }
+  };
+
+  // Filter subsidies by status
+  const filteredSubsidies = statusFilter
+    ? savedSubsidies.filter((s) => s.status === statusFilter)
+    : savedSubsidies;
 
   const toggleNotes = (savedId: string) => {
     setExpandedNotes((prev) => {
@@ -162,21 +189,44 @@ export function SavedSubsidiesPage() {
         </Link>
       </div>
 
-      {/* Stats */}
+      {/* Stats / Filter */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {STATUS_OPTIONS.map((status) => {
           const count = savedSubsidies.filter((s) => s.status === status.value).length;
+          const isActive = statusFilter === status.value;
           return (
-            <div
+            <button
               key={status.value}
-              className="bg-white rounded-lg border border-slate-200 p-4 text-center"
+              onClick={() => handleStatusFilterChange(isActive ? null : status.value)}
+              className={`rounded-lg border p-4 text-center transition-all ${
+                isActive
+                  ? 'bg-blue-50 border-blue-300 ring-2 ring-blue-200'
+                  : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+              }`}
             >
               <p className="text-2xl font-bold text-slate-900">{count}</p>
               <p className="text-sm text-slate-600">{status.label}</p>
-            </div>
+            </button>
           );
         })}
       </div>
+
+      {/* Active Filter Indicator */}
+      {statusFilter && (
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-slate-600">
+            Filtre actif: <span className="font-medium">{getStatusOption(statusFilter).label}</span>
+          </span>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => handleStatusFilterChange(null)}
+            className="text-slate-500 h-7"
+          >
+            Effacer le filtre
+          </Button>
+        </div>
+      )}
 
       {/* Urgent Deadlines Alert */}
       {(() => {
@@ -247,9 +297,20 @@ export function SavedSubsidiesPage() {
             </Button>
           </Link>
         </div>
+      ) : filteredSubsidies.length === 0 ? (
+        <div className="bg-white rounded-xl border border-slate-200 p-8 text-center">
+          <p className="text-slate-600">Aucune aide avec ce statut</p>
+          <Button
+            variant="outline"
+            onClick={() => handleStatusFilterChange(null)}
+            className="mt-3"
+          >
+            Voir toutes les aides
+          </Button>
+        </div>
       ) : (
         <div className="space-y-4">
-          {savedSubsidies.map((saved) => {
+          {filteredSubsidies.map((saved) => {
             const subsidy = saved.subsidy;
             if (!subsidy) return null;
 

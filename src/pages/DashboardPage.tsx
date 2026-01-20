@@ -180,7 +180,10 @@ export function DashboardPage() {
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {/* Saved Subsidies */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5">
+        <Link
+          to="/app/saved"
+          className="bg-white rounded-xl border border-slate-200 p-5 hover:border-blue-300 hover:shadow-sm transition-all"
+        >
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-lg">
               <Bookmark className="h-5 w-5 text-blue-600" />
@@ -190,10 +193,13 @@ export function DashboardPage() {
               <p className="text-2xl font-bold text-slate-900">{stats.saved}</p>
             </div>
           </div>
-        </div>
+        </Link>
 
         {/* Applications Sent */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5">
+        <Link
+          to="/app/saved?status=applied"
+          className="bg-white rounded-xl border border-slate-200 p-5 hover:border-amber-300 hover:shadow-sm transition-all"
+        >
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-10 h-10 bg-amber-100 rounded-lg">
               <Send className="h-5 w-5 text-amber-600" />
@@ -203,10 +209,13 @@ export function DashboardPage() {
               <p className="text-2xl font-bold text-slate-900">{stats.applied}</p>
             </div>
           </div>
-        </div>
+        </Link>
 
         {/* Funding Won */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5">
+        <Link
+          to="/app/saved?status=received"
+          className="bg-white rounded-xl border border-slate-200 p-5 hover:border-emerald-300 hover:shadow-sm transition-all"
+        >
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-10 h-10 bg-emerald-100 rounded-lg">
               <Trophy className="h-5 w-5 text-emerald-600" />
@@ -216,7 +225,7 @@ export function DashboardPage() {
               <p className="text-2xl font-bold text-slate-900">{stats.received}</p>
             </div>
           </div>
-        </div>
+        </Link>
 
         {/* Potential Funding */}
         <div className="bg-white rounded-xl border border-slate-200 p-5">
