@@ -104,14 +104,15 @@ const LandingPage = () => {
   const pricingPlans = [
     {
       name: "Premium",
-      subtitle: "Pour les PME structurees",
+      subtitle: "Pour les groupes & cabinets",
       price: "299",
       period: "/an",
       features: [
+        "Multi-sites (10 societes incluses)",
         "Recherches illimitees",
         "Assistant IA contextuel",
         "Rapports white-label",
-        "Accompagnement expert",
+        "Accompagnement expert dedie",
         "Support prioritaire 24h",
         "API Access",
       ],
