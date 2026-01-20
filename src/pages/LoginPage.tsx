@@ -37,6 +37,19 @@ const LoginPage = () => {
       }
 
       if (data.user) {
+        // Check if user belongs to this platform
+        const userSource = data.user.user_metadata?.source
+
+        if (userSource && userSource !== "masubventionpro") {
+          // User registered on different platform - sign them out and show error
+          await supabase.auth.signOut()
+          setError(
+            "Ce compte est associe a subvention360.com. " +
+            "Veuillez vous connecter sur subvention360.com ou creer un nouveau compte ici."
+          )
+          return
+        }
+
         // Redirect to dashboard/app
         navigate("/app")
       }
