@@ -18,7 +18,9 @@ import {
   Globe,
   Clock,
   Tag,
+  Download,
 } from 'lucide-react';
+import { exportSubsidyToPDF } from '@/lib/pdfExport';
 
 export function SubsidyDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -280,6 +282,14 @@ export function SubsidyDetailPage() {
               </Button>
             </a>
           )}
+          <Button
+            variant="outline"
+            onClick={() => exportSubsidyToPDF(subsidy)}
+            className="flex-1 md:flex-none"
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Exporter PDF
+          </Button>
         </div>
       </div>
     </div>

@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useSavedSubsidies } from '@/hooks/useSavedSubsidies';
 import { getSubsidyTitle, SavedSubsidy } from '@/types';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
@@ -19,6 +21,12 @@ import {
   Building,
   ExternalLink,
   Trash2,
+  AlertTriangle,
+  Clock,
+  MessageSquare,
+  ChevronDown,
+  ChevronUp,
+  Save,
 } from 'lucide-react';
 
 const STATUS_OPTIONS = [
@@ -29,8 +37,53 @@ const STATUS_OPTIONS = [
   { value: 'rejected', label: 'Refusee', color: 'bg-red-100 text-red-700' },
 ];
 
+// Calculate days until deadline
+function getDeadlineStatus(deadline: string | null): {
+  daysLeft: number | null;
+  urgency: 'expired' | 'urgent' | 'warning' | 'normal' | null;
+  label: string | null;
+} {
+  if (!deadline) return { daysLeft: null, urgency: null, label: null };
+
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const deadlineDate = new Date(deadline);
+  deadlineDate.setHours(0, 0, 0, 0);
+
+  const diffTime = deadlineDate.getTime() - now.getTime();
+  const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (daysLeft < 0) {
+    return { daysLeft, urgency: 'expired', label: 'Expiree' };
+  } else if (daysLeft === 0) {
+    return { daysLeft, urgency: 'urgent', label: "Aujourd'hui" };
+  } else if (daysLeft <= 3) {
+    return { daysLeft, urgency: 'urgent', label: `${daysLeft}j restant${daysLeft > 1 ? 's' : ''}` };
+  } else if (daysLeft <= 7) {
+    return { daysLeft, urgency: 'warning', label: `${daysLeft}j restants` };
+  } else if (daysLeft <= 30) {
+    return { daysLeft, urgency: 'normal', label: `${daysLeft}j restants` };
+  }
+  return { daysLeft, urgency: null, label: null };
+}
+
 export function SavedSubsidiesPage() {
-  const { savedSubsidies, loading, unsaveSubsidy, updateStatus } = useSavedSubsidies();
+  const { savedSubsidies, loading, unsaveSubsidy, updateStatus, updateNotes } = useSavedSubsidies();
+  const [expandedNotes, setExpandedNotes] = useState<Set<string>>(new Set());
+  const [editingNotes, setEditingNotes] = useState<Record<string, string>>({});
+  const [savingNotes, setSavingNotes] = useState<Set<string>>(new Set());
+
+  const toggleNotes = (savedId: string) => {
+    setExpandedNotes((prev) => {
+      const next = new Set(prev);
+      if (next.has(savedId)) {
+        next.delete(savedId);
+      } else {
+        next.add(savedId);
+      }
+      return next;
+    });
+  };
 
   const handleRemove = async (subsidyId: string) => {
     if (window.confirm('Voulez-vous vraiment retirer cette aide de vos sauvegardes ?')) {
@@ -47,6 +100,31 @@ export function SavedSubsidiesPage() {
       await updateStatus(savedId, status);
     } catch (error) {
       console.error('Error updating status:', error);
+    }
+  };
+
+  const handleNotesChange = (savedId: string, value: string) => {
+    setEditingNotes((prev) => ({ ...prev, [savedId]: value }));
+  };
+
+  const handleSaveNotes = async (savedId: string, currentNotes: string | null) => {
+    const newNotes = editingNotes[savedId] ?? currentNotes ?? '';
+    setSavingNotes((prev) => new Set(prev).add(savedId));
+    try {
+      await updateNotes(savedId, newNotes);
+      setEditingNotes((prev) => {
+        const next = { ...prev };
+        delete next[savedId];
+        return next;
+      });
+    } catch (error) {
+      console.error('Error saving notes:', error);
+    } finally {
+      setSavingNotes((prev) => {
+        const next = new Set(prev);
+        next.delete(savedId);
+        return next;
+      });
     }
   };
 
@@ -99,6 +177,54 @@ export function SavedSubsidiesPage() {
           );
         })}
       </div>
+
+      {/* Urgent Deadlines Alert */}
+      {(() => {
+        const urgentSubsidies = savedSubsidies.filter((s) => {
+          if (!s.subsidy?.deadline) return false;
+          if (s.status === 'received' || s.status === 'rejected') return false;
+          const status = getDeadlineStatus(s.subsidy.deadline);
+          return status.urgency === 'urgent' || status.urgency === 'warning';
+        });
+
+        if (urgentSubsidies.length === 0) return null;
+
+        return (
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0">
+                <AlertTriangle className="h-5 w-5 text-amber-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-amber-800">
+                  {urgentSubsidies.length} aide{urgentSubsidies.length > 1 ? 's' : ''} avec deadline proche
+                </h3>
+                <div className="mt-2 space-y-1">
+                  {urgentSubsidies.slice(0, 3).map((s) => {
+                    const status = getDeadlineStatus(s.subsidy?.deadline || null);
+                    return (
+                      <Link
+                        key={s.id}
+                        to={`/app/subsidy/${s.subsidy_id}`}
+                        className="block text-sm text-amber-700 hover:text-amber-900"
+                      >
+                        <span className="font-medium">{status.label}</span>
+                        {' - '}
+                        {getSubsidyTitle(s.subsidy!)}
+                      </Link>
+                    );
+                  })}
+                  {urgentSubsidies.length > 3 && (
+                    <p className="text-sm text-amber-600">
+                      + {urgentSubsidies.length - 3} autre{urgentSubsidies.length - 3 > 1 ? 's' : ''}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* List */}
       {loading ? (
@@ -161,17 +287,44 @@ export function SavedSubsidiesPage() {
                           <span>Jusqu'a {formatAmount(subsidy.amount_max)}</span>
                         </div>
                       )}
-                      {subsidy.deadline && (
-                        <div className="flex items-center gap-1 text-slate-600">
-                          <Calendar className="h-3.5 w-3.5" />
-                          <span>
-                            {new Date(subsidy.deadline).toLocaleDateString('fr-FR', {
-                              day: 'numeric',
-                              month: 'short',
-                            })}
-                          </span>
-                        </div>
-                      )}
+                      {subsidy.deadline && (() => {
+                        const deadlineStatus = getDeadlineStatus(subsidy.deadline);
+                        const urgencyStyles = {
+                          expired: 'bg-slate-100 text-slate-500',
+                          urgent: 'bg-red-100 text-red-700',
+                          warning: 'bg-amber-100 text-amber-700',
+                          normal: 'bg-blue-50 text-blue-700',
+                        };
+
+                        return (
+                          <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1 text-slate-600">
+                              <Calendar className="h-3.5 w-3.5" />
+                              <span>
+                                {new Date(subsidy.deadline).toLocaleDateString('fr-FR', {
+                                  day: 'numeric',
+                                  month: 'short',
+                                })}
+                              </span>
+                            </div>
+                            {deadlineStatus.urgency && (
+                              <span
+                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
+                                  urgencyStyles[deadlineStatus.urgency]
+                                }`}
+                              >
+                                {deadlineStatus.urgency === 'urgent' && (
+                                  <AlertTriangle className="h-3 w-3" />
+                                )}
+                                {deadlineStatus.urgency === 'warning' && (
+                                  <Clock className="h-3 w-3" />
+                                )}
+                                {deadlineStatus.label}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </div>
                   </div>
 
@@ -226,7 +379,59 @@ export function SavedSubsidiesPage() {
                       <ExternalLink className="h-3.5 w-3.5" />
                     </a>
                   )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => toggleNotes(saved.id)}
+                    className="ml-auto text-slate-500"
+                  >
+                    <MessageSquare className="h-4 w-4 mr-1" />
+                    Notes
+                    {saved.notes && <span className="ml-1 text-blue-600">*</span>}
+                    {expandedNotes.has(saved.id) ? (
+                      <ChevronUp className="h-4 w-4 ml-1" />
+                    ) : (
+                      <ChevronDown className="h-4 w-4 ml-1" />
+                    )}
+                  </Button>
                 </div>
+
+                {/* Notes Section */}
+                {expandedNotes.has(saved.id) && (
+                  <div className="mt-4 pt-4 border-t border-slate-100">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Notes personnelles
+                    </label>
+                    <Textarea
+                      placeholder="Ajoutez des notes sur cette aide (ex: documents requis, contacts, etapes...)'"
+                      value={editingNotes[saved.id] ?? saved.notes ?? ''}
+                      onChange={(e) => handleNotesChange(saved.id, e.target.value)}
+                      className="min-h-[80px]"
+                    />
+                    <div className="flex justify-end mt-2">
+                      <Button
+                        size="sm"
+                        onClick={() => handleSaveNotes(saved.id, saved.notes)}
+                        disabled={
+                          savingNotes.has(saved.id) ||
+                          (editingNotes[saved.id] ?? saved.notes ?? '') === (saved.notes ?? '')
+                        }
+                      >
+                        {savingNotes.has(saved.id) ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                            Enregistrement...
+                          </>
+                        ) : (
+                          <>
+                            <Save className="h-4 w-4 mr-1" />
+                            Enregistrer
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             );
           })}

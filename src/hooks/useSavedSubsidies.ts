@@ -12,6 +12,7 @@ interface UseSavedSubsidiesReturn {
   unsaveSubsidy: (subsidyId: string) => Promise<void>;
   toggleSave: (subsidyId: string) => Promise<void>;
   updateStatus: (savedId: string, status: SavedSubsidy['status']) => Promise<void>;
+  updateNotes: (savedId: string, notes: string) => Promise<void>;
   refresh: () => Promise<void>;
 }
 
@@ -173,6 +174,30 @@ export function useSavedSubsidies(): UseSavedSubsidiesReturn {
     [user]
   );
 
+  const updateNotes = useCallback(
+    async (savedId: string, notes: string) => {
+      if (!user) throw new Error('Non authentifie');
+
+      try {
+        const { error: updateError } = await supabase
+          .from('masubventionpro_saved_subsidies')
+          .update({ notes })
+          .eq('id', savedId)
+          .eq('user_id', user.id);
+
+        if (updateError) throw updateError;
+
+        setSavedSubsidies((prev) =>
+          prev.map((s) => (s.id === savedId ? { ...s, notes } : s))
+        );
+      } catch (err: any) {
+        console.error('Error updating notes:', err);
+        throw err;
+      }
+    },
+    [user]
+  );
+
   return {
     savedSubsidies,
     loading,
@@ -182,6 +207,7 @@ export function useSavedSubsidies(): UseSavedSubsidiesReturn {
     unsaveSubsidy,
     toggleSave,
     updateStatus,
+    updateNotes,
     refresh: fetchSavedSubsidies,
   };
 }
