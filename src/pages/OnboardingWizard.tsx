@@ -19,11 +19,11 @@ import {
 // Stripe configuration - same as subvention360
 const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
 
-// Price IDs - to be created in Stripe Dashboard
+// Price IDs - Created in Stripe (live mode)
 const PRICE_IDS = {
-  decouverte: "price_masubventionpro_decouverte_49",
-  business: "price_masubventionpro_business_149",
-  premium: "price_masubventionpro_premium_299",
+  decouverte: "price_1SriofGHk83RfX3M9kJpY68K",  // 49€/year
+  business: "price_1SriohGHk83RfX3MaB9J9h9I",    // 149€/year
+  premium: "price_1SrioiGHk83RfX3MPSRH0T6W",     // 299€/year
 }
 
 interface OnboardingData {
