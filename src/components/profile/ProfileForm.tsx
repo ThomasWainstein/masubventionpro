@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Building, CheckCircle } from 'lucide-react';
 import {
   MaSubventionProProfile,
   FRENCH_REGIONS,
@@ -17,12 +17,41 @@ import {
   LEGAL_FORMS,
   PROJECT_TYPES,
 } from '@/types';
+import { CompanySearch } from './CompanySearch';
+import { CompanySearchResult } from '@/lib/companySearch';
 
 interface ProfileFormProps {
   initialData?: Partial<MaSubventionProProfile>;
   onSubmit: (data: Partial<MaSubventionProProfile>) => Promise<void>;
   submitLabel?: string;
   isLoading?: boolean;
+}
+
+/**
+ * Map INSEE employee range codes to our range values
+ */
+function mapEmployeeRange(employeeRangeText: string): string {
+  const text = employeeRangeText.toLowerCase();
+
+  if (text.includes('pas de') || text.includes('0')) return '';
+  if (text.includes('1-2') || text.includes('1 a 2')) return '1-10';
+  if (text.includes('3-5') || text.includes('6-9')) return '1-10';
+  if (text.includes('10-19')) return '11-50';
+  if (text.includes('20-49')) return '11-50';
+  if (text.includes('50-99')) return '51-250';
+  if (text.includes('100-199') || text.includes('200-249')) return '51-250';
+  if (text.includes('250') || text.includes('500') || text.includes('1000')) return '250+';
+
+  return '';
+}
+
+/**
+ * Extract year from date string (YYYY-MM-DD or YYYY)
+ */
+function extractYear(dateStr: string): number | null {
+  if (!dateStr) return null;
+  const year = parseInt(dateStr.substring(0, 4));
+  return isNaN(year) ? null : year;
 }
 
 export function ProfileForm({
@@ -33,16 +62,52 @@ export function ProfileForm({
 }: ProfileFormProps) {
   const [formData, setFormData] = useState({
     company_name: initialData.company_name || '',
+    siret: initialData.siret || '',
+    siren: initialData.siren || '',
+    naf_code: initialData.naf_code || '',
+    naf_label: initialData.naf_label || '',
     sector: initialData.sector || '',
     region: initialData.region || '',
+    department: initialData.department || '',
+    city: initialData.city || '',
+    postal_code: initialData.postal_code || '',
+    address: initialData.address || '',
     employees: initialData.employees || '',
     annual_turnover: initialData.annual_turnover?.toString() || '',
     year_created: initialData.year_created?.toString() || '',
     legal_form: initialData.legal_form || '',
+    company_category: initialData.company_category || '',
     project_types: initialData.project_types || [],
   });
 
   const [error, setError] = useState<string | null>(null);
+  const [companyEnriched, setCompanyEnriched] = useState(!!initialData.siret);
+
+  const handleCompanySelect = (company: CompanySearchResult) => {
+    // Auto-fill form fields from company data
+    setFormData((prev) => ({
+      ...prev,
+      company_name: company.name || prev.company_name,
+      siret: company.siret || prev.siret,
+      siren: company.siren || prev.siren,
+      naf_code: company.nafCode || prev.naf_code,
+      naf_label: company.nafLabel || prev.naf_label,
+      sector: company.nafLabel || prev.sector,
+      region: company.region || prev.region,
+      department: company.department || prev.department,
+      city: company.city || prev.city,
+      postal_code: company.postalCode || prev.postal_code,
+      address: company.address || prev.address,
+      employees: mapEmployeeRange(company.employeeRange) || prev.employees,
+      legal_form: company.legalForm || prev.legal_form,
+      company_category: company.companyCategory || prev.company_category,
+      year_created: company.creationDate
+        ? (extractYear(company.creationDate)?.toString() || prev.year_created)
+        : prev.year_created,
+    }));
+
+    setCompanyEnriched(true);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,12 +122,21 @@ export function ProfileForm({
     try {
       await onSubmit({
         company_name: formData.company_name.trim(),
+        siret: formData.siret || null,
+        siren: formData.siren || null,
+        naf_code: formData.naf_code || null,
+        naf_label: formData.naf_label || null,
         sector: formData.sector || null,
         region: formData.region || null,
+        department: formData.department || null,
+        city: formData.city || null,
+        postal_code: formData.postal_code || null,
+        address: formData.address || null,
         employees: formData.employees || null,
         annual_turnover: formData.annual_turnover ? parseFloat(formData.annual_turnover) : null,
         year_created: formData.year_created ? parseInt(formData.year_created) : null,
         legal_form: formData.legal_form || null,
+        company_category: formData.company_category || null,
         project_types: formData.project_types,
       });
     } catch (err: any) {
@@ -87,7 +161,30 @@ export function ProfileForm({
         </div>
       )}
 
-      {/* Company Name */}
+      {/* Company Search Section */}
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Building className="h-5 w-5 text-blue-600" />
+          <h3 className="font-medium text-slate-900">Rechercher votre entreprise</h3>
+        </div>
+        <p className="text-sm text-slate-600 mb-3">
+          Recherchez par nom d'entreprise, SIREN ou SIRET pour pre-remplir automatiquement les informations
+        </p>
+        <CompanySearch
+          onCompanySelect={handleCompanySelect}
+          placeholder="Rechercher par nom, SIREN ou SIRET..."
+          initialValue={initialData.company_name || ''}
+        />
+
+        {companyEnriched && formData.siret && (
+          <div className="mt-3 flex items-center gap-2 text-sm text-emerald-700">
+            <CheckCircle className="h-4 w-4" />
+            <span>Entreprise identifiee - SIRET: {formData.siret}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Company Name (can be edited manually) */}
       <div>
         <Label htmlFor="company_name" className="text-sm font-medium">
           Nom de l'entreprise *
@@ -101,6 +198,26 @@ export function ProfileForm({
           required
         />
       </div>
+
+      {/* SIRET / NAF Info (read-only if enriched) */}
+      {formData.siret && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label className="text-sm font-medium text-slate-500">SIRET</Label>
+            <p className="mt-1 text-slate-900 bg-slate-50 px-3 py-2 rounded-md text-sm">
+              {formData.siret}
+            </p>
+          </div>
+          {formData.naf_label && (
+            <div>
+              <Label className="text-sm font-medium text-slate-500">Activite (NAF)</Label>
+              <p className="mt-1 text-slate-900 bg-slate-50 px-3 py-2 rounded-md text-sm truncate">
+                {formData.naf_label}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Region */}
       <div>
@@ -123,6 +240,28 @@ export function ProfileForm({
           </SelectContent>
         </Select>
       </div>
+
+      {/* City and Postal Code (if enriched) */}
+      {(formData.city || formData.postal_code) && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {formData.city && (
+            <div>
+              <Label className="text-sm font-medium text-slate-500">Ville</Label>
+              <p className="mt-1 text-slate-900 bg-slate-50 px-3 py-2 rounded-md text-sm">
+                {formData.city}
+              </p>
+            </div>
+          )}
+          {formData.postal_code && (
+            <div>
+              <Label className="text-sm font-medium text-slate-500">Code postal</Label>
+              <p className="mt-1 text-slate-900 bg-slate-50 px-3 py-2 rounded-md text-sm">
+                {formData.postal_code}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Sector */}
       <div>
@@ -217,6 +356,16 @@ export function ProfileForm({
           />
         </div>
       </div>
+
+      {/* Company Category (if enriched) */}
+      {formData.company_category && (
+        <div>
+          <Label className="text-sm font-medium text-slate-500">Categorie d'entreprise</Label>
+          <p className="mt-1 text-slate-900 bg-slate-50 px-3 py-2 rounded-md text-sm">
+            {formData.company_category}
+          </p>
+        </div>
+      )}
 
       {/* Project Types */}
       <div>
