@@ -9,6 +9,7 @@ import {
   Building2,
   ChevronLeft,
   ChevronRight,
+  Sparkles,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNewSubsidies } from '@/hooks/useNewSubsidies';
@@ -28,6 +29,11 @@ const navItems = [
     title: 'Rechercher',
     href: '/app/search',
     icon: Search,
+  },
+  {
+    title: 'Assistant IA',
+    href: '/app/ai',
+    icon: Sparkles,
   },
   {
     title: 'Mes subventions',

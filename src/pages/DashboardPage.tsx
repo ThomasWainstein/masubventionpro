@@ -285,21 +285,21 @@ export function DashboardPage() {
             </div>
           </Link>
 
-          {/* AI Matching (Premium feature teaser) */}
-          <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl p-6 text-white relative overflow-hidden">
-            <div className="absolute top-2 right-2 bg-white/20 px-2 py-0.5 rounded text-xs font-medium">
-              Business+
-            </div>
+          {/* AI Assistant */}
+          <Link
+            to="/app/ai"
+            className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl p-6 text-white hover:from-purple-700 hover:to-purple-800 transition-all group"
+          >
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-semibold text-lg">Matching IA</h3>
+                <h3 className="font-semibold text-lg">Assistant IA</h3>
                 <p className="text-purple-100 text-sm mt-1">
-                  Recevez des recommandations personnalisees
+                  Discutez avec votre conseiller en subventions
                 </p>
               </div>
-              <Sparkles className="h-10 w-10 text-purple-300" />
+              <Sparkles className="h-10 w-10 text-purple-300 group-hover:scale-110 transition-transform" />
             </div>
-          </div>
+          </Link>
         </div>
       </div>
 

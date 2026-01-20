@@ -20,6 +20,9 @@ import {
 import { BUSINESS_SECTORS } from '@/types';
 import { formatSIRET } from '@/lib/validation/siret';
 import { DocumentUpload } from '@/components/profile/DocumentUpload';
+import { ProfileEnrichmentSection } from '@/components/profile/ProfileEnrichmentSection';
+import { WebsiteIntelligenceDisplay } from '@/components/profile/WebsiteIntelligenceDisplay';
+import type { WebsiteIntelligenceData } from '@/types';
 
 export function ProfilePage() {
   const { profile, loading, hasProfile } = useProfile();
@@ -118,6 +121,17 @@ export function ProfilePage() {
           </p>
         )}
       </div>
+
+      {/* AI Enrichment Section */}
+      <ProfileEnrichmentSection />
+
+      {/* Website Intelligence Display */}
+      {profile.website_intelligence && (
+        <WebsiteIntelligenceDisplay
+          data={profile.website_intelligence as WebsiteIntelligenceData}
+          websiteUrl={profile.website_url}
+        />
+      )}
 
       {/* Company Information */}
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">

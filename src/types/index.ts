@@ -1,5 +1,40 @@
 // MaSubventionPro TypeScript Types
 
+export interface WebsiteIntelligenceData {
+  companyDescription?: string;
+  businessActivities?: string[];
+  innovations?: {
+    indicators: string[];
+    technologies: string[];
+    score: number;
+  };
+  sustainability?: {
+    initiatives: string[];
+    certifications: string[];
+    score: number;
+  };
+  export?: {
+    markets: string[];
+    multilingualSite: boolean;
+    score: number;
+  };
+  digital?: {
+    technologies: string[];
+    ecommerce: boolean;
+    score: number;
+  };
+  growth?: {
+    signals: string[];
+    recentInvestment: boolean;
+    score: number;
+  };
+  analysis?: {
+    confidence: number;
+    analysisDate: string;
+    modelUsed?: string;
+  };
+}
+
 export interface MaSubventionProProfile {
   id: string;
   user_id: string;
@@ -21,6 +56,7 @@ export interface MaSubventionProProfile {
   legal_form: string | null;
   company_category: string | null;
   website_url: string | null;
+  website_intelligence: WebsiteIntelligenceData | null;
   description: string | null;
   certifications: string[];
   project_types: string[];

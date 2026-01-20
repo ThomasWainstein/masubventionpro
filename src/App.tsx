@@ -16,6 +16,7 @@ import SearchPage from './pages/SearchPage'
 import SubsidyDetailPage from './pages/SubsidyDetailPage'
 import SavedSubsidiesPage from './pages/SavedSubsidiesPage'
 import SettingsPage from './pages/SettingsPage'
+import AIAssistantPage from './pages/AIAssistantPage'
 
 // Layout & Auth
 import { ProtectedRoute } from './components/auth/ProtectedRoute'
@@ -45,6 +46,7 @@ function App() {
           <Route path="/app/search" element={<SearchPage />} />
           <Route path="/app/subsidy/:id" element={<SubsidyDetailPage />} />
           <Route path="/app/saved" element={<SavedSubsidiesPage />} />
+          <Route path="/app/ai" element={<AIAssistantPage />} />
           <Route path="/app/settings" element={<SettingsPage />} />
         </Route>
       </Route>
