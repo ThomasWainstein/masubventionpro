@@ -100,38 +100,54 @@ const LandingPage = () => {
     },
   ]
 
+  // Pricing: Premium first for anchoring effect
   const pricingPlans = [
     {
-      name: "Starter",
-      subtitle: "Pour demarrer",
-      price: "49",
-      features: ["50 recherches/mois", "Base complete", "Support email"],
-      featured: false,
-    },
-    {
-      name: "Pro",
-      subtitle: "Pour les cabinets",
-      price: "149",
+      name: "Premium",
+      subtitle: "Pour les PME structurees",
+      price: "299",
+      period: "/an",
       features: [
         "Recherches illimitees",
-        "Rapports personnalises",
-        "Support prioritaire",
+        "Assistant IA contextuel",
+        "Rapports white-label",
+        "Accompagnement expert",
+        "Support prioritaire 24h",
         "API Access",
       ],
-      featured: true,
-      badge: "POPULAIRE",
+      featured: false,
+      cta: "Choisir Premium",
     },
     {
-      name: "Enterprise",
-      subtitle: "Sur mesure",
-      price: "Sur devis",
+      name: "Business",
+      subtitle: "Le choix des cabinets",
+      price: "149",
+      period: "/an",
       features: [
-        "Tout illimite",
-        "Integration CRM",
-        "Account manager",
-        "SLA garanti",
+        "200 recherches/mois",
+        "Matching IA avance",
+        "Rapports personnalises",
+        "Alertes nouveaux dispositifs",
+        "Support email prioritaire",
+      ],
+      featured: true,
+      badge: "RECOMMANDE",
+      cta: "Essai 14 jours gratuit",
+    },
+    {
+      name: "Decouverte",
+      subtitle: "Pour commencer",
+      price: "49",
+      period: "",
+      features: [
+        "50 recherches",
+        "Base complete des aides",
+        "Filtres par region/secteur",
+        "Export PDF basique",
+        "Support email",
       ],
       featured: false,
+      cta: "Demarrer maintenant",
     },
   ]
 
@@ -426,17 +442,11 @@ const LandingPage = () => {
                 </h3>
                 <p className="text-slate-500 mt-1">{plan.subtitle}</p>
                 <div className="my-6">
-                  {plan.price === "Sur devis" ? (
-                    <span className="text-3xl font-extrabold text-blue-800">
-                      Sur devis
-                    </span>
-                  ) : (
-                    <>
-                      <span className="text-5xl font-extrabold text-blue-800">
-                        {plan.price}
-                      </span>
-                      <span className="text-slate-500">/mois</span>
-                    </>
+                  <span className="text-5xl font-extrabold text-blue-800">
+                    {plan.price}€
+                  </span>
+                  {plan.period && (
+                    <span className="text-slate-500">{plan.period}</span>
                   )}
                 </div>
                 <ul className="text-left space-y-3 mb-8">
@@ -445,7 +455,7 @@ const LandingPage = () => {
                       key={i}
                       className="flex items-center gap-2 py-2 border-b border-slate-100"
                     >
-                      <Check className="w-5 h-5 text-emerald-600" />
+                      <Check className="w-5 h-5 text-emerald-600 flex-shrink-0" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -455,11 +465,7 @@ const LandingPage = () => {
                   variant={plan.featured ? "default" : "secondary"}
                   className="w-full"
                 >
-                  {plan.name === "Enterprise"
-                    ? "Nous contacter"
-                    : plan.name === "Pro"
-                    ? "Essai 14 jours"
-                    : "Commencer"}
+                  {plan.cta}
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </div>
