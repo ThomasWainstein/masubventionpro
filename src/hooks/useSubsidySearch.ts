@@ -24,8 +24,10 @@ export interface SearchFilters {
   query: string;
   regions: string[];
   fundingTypes: string[];
+  sectors: string[];
   minAmount?: number;
   maxAmount?: number;
+  sortBy: 'deadline' | 'amount_desc' | 'amount_asc' | 'relevance';
 }
 
 interface UseSubsidySearchReturn {
@@ -53,6 +55,8 @@ export function useSubsidySearch(): UseSubsidySearchReturn {
     query: '',
     regions: [],
     fundingTypes: [],
+    sectors: [],
+    sortBy: 'deadline',
   });
 
   const buildQuery = useCallback((filters: SearchFilters, page: number) => {
@@ -82,6 +86,15 @@ export function useSubsidySearch(): UseSubsidySearchReturn {
       query = query.in('funding_type', filters.fundingTypes);
     }
 
+    // Sector filter
+    if (filters.sectors && filters.sectors.length > 0) {
+      // Search in primary_sector or categories array
+      const sectorConditions = filters.sectors
+        .map(s => `primary_sector.ilike.%${s}%,categories.cs.{${s}}`)
+        .join(',');
+      query = query.or(sectorConditions);
+    }
+
     // Amount filters
     if (filters.minAmount) {
       query = query.gte('amount_max', filters.minAmount);
@@ -90,10 +103,30 @@ export function useSubsidySearch(): UseSubsidySearchReturn {
       query = query.lte('amount_min', filters.maxAmount);
     }
 
-    // Order by deadline (soonest first), then by amount
-    query = query
-      .order('deadline', { ascending: true, nullsFirst: false })
-      .order('amount_max', { ascending: false, nullsFirst: true });
+    // Sorting
+    switch (filters.sortBy) {
+      case 'amount_desc':
+        query = query
+          .order('amount_max', { ascending: false, nullsFirst: false })
+          .order('deadline', { ascending: true, nullsFirst: false });
+        break;
+      case 'amount_asc':
+        query = query
+          .order('amount_min', { ascending: true, nullsFirst: false })
+          .order('deadline', { ascending: true, nullsFirst: false });
+        break;
+      case 'relevance':
+        // For relevance, we rely on the text search quality; order by deadline as secondary
+        query = query
+          .order('deadline', { ascending: true, nullsFirst: false });
+        break;
+      case 'deadline':
+      default:
+        query = query
+          .order('deadline', { ascending: true, nullsFirst: false })
+          .order('amount_max', { ascending: false, nullsFirst: true });
+        break;
+    }
 
     // Pagination
     const from = page * PAGE_SIZE;

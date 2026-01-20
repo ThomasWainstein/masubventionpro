@@ -19,7 +19,33 @@ import {
   AlertCircle,
   SlidersHorizontal,
 } from 'lucide-react';
-import { FRENCH_REGIONS, FUNDING_TYPES } from '@/types';
+import { FRENCH_REGIONS, FUNDING_TYPES, BUSINESS_SECTORS } from '@/types';
+
+// Amount presets for the filter
+const AMOUNT_PRESETS = [
+  { value: '', label: 'Tous les montants' },
+  { value: '0-10000', label: "Jusqu'a 10 000 EUR" },
+  { value: '10000-50000', label: '10 000 - 50 000 EUR' },
+  { value: '50000-200000', label: '50 000 - 200 000 EUR' },
+  { value: '200000-1000000', label: '200 000 - 1 000 000 EUR' },
+  { value: '1000000+', label: 'Plus de 1 000 000 EUR' },
+];
+
+// Sort options
+const SORT_OPTIONS = [
+  { value: 'deadline', label: 'Date limite (proche)' },
+  { value: 'amount_desc', label: 'Montant (decroissant)' },
+  { value: 'amount_asc', label: 'Montant (croissant)' },
+  { value: 'relevance', label: 'Pertinence' },
+] as const;
+
+// Helper to parse amount preset
+function parseAmountPreset(preset: string): { min?: number; max?: number } {
+  if (!preset) return {};
+  if (preset === '1000000+') return { min: 1000000 };
+  const [min, max] = preset.split('-').map(Number);
+  return { min, max };
+}
 
 export function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -33,6 +59,13 @@ export function SearchPage() {
   const [selectedFundingTypes, setSelectedFundingTypes] = useState<string[]>(
     searchParams.get('types')?.split(',').filter(Boolean) || []
   );
+  const [selectedSectors, setSelectedSectors] = useState<string[]>(
+    searchParams.get('sectors')?.split(',').filter(Boolean) || []
+  );
+  const [amountPreset, setAmountPreset] = useState(searchParams.get('amount') || '');
+  const [sortBy, setSortBy] = useState<SearchFilters['sortBy']>(
+    (searchParams.get('sort') as SearchFilters['sortBy']) || 'deadline'
+  );
   const [showFilters, setShowFilters] = useState(false);
 
   // Saved subsidies (placeholder - will be implemented in SavedSubsidiesPage)
@@ -41,10 +74,15 @@ export function SearchPage() {
   // Debounce search
   useEffect(() => {
     const timeoutId = setTimeout(() => {
+      const { min: minAmount, max: maxAmount } = parseAmountPreset(amountPreset);
       const filters: SearchFilters = {
         query,
         regions: selectedRegions,
         fundingTypes: selectedFundingTypes,
+        sectors: selectedSectors,
+        minAmount,
+        maxAmount,
+        sortBy,
       };
       search(filters);
 
@@ -53,18 +91,26 @@ export function SearchPage() {
       if (query) params.set('q', query);
       if (selectedRegions.length) params.set('regions', selectedRegions.join(','));
       if (selectedFundingTypes.length) params.set('types', selectedFundingTypes.join(','));
+      if (selectedSectors.length) params.set('sectors', selectedSectors.join(','));
+      if (amountPreset) params.set('amount', amountPreset);
+      if (sortBy !== 'deadline') params.set('sort', sortBy);
       setSearchParams(params, { replace: true });
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [query, selectedRegions, selectedFundingTypes]);
+  }, [query, selectedRegions, selectedFundingTypes, selectedSectors, amountPreset, sortBy]);
 
   // Initial search on mount
   useEffect(() => {
+    const { min: minAmount, max: maxAmount } = parseAmountPreset(searchParams.get('amount') || '');
     const filters: SearchFilters = {
       query: searchParams.get('q') || '',
       regions: searchParams.get('regions')?.split(',').filter(Boolean) || [],
       fundingTypes: searchParams.get('types')?.split(',').filter(Boolean) || [],
+      sectors: searchParams.get('sectors')?.split(',').filter(Boolean) || [],
+      minAmount,
+      maxAmount,
+      sortBy: (searchParams.get('sort') as SearchFilters['sortBy']) || 'deadline',
     };
     search(filters);
   }, []);
@@ -86,9 +132,18 @@ export function SearchPage() {
     setQuery('');
     setSelectedRegions([]);
     setSelectedFundingTypes([]);
+    setSelectedSectors([]);
+    setAmountPreset('');
+    setSortBy('deadline');
   };
 
-  const hasActiveFilters = query || selectedRegions.length > 0 || selectedFundingTypes.length > 0;
+  const activeFilterCount =
+    (selectedRegions.length > 0 ? 1 : 0) +
+    (selectedFundingTypes.length > 0 ? 1 : 0) +
+    (selectedSectors.length > 0 ? 1 : 0) +
+    (amountPreset ? 1 : 0);
+
+  const hasActiveFilters = query || activeFilterCount > 0;
 
   return (
     <div className="space-y-6">
@@ -123,9 +178,9 @@ export function SearchPage() {
         >
           <SlidersHorizontal className="h-4 w-4" />
           Filtres
-          {(selectedRegions.length > 0 || selectedFundingTypes.length > 0) && (
+          {activeFilterCount > 0 && (
             <span className="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full">
-              {selectedRegions.length + selectedFundingTypes.length}
+              {activeFilterCount}
             </span>
           )}
         </Button>
@@ -134,7 +189,7 @@ export function SearchPage() {
       {/* Filters Panel */}
       {showFilters && (
         <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Region Filter */}
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
@@ -175,6 +230,73 @@ export function SearchPage() {
                   {FUNDING_TYPES.map((type) => (
                     <SelectItem key={type.value} value={type.value}>
                       {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Sector Filter */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Secteur d'activite
+              </label>
+              <Select
+                value={selectedSectors[0] || ''}
+                onValueChange={(value) => setSelectedSectors(value ? [value] : [])}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Tous les secteurs" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Tous les secteurs</SelectItem>
+                  {BUSINESS_SECTORS.map((sector) => (
+                    <SelectItem key={sector.value} value={sector.value}>
+                      {sector.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Amount Filter */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Montant
+              </label>
+              <Select
+                value={amountPreset}
+                onValueChange={setAmountPreset}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Tous les montants" />
+                </SelectTrigger>
+                <SelectContent>
+                  {AMOUNT_PRESETS.map((preset) => (
+                    <SelectItem key={preset.value || 'all'} value={preset.value}>
+                      {preset.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Sort Options */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Trier par
+              </label>
+              <Select
+                value={sortBy}
+                onValueChange={(value) => setSortBy(value as SearchFilters['sortBy'])}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Date limite" />
+                </SelectTrigger>
+                <SelectContent>
+                  {SORT_OPTIONS.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
                     </SelectItem>
                   ))}
                 </SelectContent>

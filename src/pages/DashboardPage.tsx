@@ -1,8 +1,13 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/contexts/ProfileContext';
+import { useSavedSubsidies } from '@/hooks/useSavedSubsidies';
+import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
+import { SubsidyCard } from '@/components/search/SubsidyCard';
+import { Subsidy } from '@/types';
 import {
   Search,
   Building2,
@@ -13,11 +18,17 @@ import {
   TrendingUp,
   Clock,
   Sparkles,
+  Star,
 } from 'lucide-react';
 
 export function DashboardPage() {
   const { user } = useAuth();
   const { profile, loading: profileLoading, hasProfile } = useProfile();
+  const { savedSubsidies, isSaved, toggleSave } = useSavedSubsidies();
+
+  // Recommended subsidies state
+  const [recommendedSubsidies, setRecommendedSubsidies] = useState<Subsidy[]>([]);
+  const [loadingRecommendations, setLoadingRecommendations] = useState(false);
 
   const userName = user?.user_metadata?.first_name || user?.email?.split('@')[0] || 'Utilisateur';
   const userPlan = user?.user_metadata?.selected_plan || 'decouverte';
@@ -31,6 +42,43 @@ export function DashboardPage() {
 
   const currentPlan = planLimits[userPlan as keyof typeof planLimits] || planLimits.decouverte;
   const searchesRemaining = currentPlan.searches === -1 ? 'Illimitees' : currentPlan.searches;
+
+  // Fetch recommended subsidies based on profile
+  useEffect(() => {
+    async function fetchRecommendations() {
+      if (!hasProfile || !profile) return;
+
+      setLoadingRecommendations(true);
+      try {
+        let query = supabase
+          .from('subsidies')
+          .select('id, title, description, agency, region, deadline, amount_min, amount_max, funding_type, categories, primary_sector, application_url, is_active')
+          .eq('is_active', true)
+          .order('deadline', { ascending: true, nullsFirst: false })
+          .limit(5);
+
+        // Filter by region if available (include national)
+        if (profile.region) {
+          query = query.or(`region.cs.{${profile.region}},region.cs.{National}`);
+        }
+
+        const { data, error } = await query;
+
+        if (error) {
+          console.error('Error fetching recommendations:', error);
+          return;
+        }
+
+        setRecommendedSubsidies((data || []) as Subsidy[]);
+      } catch (err) {
+        console.error('Error fetching recommendations:', err);
+      } finally {
+        setLoadingRecommendations(false);
+      }
+    }
+
+    fetchRecommendations();
+  }, [hasProfile, profile]);
 
   if (profileLoading) {
     return (
@@ -106,7 +154,7 @@ export function DashboardPage() {
             </div>
             <div>
               <p className="text-sm text-slate-600">Aides sauvegardees</p>
-              <p className="text-2xl font-bold text-slate-900">0</p>
+              <p className="text-2xl font-bold text-slate-900">{savedSubsidies.length}</p>
             </div>
           </div>
           <Link to="/app/saved" className="text-xs text-blue-600 hover:underline mt-3 inline-block">
@@ -174,29 +222,70 @@ export function DashboardPage() {
         </div>
       </div>
 
-      {/* Recent Subsidies Preview */}
+      {/* Recommended Subsidies */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-slate-900">Aides recentes</h2>
+          <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+            <Star className="h-5 w-5 text-amber-500" />
+            {hasProfile ? 'Recommandees pour vous' : 'Aides recentes'}
+          </h2>
           <Link to="/app/search" className="text-blue-600 hover:underline text-sm flex items-center gap-1">
             Voir tout
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-8 text-center">
-          <div className="flex items-center justify-center w-12 h-12 bg-slate-100 rounded-full mx-auto mb-4">
-            <Clock className="h-6 w-6 text-slate-400" />
+
+        {loadingRecommendations ? (
+          <div className="bg-white rounded-xl border border-slate-200 p-8 text-center">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto" />
+            <p className="text-slate-600 mt-3">Chargement des recommandations...</p>
           </div>
-          <p className="text-slate-600">
-            Lancez une recherche pour decouvrir les aides disponibles
-          </p>
-          <Link to="/app/search">
-            <Button className="mt-4">
-              <Search className="mr-2 h-4 w-4" />
-              Rechercher des aides
-            </Button>
-          </Link>
-        </div>
+        ) : recommendedSubsidies.length > 0 ? (
+          <div className="space-y-4">
+            {recommendedSubsidies.map((subsidy) => (
+              <SubsidyCard
+                key={subsidy.id}
+                subsidy={subsidy}
+                isSaved={isSaved(subsidy.id)}
+                onToggleSave={toggleSave}
+              />
+            ))}
+            <div className="text-center pt-2">
+              <Link to="/app/search">
+                <Button variant="outline">
+                  Voir plus d'aides
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-white rounded-xl border border-slate-200 p-8 text-center">
+            <div className="flex items-center justify-center w-12 h-12 bg-slate-100 rounded-full mx-auto mb-4">
+              <Clock className="h-6 w-6 text-slate-400" />
+            </div>
+            <p className="text-slate-600">
+              {hasProfile
+                ? 'Aucune aide correspondant a votre profil pour le moment'
+                : 'Completez votre profil pour recevoir des recommandations personnalisees'}
+            </p>
+            <Link to={hasProfile ? '/app/search' : '/app/profile/setup'}>
+              <Button className="mt-4">
+                {hasProfile ? (
+                  <>
+                    <Search className="mr-2 h-4 w-4" />
+                    Rechercher des aides
+                  </>
+                ) : (
+                  <>
+                    <Building2 className="mr-2 h-4 w-4" />
+                    Completer mon profil
+                  </>
+                )}
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Tips */}
