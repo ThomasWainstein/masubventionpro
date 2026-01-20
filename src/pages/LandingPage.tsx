@@ -100,8 +100,39 @@ const LandingPage = () => {
     },
   ]
 
-  // Pricing: Premium first for anchoring effect
+  // Pricing: Left to right (cheapest to most expensive)
   const pricingPlans = [
+    {
+      name: "Decouverte",
+      subtitle: "Pour commencer",
+      price: "49",
+      period: "",
+      features: [
+        "50 recherches",
+        "Base complete des aides",
+        "Filtres par region/secteur",
+        "Export PDF basique",
+        "Support email",
+      ],
+      featured: false,
+      cta: "Demarrer maintenant",
+    },
+    {
+      name: "Business",
+      subtitle: "Le choix des PME",
+      price: "149",
+      period: "/an",
+      features: [
+        "200 recherches/mois",
+        "Matching IA avance",
+        "Rapports personnalises",
+        "Alertes nouveaux dispositifs",
+        "Support email prioritaire",
+      ],
+      featured: true,
+      badge: "RECOMMANDE",
+      cta: "Choisir Business",
+    },
     {
       name: "Premium",
       subtitle: "Pour les groupes & cabinets",
@@ -118,37 +149,6 @@ const LandingPage = () => {
       ],
       featured: false,
       cta: "Choisir Premium",
-    },
-    {
-      name: "Business",
-      subtitle: "Le choix des cabinets",
-      price: "149",
-      period: "/an",
-      features: [
-        "200 recherches/mois",
-        "Matching IA avance",
-        "Rapports personnalises",
-        "Alertes nouveaux dispositifs",
-        "Support email prioritaire",
-      ],
-      featured: true,
-      badge: "RECOMMANDE",
-      cta: "Essai 14 jours gratuit",
-    },
-    {
-      name: "Decouverte",
-      subtitle: "Pour commencer",
-      price: "49",
-      period: "",
-      features: [
-        "50 recherches",
-        "Base complete des aides",
-        "Filtres par region/secteur",
-        "Export PDF basique",
-        "Support email",
-      ],
-      featured: false,
-      cta: "Demarrer maintenant",
     },
   ]
 
@@ -206,7 +206,7 @@ const LandingPage = () => {
             Contact
           </a>
           <Button onClick={() => navigate("/signup")}>
-            Essai Gratuit
+            S'inscrire
           </Button>
         </nav>
 
@@ -235,7 +235,7 @@ const LandingPage = () => {
             onClick={() => navigate("/signup")}
             className="w-full"
           >
-            Essai Gratuit
+            S'inscrire
           </Button>
         </div>
       )}
