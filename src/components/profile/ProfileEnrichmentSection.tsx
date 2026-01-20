@@ -90,6 +90,7 @@ export function ProfileEnrichmentSection({ onEnrichmentComplete }: ProfileEnrich
             url: validUrl,
             profileId: profile?.id,
             language: 'fr',
+            profileTable: 'masubventionpro_profiles',
           }),
         }
       );
