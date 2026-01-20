@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import {
   LayoutDashboard,
@@ -10,6 +11,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNewSubsidies } from '@/hooks/useNewSubsidies';
 
 interface AppSidebarProps {
   isCollapsed: boolean;
@@ -49,6 +51,14 @@ const bottomNavItems = [
 
 export function AppSidebar({ isCollapsed, onToggle }: AppSidebarProps) {
   const location = useLocation();
+  const { newCount, hasNew, markAsViewed } = useNewSubsidies();
+
+  // Mark subsidies as viewed when user visits search page
+  useEffect(() => {
+    if (location.pathname === '/app/search' && hasNew) {
+      markAsViewed();
+    }
+  }, [location.pathname, hasNew, markAsViewed]);
 
   const isActive = (href: string) => {
     if (href === '/app') {
@@ -89,21 +99,39 @@ export function AppSidebar({ isCollapsed, onToggle }: AppSidebarProps) {
 
       {/* Main Navigation */}
       <nav className="flex flex-col gap-1 p-2">
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            to={item.href}
-            className={cn(
-              'flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors',
-              isActive(item.href)
-                ? 'bg-blue-600 text-white'
-                : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-            )}
-          >
-            <item.icon className="h-5 w-5 flex-shrink-0" />
-            {!isCollapsed && <span className="truncate">{item.title}</span>}
-          </Link>
-        ))}
+        {navItems.map((item) => {
+          const showBadge = item.href === '/app/search' && hasNew && newCount > 0;
+
+          return (
+            <Link
+              key={item.href}
+              to={item.href}
+              className={cn(
+                'flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors relative',
+                isActive(item.href)
+                  ? 'bg-blue-600 text-white'
+                  : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+              )}
+            >
+              <item.icon className="h-5 w-5 flex-shrink-0" />
+              {!isCollapsed && (
+                <span className="truncate flex-1">{item.title}</span>
+              )}
+              {showBadge && (
+                <span
+                  className={cn(
+                    'flex items-center justify-center text-xs font-medium bg-emerald-500 text-white rounded-full',
+                    isCollapsed
+                      ? 'absolute -top-1 -right-1 w-5 h-5'
+                      : 'px-2 py-0.5 min-w-[20px]'
+                  )}
+                >
+                  {newCount > 99 ? '99+' : newCount}
+                </span>
+              )}
+            </Link>
+          );
+        })}
       </nav>
 
       {/* Bottom Navigation */}
