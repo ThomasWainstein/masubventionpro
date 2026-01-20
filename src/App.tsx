@@ -10,6 +10,7 @@ import NotFound from './pages/NotFound'
 // Protected pages
 import DashboardPage from './pages/DashboardPage'
 import ProfileSetupPage from './pages/ProfileSetupPage'
+import ProfilePage from './pages/ProfilePage'
 import ProfileEditPage from './pages/ProfileEditPage'
 import SearchPage from './pages/SearchPage'
 import SubsidyDetailPage from './pages/SubsidyDetailPage'
@@ -39,6 +40,7 @@ function App() {
         {/* App routes with layout */}
         <Route element={<AppLayout />}>
           <Route path="/app" element={<DashboardPage />} />
+          <Route path="/app/profile" element={<ProfilePage />} />
           <Route path="/app/profile/edit" element={<ProfileEditPage />} />
           <Route path="/app/search" element={<SearchPage />} />
           <Route path="/app/subsidy/:id" element={<SubsidyDetailPage />} />

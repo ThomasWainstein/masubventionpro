@@ -34,7 +34,7 @@ const navItems = [
   },
   {
     title: 'Mon profil',
-    href: '/app/profile/edit',
+    href: '/app/profile',
     icon: Building2,
   },
 ];
