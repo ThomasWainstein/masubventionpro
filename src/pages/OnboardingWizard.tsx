@@ -16,9 +16,6 @@ import {
   CreditCard,
 } from "lucide-react"
 
-// Stripe configuration - same as subvention360
-const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
-
 // Price IDs - Created in Stripe (live mode)
 const PRICE_IDS = {
   decouverte: "price_1SriofGHk83RfX3M9kJpY68K",  // 49€/year
