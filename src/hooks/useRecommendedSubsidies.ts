@@ -156,7 +156,7 @@ async function fetchAIRecommendations(
       body: JSON.stringify({
         profile_id: profileId,
         profile_table: 'masubventionpro_profiles', // V5.9: Use masubventionpro table
-        skip_llm: true, // Fast response with RRF scoring
+        skip_llm: false, // Enable DeepSeek LLM scoring for better match quality
         trigger_async_llm: false, // Don't queue for background LLM
         force_refresh: false,
       }),
