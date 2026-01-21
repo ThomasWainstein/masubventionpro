@@ -93,7 +93,8 @@ async function fetchAIRecommendations(
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
-        apikey: import.meta.env.VITE_SUPABASE_ANON_KEY || '',
+        // Use new opaque publishable key format (legacy keys are disabled)
+        apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY || '',
       },
       body: JSON.stringify({
         profile_id: profileId,
