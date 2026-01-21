@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -88,7 +88,19 @@ export function ProfileForm({
   const [error, setError] = useState<string | null>(null);
   const [companyEnriched, setCompanyEnriched] = useState(!!initialData.siret);
 
-  const handleCompanySelect = (company: CompanySearchResult) => {
+  // Memoized field change handler to prevent re-renders
+  const handleFieldChange = useCallback((field: string) => (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+  }, []);
+
+  // Memoized select change handler
+  const handleSelectChange = useCallback((field: string) => (value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  }, []);
+
+  const handleCompanySelect = useCallback((company: CompanySearchResult) => {
     // Auto-fill form fields from company data
     setFormData((prev) => ({
       ...prev,
@@ -112,7 +124,7 @@ export function ProfileForm({
     }));
 
     setCompanyEnriched(true);
-  };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -152,14 +164,14 @@ export function ProfileForm({
     }
   };
 
-  const toggleProjectType = (type: string) => {
+  const toggleProjectType = useCallback((type: string) => {
     setFormData((prev) => ({
       ...prev,
       project_types: prev.project_types.includes(type)
         ? prev.project_types.filter((t) => t !== type)
         : [...prev.project_types, type],
     }));
-  };
+  }, []);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -200,7 +212,7 @@ export function ProfileForm({
         <Input
           id="company_name"
           value={formData.company_name}
-          onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
+          onChange={handleFieldChange('company_name')}
           placeholder="Ma Startup SAS"
           className="mt-1"
           required
@@ -234,7 +246,7 @@ export function ProfileForm({
         </Label>
         <Select
           value={formData.region}
-          onValueChange={(value) => setFormData({ ...formData, region: value })}
+          onValueChange={handleSelectChange('region')}
         >
           <SelectTrigger className="mt-1">
             <SelectValue placeholder="Selectionnez une region" />
@@ -278,7 +290,7 @@ export function ProfileForm({
         </Label>
         <Select
           value={formData.sector}
-          onValueChange={(value) => setFormData({ ...formData, sector: value })}
+          onValueChange={handleSelectChange('sector')}
         >
           <SelectTrigger className="mt-1">
             <SelectValue placeholder="Selectionnez un secteur" />
@@ -302,7 +314,7 @@ export function ProfileForm({
           id="website_url"
           type="url"
           value={formData.website_url}
-          onChange={(e) => setFormData({ ...formData, website_url: e.target.value })}
+          onChange={handleFieldChange('website_url')}
           placeholder="https://www.mon-entreprise.fr"
           className="mt-1"
         />
@@ -316,7 +328,7 @@ export function ProfileForm({
         <Textarea
           id="description"
           value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          onChange={handleFieldChange('description')}
           placeholder="Decrivez votre activite, vos produits ou services..."
           className="mt-1 min-h-[100px]"
           rows={4}
@@ -334,7 +346,7 @@ export function ProfileForm({
           </Label>
           <Select
             value={formData.employees}
-            onValueChange={(value) => setFormData({ ...formData, employees: value })}
+            onValueChange={handleSelectChange('employees')}
           >
             <SelectTrigger className="mt-1">
               <SelectValue placeholder="Nombre de salaries" />
@@ -356,7 +368,7 @@ export function ProfileForm({
           </Label>
           <Select
             value={formData.legal_form}
-            onValueChange={(value) => setFormData({ ...formData, legal_form: value })}
+            onValueChange={handleSelectChange('legal_form')}
           >
             <SelectTrigger className="mt-1">
               <SelectValue placeholder="Selectionnez" />
@@ -382,7 +394,7 @@ export function ProfileForm({
             id="annual_turnover"
             type="number"
             value={formData.annual_turnover}
-            onChange={(e) => setFormData({ ...formData, annual_turnover: e.target.value })}
+            onChange={handleFieldChange('annual_turnover')}
             placeholder="Ex: 500000"
             className="mt-1"
           />
@@ -397,7 +409,7 @@ export function ProfileForm({
             id="year_created"
             type="number"
             value={formData.year_created}
-            onChange={(e) => setFormData({ ...formData, year_created: e.target.value })}
+            onChange={handleFieldChange('year_created')}
             placeholder="Ex: 2020"
             min="1900"
             max={new Date().getFullYear()}

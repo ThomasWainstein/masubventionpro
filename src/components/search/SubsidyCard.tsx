@@ -8,6 +8,7 @@ import {
   Bookmark,
   BookmarkCheck,
   ExternalLink,
+  Sparkles,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -15,9 +16,17 @@ interface SubsidyCardProps {
   subsidy: Subsidy;
   isSaved?: boolean;
   onToggleSave?: (subsidyId: string) => void;
+  matchScore?: number;
+  matchReasons?: string[];
 }
 
-export function SubsidyCard({ subsidy, isSaved = false, onToggleSave }: SubsidyCardProps) {
+export function SubsidyCard({
+  subsidy,
+  isSaved = false,
+  onToggleSave,
+  matchScore,
+  matchReasons,
+}: SubsidyCardProps) {
   const title = getSubsidyTitle(subsidy);
   const description = getSubsidyDescription(subsidy);
 
@@ -114,6 +123,26 @@ export function SubsidyCard({ subsidy, isSaved = false, onToggleSave }: SubsidyC
         <p className="mt-3 text-sm text-slate-600 line-clamp-2">
           {description}
         </p>
+      )}
+
+      {/* Match Reasons (when available) */}
+      {matchReasons && matchReasons.length > 0 && (
+        <div className="mt-3 flex items-center gap-2 flex-wrap">
+          <Sparkles className="h-3.5 w-3.5 text-purple-500" />
+          {matchReasons.slice(0, 3).map((reason, idx) => (
+            <span
+              key={idx}
+              className="text-xs bg-purple-50 text-purple-700 px-2 py-0.5 rounded-full"
+            >
+              {reason}
+            </span>
+          ))}
+          {matchScore && matchScore >= 50 && (
+            <span className="text-xs text-purple-600 font-medium">
+              {matchScore}% match
+            </span>
+          )}
+        </div>
       )}
 
       {/* Meta Info */}

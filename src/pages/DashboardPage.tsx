@@ -1,15 +1,13 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/contexts/ProfileContext';
 import { useSavedSubsidies } from '@/hooks/useSavedSubsidies';
 import { useNewSubsidies } from '@/hooks/useNewSubsidies';
-import { supabase } from '@/lib/supabase';
+import { useRecommendedSubsidies } from '@/hooks/useRecommendedSubsidies';
 import { Button } from '@/components/ui/button';
 import { SubsidyCard } from '@/components/search/SubsidyCard';
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed';
-import { Subsidy } from '@/types';
 import {
   Search,
   Building2,
@@ -33,9 +31,12 @@ export function DashboardPage() {
   const { savedSubsidies, isSaved, toggleSave } = useSavedSubsidies();
   const { newCount, hasNew } = useNewSubsidies();
 
-  // Recommended subsidies state
-  const [recommendedSubsidies, setRecommendedSubsidies] = useState<Subsidy[]>([]);
-  const [loadingRecommendations, setLoadingRecommendations] = useState(false);
+  // V5 Hybrid Matcher - Profile-based recommendations with AI scoring
+  const {
+    recommendations: recommendedSubsidies,
+    loading: loadingRecommendations,
+    isAIScored,
+  } = useRecommendedSubsidies(hasProfile ? profile : null, { limit: 5, useAIScoring: true });
 
   const userName = user?.user_metadata?.first_name || user?.email?.split('@')[0] || 'Utilisateur';
 
@@ -66,43 +67,6 @@ export function DashboardPage() {
     }
     return `${amount} EUR`;
   };
-
-  // Fetch recommended subsidies based on profile
-  useEffect(() => {
-    async function fetchRecommendations() {
-      if (!hasProfile || !profile) return;
-
-      setLoadingRecommendations(true);
-      try {
-        let query = supabase
-          .from('subsidies')
-          .select('id, title, description, agency, region, deadline, amount_min, amount_max, funding_type, categories, primary_sector, application_url, is_active')
-          .eq('is_active', true)
-          .order('deadline', { ascending: true, nullsFirst: false })
-          .limit(5);
-
-        // Filter by region if available (include national)
-        if (profile.region) {
-          query = query.or(`region.cs.{${profile.region}},region.cs.{National}`);
-        }
-
-        const { data, error } = await query;
-
-        if (error) {
-          console.error('Error fetching recommendations:', error);
-          return;
-        }
-
-        setRecommendedSubsidies((data || []) as Subsidy[]);
-      } catch (err) {
-        console.error('Error fetching recommendations:', err);
-      } finally {
-        setLoadingRecommendations(false);
-      }
-    }
-
-    fetchRecommendations();
-  }, [hasProfile, profile]);
 
   if (profileLoading) {
     return (
@@ -326,10 +290,18 @@ export function DashboardPage() {
       {/* Recommended Subsidies */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-            <Star className="h-5 w-5 text-amber-500" />
-            {hasProfile ? 'Recommandees pour vous' : 'Aides recentes'}
-          </h2>
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+              <Star className="h-5 w-5 text-amber-500" />
+              {hasProfile ? 'Recommandees pour vous' : 'Aides recentes'}
+            </h2>
+            {hasProfile && isAIScored && (
+              <p className="text-xs text-purple-600 flex items-center gap-1 mt-1">
+                <Sparkles className="h-3 w-3" />
+                Score par IA - basé sur les laureats similaires
+              </p>
+            )}
+          </div>
           <Link to="/app/search" className="text-blue-600 hover:underline text-sm flex items-center gap-1">
             Voir tout
             <ArrowRight className="h-4 w-4" />
@@ -349,6 +321,8 @@ export function DashboardPage() {
                 subsidy={subsidy}
                 isSaved={isSaved(subsidy.id)}
                 onToggleSave={toggleSave}
+                matchScore={subsidy.matchScore}
+                matchReasons={subsidy.matchReasons}
               />
             ))}
             <div className="text-center pt-2">

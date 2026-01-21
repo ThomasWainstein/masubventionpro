@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, Building, MapPin, Users, Loader2, X, Activity } from 'lucide-react';
@@ -37,7 +37,7 @@ export function CompanySearch({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     if (!query || query.trim().length < 3) {
       setResults([]);
       setShowResults(false);
@@ -59,40 +59,36 @@ export function CompanySearch({
     } finally {
       setIsSearching(false);
     }
-  };
+  }, [query]);
 
-  const handleInputChange = (value: string) => {
+  const handleInputChange = useCallback((value: string) => {
     setQuery(value);
-
-    if (selectedCompany) {
-      setSelectedCompany(null);
-    }
-
+    setSelectedCompany(null);
     setResults([]);
     setShowResults(false);
     setError(null);
-  };
+  }, []);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       handleSearch();
     }
-  };
+  }, [handleSearch]);
 
-  const handleCompanySelect = (company: CompanySearchResult) => {
+  const handleCompanySelect = useCallback((company: CompanySearchResult) => {
     setSelectedCompany(company);
     setQuery(company.name);
     setShowResults(false);
     onCompanySelect(company);
-  };
+  }, [onCompanySelect]);
 
-  const clearSelection = () => {
+  const clearSelection = useCallback(() => {
     setSelectedCompany(null);
     setQuery('');
     setResults([]);
     setShowResults(false);
-  };
+  }, []);
 
   return (
     <div ref={containerRef} className={`relative ${className}`}>
