@@ -61,98 +61,109 @@ interface UseRecommendedSubsidiesReturn {
   isAIScored: boolean;
 }
 
-const EDGE_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/enhanced-profile-conversation-stream`;
+const V5_MATCHER_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/v5-hybrid-calculate-matches`;
 
 /**
- * Fetch AI-powered recommendations from edge function
+ * V5 Match result from edge function
+ */
+interface V5Match {
+  subsidy_id: string;
+  llm_score: number;
+  sector_fit: number;
+  project_fit: number;
+  eligibility_score: number;
+  explanation: string;
+  concerns: string[];
+  confidence: 'high' | 'medium' | 'low';
+}
+
+/**
+ * Fetch AI-powered recommendations from V5 hybrid matcher
+ * Uses profile_table: 'masubventionpro_profiles' to specify our table
  */
 async function fetchAIRecommendations(
   profileId: string,
   accessToken: string
 ): Promise<ScoredSubsidy[] | null> {
   try {
-    const response = await fetch(EDGE_FUNCTION_URL, {
+    console.log('[V5 Matcher] Calling edge function for profile:', profileId);
+
+    const response = await fetch(V5_MATCHER_URL, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
         apikey: import.meta.env.VITE_SUPABASE_ANON_KEY || '',
-        Accept: 'text/event-stream',
       },
       body: JSON.stringify({
-        message: 'Quelles sont les meilleures aides pour mon profil? Donne-moi les top recommandations.',
-        profileId,
-        conversationHistory: [],
-        sessionId: null,
-        userTier: 'business',
+        profile_id: profileId,
+        profile_table: 'masubventionpro_profiles', // V5.9: Use masubventionpro table
+        skip_llm: true, // Fast response with RRF scoring
+        trigger_async_llm: false, // Don't queue for background LLM
+        force_refresh: false,
       }),
     });
 
     if (!response.ok) {
-      console.warn('AI recommendations fetch failed:', response.status);
+      const errorText = await response.text();
+      console.warn('[V5 Matcher] Request failed:', response.status, errorText);
       return null;
     }
 
-    const reader = response.body?.getReader();
-    if (!reader) return null;
+    const result = await response.json();
 
-    const decoder = new TextDecoder();
-    let profileMatches: ScoredSubsidy[] | null = null;
-
-    // Read stream to get intelligence data
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      const chunk = decoder.decode(value, { stream: true });
-      const lines = chunk.split('\n');
-
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          const data = line.slice(6);
-          if (data === '[DONE]') continue;
-
-          try {
-            const parsed = JSON.parse(data);
-            if (parsed.type === 'done' && parsed.intelligence?.profileMatches?.matches) {
-              // Extract profileMatches from AI response
-              const matches = parsed.intelligence.profileMatches.matches;
-              profileMatches = matches.map((match: any): ScoredSubsidy => ({
-                id: match.id,
-                title: match.title,
-                description: null,
-                agency: match.organization || null,
-                region: [],
-                deadline: match.deadline || null,
-                start_date: null,
-                amount_min: null,
-                amount_max: match.amountMax || null,
-                funding_type: match.fundingType || null,
-                categories: [],
-                primary_sector: null,
-                keywords: null,
-                application_url: null,
-                source_url: null,
-                quality_score: null,
-                status: null,
-                is_active: true,
-                created_at: null,
-                updated_at: null,
-                matchScore: Math.round(match.successProbability || 0),
-                matchReasons: match.successReasons || [],
-                successProbability: match.successProbability,
-              }));
-            }
-          } catch {
-            // Skip invalid JSON
-          }
-        }
-      }
+    if (!result.matches || result.matches.length === 0) {
+      console.log('[V5 Matcher] No matches returned');
+      return null;
     }
 
-    return profileMatches;
+    console.log(`[V5 Matcher] Got ${result.matches.length} matches (version: ${result.version})`);
+
+    // Fetch full subsidy details for the matched IDs
+    const subsidyIds = result.matches.map((m: V5Match) => m.subsidy_id);
+    const { data: subsidies, error: subsidyError } = await supabase
+      .from('subsidies')
+      .select(SUBSIDY_COLUMNS)
+      .in('id', subsidyIds);
+
+    if (subsidyError || !subsidies) {
+      console.warn('[V5 Matcher] Failed to fetch subsidy details:', subsidyError);
+      return null;
+    }
+
+    // Create a map for quick lookup
+    const subsidyMap = new Map(subsidies.map(s => [s.id, s]));
+
+    // Map V5 matches to ScoredSubsidy format
+    const scored: ScoredSubsidy[] = result.matches
+      .map((match: V5Match) => {
+        const subsidy = subsidyMap.get(match.subsidy_id);
+        if (!subsidy) return null;
+
+        // Build match reasons from V5 scores
+        const reasons: string[] = [];
+        if (match.sector_fit >= 70) reasons.push('Secteur excellent');
+        else if (match.sector_fit >= 50) reasons.push('Secteur compatible');
+        if (match.project_fit >= 70) reasons.push('Projet ideal');
+        else if (match.project_fit >= 50) reasons.push('Projet adapte');
+        if (match.eligibility_score >= 70) reasons.push('Eligibilite forte');
+        if (match.confidence === 'high') reasons.push('Confiance elevee');
+
+        return {
+          ...subsidy,
+          matchScore: Math.round(match.llm_score),
+          matchReasons: reasons.length > 0 ? reasons : ['Recommandation IA'],
+          successProbability: match.llm_score,
+          similarityScore: match.sector_fit,
+          marketDensityScore: match.eligibility_score,
+          competitiveDensity: match.confidence,
+        } as ScoredSubsidy;
+      })
+      .filter((s: ScoredSubsidy | null): s is ScoredSubsidy => s !== null);
+
+    return scored;
   } catch (err) {
-    console.warn('AI recommendations error:', err);
+    console.warn('[V5 Matcher] Error:', err);
     return null;
   }
 }

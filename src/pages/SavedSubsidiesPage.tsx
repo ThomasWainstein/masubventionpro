@@ -2,7 +2,10 @@ import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useSavedSubsidies } from '@/hooks/useSavedSubsidies';
+import { useRecommendedSubsidies } from '@/hooks/useRecommendedSubsidies';
+import { useProfile } from '@/contexts/ProfileContext';
 import { getSubsidyTitle, SavedSubsidy } from '@/types';
+import { SubsidyCard } from '@/components/search/SubsidyCard';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -27,6 +30,9 @@ import {
   ChevronDown,
   ChevronUp,
   Save,
+  Sparkles,
+  Star,
+  ArrowRight,
 } from 'lucide-react';
 
 const STATUS_OPTIONS = [
@@ -69,7 +75,16 @@ function getDeadlineStatus(deadline: string | null): {
 
 export function SavedSubsidiesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { savedSubsidies, loading, unsaveSubsidy, updateStatus, updateNotes } = useSavedSubsidies();
+  const { savedSubsidies, loading, unsaveSubsidy, updateStatus, updateNotes, isSaved, toggleSave } = useSavedSubsidies();
+  const { profile, hasProfile } = useProfile();
+
+  // V5 Hybrid Matcher - Profile-based recommendations
+  const {
+    recommendations,
+    loading: loadingRecommendations,
+    isAIScored,
+  } = useRecommendedSubsidies(hasProfile ? profile : null, { limit: 10, useAIScoring: true });
+
   const [expandedNotes, setExpandedNotes] = useState<Set<string>>(new Set());
   const [editingNotes, setEditingNotes] = useState<Record<string, string>>({});
   const [savingNotes, setSavingNotes] = useState<Set<string>>(new Set());
@@ -276,6 +291,60 @@ export function SavedSubsidiesPage() {
         );
       })()}
 
+      {/* AI Recommendations Section */}
+      {hasProfile && recommendations.length > 0 && (
+        <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl border border-purple-200 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                <Star className="h-5 w-5 text-amber-500" />
+                Recommandees pour vous
+              </h2>
+              {isAIScored && (
+                <p className="text-xs text-purple-600 flex items-center gap-1 mt-1">
+                  <Sparkles className="h-3 w-3" />
+                  Score IA V5 - basé sur votre profil entreprise
+                </p>
+              )}
+            </div>
+            <Link to="/app/search" className="text-blue-600 hover:underline text-sm flex items-center gap-1">
+              Voir tout
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          {loadingRecommendations ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
+              <span className="ml-2 text-slate-600">Calcul des recommandations...</span>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {recommendations.slice(0, 5).map((subsidy) => (
+                <SubsidyCard
+                  key={subsidy.id}
+                  subsidy={subsidy}
+                  isSaved={isSaved(subsidy.id)}
+                  onToggleSave={toggleSave}
+                  matchScore={subsidy.matchScore}
+                  matchReasons={subsidy.matchReasons}
+                />
+              ))}
+              {recommendations.length > 5 && (
+                <div className="text-center pt-2">
+                  <Link to="/app/search">
+                    <Button variant="outline" size="sm">
+                      Voir {recommendations.length - 5} autres recommandations
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* List */}
       {loading ? (
         <div className="flex items-center justify-center py-12">
@@ -288,7 +357,9 @@ export function SavedSubsidiesPage() {
           </div>
           <h3 className="text-lg font-semibold text-slate-900">Aucune aide sauvegardee</h3>
           <p className="text-slate-600 mt-2 max-w-md mx-auto">
-            Commencez par rechercher des aides et sauvegardez celles qui vous interessent
+            {hasProfile
+              ? 'Sauvegardez des aides depuis les recommandations ci-dessus ou recherchez-en de nouvelles'
+              : 'Commencez par rechercher des aides et sauvegardez celles qui vous interessent'}
           </p>
           <Link to="/app/search">
             <Button className="mt-4">
