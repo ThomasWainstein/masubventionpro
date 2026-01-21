@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat\\(dashboard\\): add V5 hybrid AI matcher for recommendations\n\nPerformance optimizations:\n- Add React.memo to Input, Textarea, Button components\n- Add useCallback to ProfileForm and CompanySearch handlers\n- Reduce unnecessary re-renders on form input\n\nV5 Hybrid Matcher implementation:\n- Create useRecommendedSubsidies hook with AI-powered scoring\n- Call enhanced-profile-conversation-stream edge function for recommendations\n- Extract profileMatches with successProbability from AI response\n- Fall back to client-side scoring when AI unavailable\n\nClient-side scoring algorithm \\(100 points max\\):\n- Region match \\(30pts\\): User''s region + National fallback\n- Sector match \\(25pts\\): NAF code/label + sector + categories\n- Project types \\(20pts\\): User interests vs subsidy keywords\n- Website intelligence \\(15pts\\): Innovation, sustainability, export scores\n- Timing \\(10pts\\): Deadline proximity sweet spot\n\nDashboard updates:\n- Show \"Score par IA\" indicator when AI scoring used\n- Display match reasons as purple badges on SubsidyCard\n- Show match percentage for high-confidence recommendations\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(npm run build:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat\\(dashboard\\): enhance with dynamic tips, profile completion, and deadline alerts\n\n- Add dynamic tips based on user context \\(profile status, deadlines, saved subsidies\\)\n- Add profile completion percentage with progress bar\n- Add upcoming deadlines alert section \\(30-day window with urgent indicators\\)\n- Improve stats display with funding won highlight and success banner\n- Use getSubsidyTitle helper for proper multilingual title handling\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit:*)"
+    ]
+  }
+}

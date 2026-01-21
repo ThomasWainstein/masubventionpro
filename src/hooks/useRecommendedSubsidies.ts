@@ -158,6 +158,36 @@ async function fetchAIRecommendations(
 }
 
 /**
+ * Sector-specific keywords for better matching
+ */
+const SECTOR_KEYWORDS: Record<string, string[]> = {
+  'agriculture': ['agricole', 'agriculteur', 'exploitation agricole', 'culture', 'elevage', 'ferme', 'agroalimentaire', 'pac', 'foncier agricole', 'semences', 'recolte'],
+  'industrie': ['industriel', 'manufacture', 'production', 'usine', 'fabrication', 'transformation'],
+  'commerce': ['commercial', 'vente', 'distribution', 'retail', 'magasin', 'boutique'],
+  'services': ['prestation', 'conseil', 'service', 'consulting'],
+  'construction': ['batiment', 'btp', 'travaux', 'immobilier', 'renovation'],
+  'transport': ['logistique', 'mobilite', 'vehicule', 'livraison', 'fret'],
+  'numerique': ['digital', 'tech', 'informatique', 'logiciel', 'ia', 'data'],
+  'sante': ['medical', 'soin', 'hopital', 'pharma', 'biotech'],
+  'tourisme': ['hotel', 'restauration', 'voyage', 'loisir', 'hebergement'],
+};
+
+/**
+ * Check if a text contains sector-relevant keywords
+ */
+function hasSectorKeywords(text: string, sector: string): boolean {
+  const sectorLower = sector.toLowerCase();
+  const keywords = SECTOR_KEYWORDS[sectorLower] || [];
+  const textLower = text.toLowerCase();
+
+  // Check main sector term
+  if (textLower.includes(sectorLower)) return true;
+
+  // Check related keywords
+  return keywords.some(kw => textLower.includes(kw));
+}
+
+/**
  * Calculate match score between profile and subsidy
  */
 function calculateMatchScore(
@@ -168,43 +198,84 @@ function calculateMatchScore(
   const reasons: string[] = [];
   const subsidyTitle = getSubsidyTitle(subsidy).toLowerCase();
   const subsidyDesc = getSubsidyDescription(subsidy).toLowerCase();
+  const fullText = `${subsidyTitle} ${subsidyDesc}`;
 
   // 1. Region match (30 points max)
   const subsidyRegions = subsidy.region || [];
-  if (subsidyRegions.includes('National')) {
-    score += 20;
-    reasons.push('Aide nationale');
-  }
+  let hasRegionMatch = false;
+
   if (profile.region && subsidyRegions.includes(profile.region)) {
     score += 30;
     reasons.push(`Region: ${profile.region}`);
+    hasRegionMatch = true;
+  }
+  if (subsidyRegions.includes('National')) {
+    score += hasRegionMatch ? 5 : 15; // Less points for national if already has regional match
+    reasons.push('Aide nationale');
   }
 
-  // 2. Sector match (25 points max)
-  const primarySector = subsidy.primary_sector?.toLowerCase() || '';
-  const categories = (subsidy.categories || []).map(c => c.toLowerCase());
+  // 2. Sector match (30 points max) - STRICTER MATCHING
+  const primarySector = subsidy.primary_sector?.toLowerCase().trim() || '';
+  const categories = (subsidy.categories || []).map(c => c.toLowerCase().trim()).filter(c => c.length > 0);
+  let sectorMatched = false;
 
-  // Match by NAF code/label
-  if (profile.naf_label) {
-    const nafLabel = profile.naf_label.toLowerCase();
-    if (primarySector.includes(nafLabel) || nafLabel.includes(primarySector)) {
+  // Match by profile sector with keyword validation
+  if (profile.sector && !sectorMatched) {
+    const sector = profile.sector.toLowerCase();
+
+    // Check if subsidy explicitly targets this sector
+    const sectorInPrimary = primarySector.length > 2 && (
+      primarySector === sector ||
+      primarySector.includes(sector) ||
+      hasSectorKeywords(primarySector, sector)
+    );
+
+    const sectorInCategories = categories.some(c =>
+      c === sector ||
+      c.includes(sector) ||
+      hasSectorKeywords(c, sector)
+    );
+
+    // Also check title and description for sector keywords
+    const sectorInContent = hasSectorKeywords(fullText, sector);
+
+    if (sectorInPrimary) {
+      score += 30;
+      reasons.push(`Secteur: ${profile.sector}`);
+      sectorMatched = true;
+    } else if (sectorInCategories && sectorInContent) {
+      // Need both category match AND content keywords for confidence
       score += 25;
-      reasons.push('Secteur NAF correspondant');
-    } else if (categories.some(c => nafLabel.includes(c) || c.includes(nafLabel))) {
-      score += 20;
-      reasons.push('Categorie sectorielle');
+      reasons.push(`Categorie: ${profile.sector}`);
+      sectorMatched = true;
+    } else if (sectorInContent) {
+      // Content match only - lower confidence
+      score += 15;
+      reasons.push('Secteur compatible');
+      sectorMatched = true;
     }
   }
 
-  // Match by sector
-  if (profile.sector) {
-    const sector = profile.sector.toLowerCase();
-    if (primarySector.includes(sector) || sector.includes(primarySector)) {
-      score += 20;
-      reasons.push(`Secteur: ${profile.sector}`);
-    } else if (categories.some(c => sector.includes(c) || c.includes(sector))) {
+  // Match by NAF label (more specific than sector)
+  if (profile.naf_label && !sectorMatched) {
+    const nafLabel = profile.naf_label.toLowerCase();
+    // Extract key terms from NAF label (e.g., "Culture de plantes" -> ["culture", "plantes"])
+    const nafTerms = nafLabel.split(/[\s,]+/).filter(t => t.length > 3);
+
+    // Check if multiple NAF terms appear in subsidy content
+    const nafMatchCount = nafTerms.filter(term =>
+      fullText.includes(term) ||
+      categories.some(c => c.includes(term))
+    ).length;
+
+    if (nafMatchCount >= 2) {
+      score += 25;
+      reasons.push('Activite NAF correspondante');
+      sectorMatched = true;
+    } else if (nafMatchCount === 1 && primarySector.length > 2) {
       score += 15;
-      reasons.push('Secteur compatible');
+      reasons.push('Secteur NAF proche');
+      sectorMatched = true;
     }
   }
 
@@ -327,14 +398,19 @@ export function useRecommendedSubsidies(
         const accessToken = sessionData?.session?.access_token;
 
         if (accessToken) {
+          console.log('[Recommendations] Trying AI scoring for profile:', profile.id);
           const aiRecommendations = await fetchAIRecommendations(profile.id, accessToken);
 
           if (aiRecommendations && aiRecommendations.length > 0) {
+            console.log('[Recommendations] AI scoring succeeded with', aiRecommendations.length, 'results');
             setRecommendations(aiRecommendations.slice(0, limit));
             setIsAIScored(true);
             setLoading(false);
             return;
           }
+          console.log('[Recommendations] AI scoring returned no results, falling back to client-side');
+        } else {
+          console.log('[Recommendations] No access token, skipping AI scoring');
         }
       }
 
@@ -377,10 +453,16 @@ export function useRecommendedSubsidies(
         // Sort by score (descending) and take top results
         scored.sort((a, b) => b.matchScore - a.matchScore);
 
-        // Filter out very low scores (less than 15 points = basically no match)
-        const filtered = scored.filter(s => s.matchScore >= 15);
+        // Filter out low scores - require at least 30 points for a meaningful match
+        // (region match + some sector relevance)
+        const filtered = scored.filter(s => s.matchScore >= 30);
 
-        setRecommendations(filtered.slice(0, limit));
+        // If no good matches, show top results but with lower threshold
+        const results = filtered.length > 0
+          ? filtered.slice(0, limit)
+          : scored.filter(s => s.matchScore >= 20).slice(0, limit);
+
+        setRecommendations(results);
       } else {
         // No scoring, just return raw results
         setRecommendations(subsidies.slice(0, limit).map(s => ({
