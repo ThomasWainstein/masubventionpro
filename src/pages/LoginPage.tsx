@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { supabase } from "@/lib/supabase"
-import { Loader2, ArrowRight } from "lucide-react"
+import { Loader2, ArrowRight, ArrowLeft } from "lucide-react"
 
 const LoginPage = () => {
   const navigate = useNavigate()
@@ -88,10 +88,19 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 py-12 px-4 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 py-12 px-4 flex items-center justify-center relative">
       <Helmet>
         <title>Connexion - MaSubventionPro</title>
       </Helmet>
+
+      {/* Back Arrow */}
+      <Link
+        to="/"
+        className="absolute top-6 left-6 text-white/70 hover:text-white transition-colors flex items-center gap-2"
+      >
+        <ArrowLeft className="w-5 h-5" />
+        <span className="text-sm font-medium">Retour</span>
+      </Link>
 
       <div className="w-full max-w-md">
         {/* Logo */}

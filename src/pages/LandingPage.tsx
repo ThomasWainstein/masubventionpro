@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase"
 import { Menu, X } from "lucide-react"
 
 /**
- * MaSubventionPro Landing Page v5
+ * MaSubventionPro Landing Page v6
  * Complete redesign with simulator, use cases, features, videos, pricing, and security sections
  */
 const LandingPage = () => {
@@ -138,12 +138,21 @@ const LandingPage = () => {
             {/* Hero Text */}
             <div>
               <h1 className="text-4xl lg:text-[3.5rem] font-extrabold leading-[1.1] mb-6">
-                Identifiez <span className="bg-gradient-to-br from-amber-500 to-amber-300 bg-clip-text text-transparent">TOUTES</span> vos aides publiques avec l'IA la plus puissante du marché
+                Identifiez <span className="bg-gradient-to-br from-amber-500 to-amber-300 bg-clip-text text-transparent">TOUTES</span> vos aides publiques avec une IA puissante
               </h1>
-              <p className="text-xl opacity-90 leading-relaxed mb-8">
-                La seule plateforme qui analyse 10 000+ dispositifs d'aides en temps réel. Créateurs, repreneurs, dirigeants : des millions d'euros d'opportunités vous attendent.
+              <p className="text-xl opacity-90 leading-relaxed mb-6">
+                Une plateforme qui analyse 10 000+ dispositifs d'aides en temps réel. Créateurs, repreneurs, dirigeants : des millions d'euros d'opportunités vous attendent.
               </p>
-              <div className="flex flex-wrap gap-4 mt-8">
+
+              {/* Data Promise Box */}
+              <div className="bg-emerald-500/15 border-2 border-emerald-500/30 px-6 py-5 rounded-xl mb-6">
+                <h4 className="text-lg font-bold text-emerald-400 mb-2">VOS DONNÉES VOUS APPARTIENNENT</h4>
+                <p className="text-base opacity-95 leading-relaxed">
+                  Aucune utilisation commerciale. Aucun partage. Aucune revente. Vos informations sont utilisées UNIQUEMENT pour vous fournir le service souscrit. Point final.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-4">
                 <span className="bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full text-sm font-semibold border border-white/20">
                   🗄️ {subsidyCount} dispositifs
                 </span>
@@ -154,7 +163,7 @@ const LandingPage = () => {
                   🇫🇷 Commune → Europe
                 </span>
                 <span className="bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full text-sm font-semibold border border-white/20">
-                  🤖 IA Claude + Gemini + GPT
+                  🤖 Assistant IA personnalisé
                 </span>
               </div>
             </div>
@@ -166,9 +175,9 @@ const LandingPage = () => {
                   SIMULATION GRATUITE
                 </span>
                 <h3 className="text-2xl font-bold text-slate-900 mb-2">
-                  Découvrez vos aides en 3 minutes
+                  Découvrez vos aides en quelques minutes
                 </h3>
-                <p className="text-slate-500 text-sm">Aucune carte bancaire requise</p>
+                <p className="text-slate-500 text-sm">Vos données restent confidentielles, plus votre profil est complet, vous obtenez une meilleure analyse</p>
               </div>
 
               <form onSubmit={handleSimulatorSubmit}>
@@ -311,11 +320,12 @@ const LandingPage = () => {
       <section className="bg-slate-50 py-12 px-8 text-center">
         <div className="max-w-[1400px] mx-auto">
           <h3 className="text-2xl font-bold text-slate-900 mb-2">
-            La base de données la plus complète du marché
+            Une base de données complète
           </h3>
-          <p className="text-slate-500 text-lg">
-            Aucune autre solution n'offre une telle exhaustivité. C'est notre avantage compétitif infranchissable.
-          </p>
+          <div className="flex items-center justify-center gap-3 text-slate-500">
+            <span>Propulsé par</span>
+            <span className="text-2xl font-bold text-blue-800">subvention360</span>
+          </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mt-8">
             <div className="p-6 bg-white rounded-xl shadow-sm">
               <span className="text-4xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
@@ -325,21 +335,21 @@ const LandingPage = () => {
             </div>
             <div className="p-6 bg-white rounded-xl shadow-sm">
               <span className="text-4xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
-                35 000+
-              </span>
-              <p className="text-slate-500 font-semibold text-sm">Sources officielles scannées</p>
-            </div>
-            <div className="p-6 bg-white rounded-xl shadow-sm">
-              <span className="text-4xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
                 Quotidien
               </span>
               <p className="text-slate-500 font-semibold text-sm">Mise à jour des données</p>
             </div>
             <div className="p-6 bg-white rounded-xl shadow-sm">
               <span className="text-4xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
-                23 Mds€
+                National
               </span>
-              <p className="text-slate-500 font-semibold text-sm">Aides non réclamées/an</p>
+              <p className="text-slate-500 font-semibold text-sm">Commune → Europe</p>
+            </div>
+            <div className="p-6 bg-white rounded-xl shadow-sm">
+              <span className="text-4xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
+                BPI, ADEME...
+              </span>
+              <p className="text-slate-500 font-semibold text-sm">Sources officielles</p>
             </div>
           </div>
         </div>
@@ -379,7 +389,7 @@ const LandingPage = () => {
         <div className="max-w-[1400px] mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-extrabold text-slate-900 mb-4">
-              Une technologie sans équivalent
+              Une technologie avancée
             </h2>
             <p className="text-xl text-slate-500">
               Propulsée par Subvention360, la référence des professionnels du financement
@@ -512,7 +522,7 @@ const LandingPage = () => {
                   "Rapport PDF détaillé téléchargeable",
                   "Scores d'éligibilité personnalisés",
                   "Montants historiques réels",
-                  "5 consultations Assistant IA expert",
+                  "Assistant IA expert",
                   "Accès 30 jours",
                 ].map((item, j, arr) => (
                   <li key={j} className={`py-3.5 flex items-start gap-3 text-sm ${j < arr.length - 1 ? 'border-b border-slate-200' : ''}`}>
@@ -542,14 +552,13 @@ const LandingPage = () => {
               </div>
               <ul className="space-y-0">
                 {[
-                  "5 simulations par an",
-                  "5 rapports PDF détaillés",
+                  "Connexion 1 an et actualisation illimitée",
+                  "Rapports PDF détaillés",
                   "Assistant IA expert ILLIMITÉ",
                   "Moteur de recherche complet (10 000+ aides)",
                   "Alertes mensuelles personnalisées par email",
                   "Notifications nouveaux dispositifs",
                   "Historique et suivi de vos aides",
-                  "Support prioritaire",
                 ].map((item, j, arr) => (
                   <li key={j} className={`py-3.5 flex items-start gap-3 text-sm ${j < arr.length - 1 ? 'border-b border-slate-200' : ''}`}>
                     <span className="text-emerald-600 font-extrabold text-xl flex-shrink-0">✓</span>
@@ -565,25 +574,22 @@ const LandingPage = () => {
               </button>
             </div>
 
-            {/* Premium */}
+            {/* Premium Groupe */}
             <div className="bg-white border-[3px] border-slate-200 rounded-3xl p-10 relative hover:-translate-y-2 hover:shadow-xl transition-all">
-              <h3 className="text-2xl font-bold text-slate-900">Premium</h3>
-              <p className="text-slate-500 mt-1">Accompagnement sur-mesure</p>
+              <h3 className="text-2xl font-bold text-slate-900">Premium Groupe</h3>
+              <p className="text-slate-500 mt-1">Pour holdings et groupes multi-sociétés</p>
               <div className="my-6">
                 <span className="text-6xl font-extrabold text-blue-800">299€</span>
                 <div className="text-lg text-slate-500">par an</div>
+                <div className="text-sm text-slate-500 mt-1">+ 29€ par pack de 10 sociétés supplémentaires</div>
               </div>
               <ul className="space-y-0">
                 {[
-                  <><strong>Simulations ILLIMITÉES</strong></>,
-                  "Rapports PDF illimités",
-                  "Assistant IA expert illimité",
-                  "Accès complet moteur de recherche",
-                  "Alertes hebdomadaires ultra-personnalisées",
-                  "Accompagnement prioritaire par expert",
-                  "Revue trimestrielle de votre stratégie",
-                  "Aide au montage de dossiers",
-                  "Support dédié 7j/7",
+                  <><strong>Multi-sites (10 sociétés incluses)</strong></>,
+                  "Recherches illimitées",
+                  "Assistant IA contextuel",
+                  "Rapports white-label",
+                  "Support prioritaire",
                 ].map((item, j, arr) => (
                   <li key={j} className={`py-3.5 flex items-start gap-3 text-sm ${j < arr.length - 1 ? 'border-b border-slate-200' : ''}`}>
                     <span className="text-emerald-600 font-extrabold text-xl flex-shrink-0">✓</span>
@@ -595,7 +601,7 @@ const LandingPage = () => {
                 onClick={() => navigate("/signup?plan=premium")}
                 className="w-full mt-6 px-8 py-4 bg-white text-blue-800 border-2 border-blue-800 rounded-lg font-semibold text-lg hover:-translate-y-0.5 transition-all"
               >
-                Choisir Premium
+                Choisir Premium Groupe
               </button>
             </div>
           </div>
@@ -632,7 +638,7 @@ const LandingPage = () => {
               {
                 icon: "🇪🇺",
                 title: "100% conforme RGPD",
-                desc: "Respect total du règlement européen. DPO dédié. Hébergement France/UE exclusivement. Certifications ISO 27001 et HDS.",
+                desc: "Respect total du règlement européen. Protection des données. Hébergement France/UE exclusivement.",
               },
               {
                 icon: "🤖",
@@ -658,12 +664,12 @@ const LandingPage = () => {
       {/* Footer */}
       <footer className="bg-slate-900 text-white py-16 px-8">
         <div className="max-w-[1400px] mx-auto">
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
+          <div className="grid md:grid-cols-2 lg:grid-cols-6 gap-12 mb-12">
             {/* Brand */}
             <div className="lg:col-span-2">
               <h4 className="text-2xl font-bold mb-4">MaSubventionPro</h4>
               <p className="text-white/70 leading-relaxed mb-6">
-                La plateforme d'intelligence artificielle qui identifie toutes vos aides publiques. Propulsée par Subvention360, la référence des professionnels du financement.
+                La plateforme d'intelligence artificielle qui identifie toutes vos aides publiques. Propulsée par subvention360, la référence des professionnels du financement.
               </p>
               <p className="font-semibold">
                 📧 contact@masubventionpro.com<br />
@@ -703,16 +709,26 @@ const LandingPage = () => {
                 <a href="#cgu" className="block text-white/70 hover:text-white transition-colors">Cookies</a>
               </div>
             </div>
+
+            {/* Professionnels */}
+            <div>
+              <h5 className="text-lg font-semibold mb-4">Professionnels</h5>
+              <div className="space-y-3">
+                <a href="https://subvention360.com" target="_blank" rel="noopener noreferrer" className="block text-white/70 hover:text-white transition-colors">subvention360 Pro</a>
+                <a href="#" className="block text-white/70 hover:text-white transition-colors">Devenir partenaire</a>
+                <a href="#" className="block text-white/70 hover:text-white transition-colors">API</a>
+                <a href="#" className="block text-white/70 hover:text-white transition-colors">Affiliation</a>
+              </div>
+            </div>
           </div>
 
           <div className="border-t border-white/10 pt-8 text-center">
             <p className="text-white/50 text-sm">
-              © 2026 MaSubventionPro. Tous droits réservés. | Propulsé par Subvention360
+              © 2026 MaSubventionPro. Tous droits réservés. | Propulsé par subvention360
             </p>
             <div className="flex flex-wrap gap-4 justify-center mt-4">
               <span className="bg-white/10 px-4 py-2 rounded-full text-sm">🔒 Données hébergées en France</span>
               <span className="bg-white/10 px-4 py-2 rounded-full text-sm">🇪🇺 100% conforme RGPD</span>
-              <span className="bg-white/10 px-4 py-2 rounded-full text-sm">🛡️ Certifié ISO 27001</span>
               <span className="bg-white/10 px-4 py-2 rounded-full text-sm">✓ Conforme IA Act</span>
             </div>
           </div>
