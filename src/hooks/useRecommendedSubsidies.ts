@@ -50,6 +50,63 @@ interface UseRecommendedSubsidiesOptions {
   enableScoring?: boolean;
   /** Use AI-powered scoring via edge function (requires auth) */
   useAIScoring?: boolean;
+  /** Skip cache and force fresh calculation */
+  forceRefresh?: boolean;
+}
+
+// Cache configuration
+const CACHE_KEY_PREFIX = 'masubventionpro_recommendations_';
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
+interface CachedRecommendations {
+  recommendations: ScoredSubsidy[];
+  timestamp: number;
+  profileId: string;
+  isAIScored: boolean;
+}
+
+/**
+ * Get cached recommendations from sessionStorage
+ */
+function getCachedRecommendations(profileId: string): CachedRecommendations | null {
+  try {
+    const cached = sessionStorage.getItem(CACHE_KEY_PREFIX + profileId);
+    if (!cached) return null;
+
+    const data: CachedRecommendations = JSON.parse(cached);
+    const age = Date.now() - data.timestamp;
+
+    // Check if cache is still valid
+    if (age > CACHE_TTL_MS) {
+      sessionStorage.removeItem(CACHE_KEY_PREFIX + profileId);
+      return null;
+    }
+
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Save recommendations to sessionStorage cache
+ */
+function setCachedRecommendations(
+  profileId: string,
+  recommendations: ScoredSubsidy[],
+  isAIScored: boolean
+): void {
+  try {
+    const data: CachedRecommendations = {
+      recommendations,
+      timestamp: Date.now(),
+      profileId,
+      isAIScored,
+    };
+    sessionStorage.setItem(CACHE_KEY_PREFIX + profileId, JSON.stringify(data));
+  } catch {
+    // sessionStorage might be full or disabled - ignore
+  }
 }
 
 interface UseRecommendedSubsidiesReturn {
@@ -386,17 +443,32 @@ export function useRecommendedSubsidies(
   profile: MaSubventionProProfile | null,
   options: UseRecommendedSubsidiesOptions = {}
 ): UseRecommendedSubsidiesReturn {
-  const { limit = 10, enableScoring = true, useAIScoring = true } = options;
+  const { limit = 10, enableScoring = true, useAIScoring = true, forceRefresh = false } = options;
 
   const [recommendations, setRecommendations] = useState<ScoredSubsidy[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isAIScored, setIsAIScored] = useState(false);
 
-  const fetchRecommendations = useCallback(async () => {
+  const fetchRecommendations = useCallback(async (skipCache = false) => {
     if (!profile) {
       setRecommendations([]);
       return;
+    }
+
+    // Check cache first (unless force refresh requested)
+    if (!skipCache && !forceRefresh && profile.id) {
+      const cached = getCachedRecommendations(profile.id);
+      if (cached) {
+        console.log('[Recommendations] Using cached data', {
+          age: Math.round((Date.now() - cached.timestamp) / 1000) + 's',
+          count: cached.recommendations.length,
+          isAIScored: cached.isAIScored,
+        });
+        setRecommendations(cached.recommendations.slice(0, limit));
+        setIsAIScored(cached.isAIScored);
+        return;
+      }
     }
 
     setLoading(true);
@@ -415,6 +487,8 @@ export function useRecommendedSubsidies(
 
           if (aiRecommendations && aiRecommendations.length > 0) {
             console.log('[Recommendations] AI scoring succeeded with', aiRecommendations.length, 'results');
+            // Cache the results
+            setCachedRecommendations(profile.id, aiRecommendations, true);
             setRecommendations(aiRecommendations.slice(0, limit));
             setIsAIScored(true);
             setLoading(false);
@@ -474,14 +548,22 @@ export function useRecommendedSubsidies(
           ? filtered.slice(0, limit)
           : scored.filter(s => s.matchScore >= 20).slice(0, limit);
 
+        // Cache client-side results too
+        if (profile.id) {
+          setCachedRecommendations(profile.id, results, false);
+        }
         setRecommendations(results);
       } else {
         // No scoring, just return raw results
-        setRecommendations(subsidies.slice(0, limit).map(s => ({
+        const results = subsidies.slice(0, limit).map(s => ({
           ...s,
           matchScore: 0,
           matchReasons: [],
-        })));
+        }));
+        if (profile.id) {
+          setCachedRecommendations(profile.id, results, false);
+        }
+        setRecommendations(results);
       }
     } catch (err: any) {
       console.error('Recommendation fetch error:', err);
@@ -497,11 +579,16 @@ export function useRecommendedSubsidies(
     fetchRecommendations();
   }, [fetchRecommendations]);
 
+  // Refresh function that bypasses cache
+  const refresh = useCallback(() => {
+    return fetchRecommendations(true);
+  }, [fetchRecommendations]);
+
   return {
     recommendations,
     loading,
     error,
-    refresh: fetchRecommendations,
+    refresh,
     isAIScored,
   };
 }
