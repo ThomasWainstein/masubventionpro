@@ -79,14 +79,30 @@ export interface ChatIntelligence {
   };
 }
 
+// Conversation from database
+interface DbConversation {
+  id: string;
+  user_id: string;
+  title: string;
+  messages: any[];
+  is_archived: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 interface UseStreamingAIReturn {
   messages: ChatMessage[];
   isStreaming: boolean;
   error: string | null;
   intelligence: ChatIntelligence | null;
+  conversationId: string | null;
+  conversations: DbConversation[];
   sendMessage: (content: string, profileId: string) => Promise<void>;
   clearMessages: () => void;
   loadConversation: (profileId: string) => void;
+  loadConversationById: (conversationId: string) => Promise<void>;
+  loadConversationList: () => Promise<void>;
+  createNewConversation: () => void;
 }
 
 const EDGE_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/enhanced-profile-conversation-stream`;
@@ -101,10 +117,15 @@ export function useStreamingAI(): UseStreamingAIReturn {
   // Use conversation memory for persistence
   const {
     messages,
+    conversationId,
+    conversations,
     addMessage,
     updateLastMessage,
     clearMessages: clearStoredMessages,
     loadMessages,
+    loadConversationById,
+    loadConversationList,
+    createNewConversation,
   } = useConversationMemory();
 
   // Load conversation for a profile
@@ -274,9 +295,14 @@ export function useStreamingAI(): UseStreamingAIReturn {
     isStreaming,
     error,
     intelligence,
+    conversationId,
+    conversations,
     sendMessage,
     clearMessages,
     loadConversation,
+    loadConversationById,
+    loadConversationList,
+    createNewConversation,
   };
 }
 

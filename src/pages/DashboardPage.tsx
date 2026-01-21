@@ -166,35 +166,31 @@ export function DashboardPage() {
 
   const dynamicTip = getDynamicTip();
 
-  // Calculate profile completion percentage
+  // Calculate profile completion percentage (same logic as ProfilePage)
   const calculateProfileCompletion = () => {
     if (!profile) return 0;
 
     const fields = [
-      { key: 'company_name', weight: 15 },
-      { key: 'siren', weight: 10 },
-      { key: 'region', weight: 10 },
-      { key: 'sector', weight: 10 },
-      { key: 'naf_code', weight: 10 },
-      { key: 'employees', weight: 10 },
-      { key: 'annual_revenue', weight: 10 },
-      { key: 'project_types', weight: 10, isArray: true },
-      { key: 'description', weight: 5 },
-      { key: 'website', weight: 5 },
-      { key: 'website_intelligence', weight: 5 },
+      'company_name',
+      'siret',
+      'sector',
+      'region',
+      'employees',
+      'legal_form',
+      'year_created',
+      'naf_code',
+      'website_url',
+      'description',
     ];
 
-    let completed = 0;
-    fields.forEach(field => {
-      const value = (profile as any)[field.key];
-      if (field.isArray) {
-        if (Array.isArray(value) && value.length > 0) completed += field.weight;
-      } else if (value && value !== '') {
-        completed += field.weight;
-      }
+    const filled = fields.filter((field) => {
+      const value = (profile as any)[field];
+      if (value === null || value === undefined || value === '') return false;
+      if (typeof value === 'string' && value.trim() === '') return false;
+      return true;
     });
 
-    return Math.min(100, completed);
+    return Math.round((filled.length / fields.length) * 100);
   };
 
   const profileCompletion = calculateProfileCompletion();
@@ -273,7 +269,7 @@ export function DashboardPage() {
       )}
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         {/* Saved Subsidies */}
         <Link
           to="/app/saved"
@@ -286,38 +282,6 @@ export function DashboardPage() {
             <div>
               <p className="text-xs text-slate-500">Sauvegardees</p>
               <p className="text-2xl font-bold text-slate-900">{stats.saved}</p>
-            </div>
-          </div>
-        </Link>
-
-        {/* Applications Sent */}
-        <Link
-          to="/app/saved?status=applied"
-          className="bg-white rounded-xl border border-slate-200 p-5 hover:border-amber-300 hover:shadow-sm transition-all"
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 bg-amber-100 rounded-lg">
-              <Send className="h-5 w-5 text-amber-600" />
-            </div>
-            <div>
-              <p className="text-xs text-slate-500">Candidatures</p>
-              <p className="text-2xl font-bold text-slate-900">{stats.applied}</p>
-            </div>
-          </div>
-        </Link>
-
-        {/* Funding Won - Count */}
-        <Link
-          to="/app/saved?status=received"
-          className="bg-white rounded-xl border border-slate-200 p-5 hover:border-emerald-300 hover:shadow-sm transition-all"
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 bg-emerald-100 rounded-lg">
-              <Trophy className="h-5 w-5 text-emerald-600" />
-            </div>
-            <div>
-              <p className="text-xs text-slate-500">Obtenues</p>
-              <p className="text-2xl font-bold text-slate-900">{stats.received}</p>
             </div>
           </div>
         </Link>

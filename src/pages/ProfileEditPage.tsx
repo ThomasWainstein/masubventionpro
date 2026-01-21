@@ -11,7 +11,7 @@ export function ProfileEditPage() {
   const navigate = useNavigate();
   const { profile, loading, updateProfile, createProfile, hasProfile } = useProfile();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [showSuccess] = useState(false);
 
   const handleSubmit = async (data: Partial<MaSubventionProProfile>) => {
     setIsSubmitting(true);
@@ -21,11 +21,10 @@ export function ProfileEditPage() {
       } else {
         await createProfile(data);
       }
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
+      // Navigate back to profile page after successful save
+      navigate('/app/profile');
     } catch (error) {
       console.error('Error saving profile:', error);
-    } finally {
       setIsSubmitting(false);
     }
   };

@@ -62,6 +62,7 @@ export function ProfilePage() {
 
   // Calculate profile completeness
   const completeness = calculateCompleteness(profile);
+  const missingFields = getMissingFields(profile);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -90,37 +91,56 @@ export function ProfilePage() {
         </Link>
       </div>
 
-      {/* Profile Completeness */}
-      <div className="bg-white rounded-xl border border-slate-200 p-5">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            {completeness >= 80 ? (
-              <CheckCircle className="h-5 w-5 text-emerald-500" />
-            ) : (
-              <AlertCircle className="h-5 w-5 text-amber-500" />
-            )}
-            <span className="font-medium text-slate-900">Completude du profil</span>
+      {/* Profile Completeness - compact when 100% */}
+      {completeness === 100 ? (
+        <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-sm font-medium border border-emerald-200">
+          <CheckCircle className="h-4 w-4" />
+          Profil complet
+        </div>
+      ) : (
+        <div className="bg-white rounded-xl border border-slate-200 p-5">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              {completeness >= 80 ? (
+                <CheckCircle className="h-5 w-5 text-emerald-500" />
+              ) : (
+                <AlertCircle className="h-5 w-5 text-amber-500" />
+              )}
+              <span className="font-medium text-slate-900">Completude du profil</span>
+            </div>
+            <span className="text-sm font-semibold text-slate-700">{completeness}%</span>
           </div>
-          <span className="text-sm font-semibold text-slate-700">{completeness}%</span>
+          <div className="w-full bg-slate-100 rounded-full h-2">
+            <div
+              className={`h-2 rounded-full transition-all ${
+                completeness >= 80
+                  ? 'bg-emerald-500'
+                  : completeness >= 50
+                  ? 'bg-amber-500'
+                  : 'bg-red-500'
+              }`}
+              style={{ width: `${completeness}%` }}
+            />
+          </div>
+          {missingFields.length > 0 && (
+            <div className="mt-3">
+              <p className="text-sm text-slate-500 mb-2">
+                Champs manquants :
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {missingFields.map((field) => (
+                  <span
+                    key={field}
+                    className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200"
+                  >
+                    {field}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-        <div className="w-full bg-slate-100 rounded-full h-2">
-          <div
-            className={`h-2 rounded-full transition-all ${
-              completeness >= 80
-                ? 'bg-emerald-500'
-                : completeness >= 50
-                ? 'bg-amber-500'
-                : 'bg-red-500'
-            }`}
-            style={{ width: `${completeness}%` }}
-          />
-        </div>
-        {completeness < 80 && (
-          <p className="text-sm text-slate-500 mt-2">
-            Completez votre profil pour ameliorer la pertinence des recommandations
-          </p>
-        )}
-      </div>
+      )}
 
       {/* AI Enrichment Section */}
       <ProfileEnrichmentSection />
@@ -340,26 +360,35 @@ function InfoItem({ icon: Icon, label, value, isLink }: InfoItemProps) {
   );
 }
 
-function calculateCompleteness(profile: any): number {
-  const fields = [
-    'company_name',
-    'siret',
-    'sector',
-    'region',
-    'employees',
-    'legal_form',
-    'year_created',
-    'naf_code',
-    'website_url',
-    'description',
-  ];
+const PROFILE_FIELDS = [
+  { key: 'company_name', label: 'Nom de l\'entreprise' },
+  { key: 'siret', label: 'SIRET' },
+  { key: 'sector', label: 'Secteur d\'activite' },
+  { key: 'region', label: 'Region' },
+  { key: 'employees', label: 'Nombre de salaries' },
+  { key: 'legal_form', label: 'Forme juridique' },
+  { key: 'year_created', label: 'Annee de creation' },
+  { key: 'naf_code', label: 'Code NAF' },
+  { key: 'website_url', label: 'Site web' },
+  { key: 'description', label: 'Description' },
+];
 
-  const filled = fields.filter((field) => {
-    const value = profile[field];
+function calculateCompleteness(profile: any): number {
+  const filled = PROFILE_FIELDS.filter((field) => {
+    const value = profile[field.key];
     return value !== null && value !== undefined && value !== '';
   });
 
-  return Math.round((filled.length / fields.length) * 100);
+  return Math.round((filled.length / PROFILE_FIELDS.length) * 100);
+}
+
+function getMissingFields(profile: any): string[] {
+  return PROFILE_FIELDS
+    .filter((field) => {
+      const value = profile[field.key];
+      return value === null || value === undefined || value === '';
+    })
+    .map((field) => field.label);
 }
 
 function formatSector(sectorValue: string | null | undefined): string | null {
