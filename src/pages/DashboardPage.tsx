@@ -8,12 +8,14 @@ import { useRecommendedSubsidies } from '@/hooks/useRecommendedSubsidies';
 import { Button } from '@/components/ui/button';
 import { SubsidyCard } from '@/components/search/SubsidyCard';
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed';
+import { getSubsidyTitle } from '@/types';
 import {
   Search,
   Building2,
   Bookmark,
   ArrowRight,
   AlertCircle,
+  AlertTriangle,
   Loader2,
   TrendingUp,
   Clock,
@@ -23,6 +25,7 @@ import {
   Trophy,
   Euro,
   Bell,
+  CalendarClock,
 } from 'lucide-react';
 
 export function DashboardPage() {
@@ -67,6 +70,134 @@ export function DashboardPage() {
     }
     return `${amount} EUR`;
   };
+
+  // Calculate upcoming deadlines from saved subsidies
+  const upcomingDeadlines = savedSubsidies
+    .filter(s => {
+      if (!s.subsidy?.deadline) return false;
+      const deadline = new Date(s.subsidy.deadline);
+      const now = new Date();
+      const daysUntil = Math.ceil((deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+      return daysUntil > 0 && daysUntil <= 30 && s.status !== 'received' && s.status !== 'rejected';
+    })
+    .sort((a, b) => new Date(a.subsidy!.deadline!).getTime() - new Date(b.subsidy!.deadline!).getTime());
+
+  // Dynamic tips based on user context
+  const getDynamicTip = () => {
+    // Priority 1: No profile - encourage completion
+    if (!hasProfile) {
+      return {
+        icon: Building2,
+        title: 'Completez votre profil',
+        message: 'Pour recevoir des recommandations d\'aides personnalisees et pertinentes, completez les informations de votre entreprise.',
+        actionText: 'Completer mon profil',
+        actionLink: '/app/profile/setup',
+      };
+    }
+
+    // Priority 2: Upcoming deadlines
+    if (upcomingDeadlines.length > 0) {
+      const nextDeadline = upcomingDeadlines[0];
+      const deadline = new Date(nextDeadline.subsidy!.deadline!);
+      const daysUntil = Math.ceil((deadline.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+      const subsidyTitle = nextDeadline.subsidy ? getSubsidyTitle(nextDeadline.subsidy) : 'Aide';
+      return {
+        icon: Clock,
+        title: `Deadline dans ${daysUntil} jour${daysUntil > 1 ? 's' : ''}`,
+        message: `Votre aide "${subsidyTitle.substring(0, 50)}${subsidyTitle.length > 50 ? '...' : ''}" arrive a echeance bientot. N'oubliez pas de soumettre votre candidature.`,
+        actionText: 'Voir les details',
+        actionLink: `/app/subsidy/${nextDeadline.subsidy_id}`,
+      };
+    }
+
+    // Priority 3: No saved subsidies - encourage exploration
+    if (savedSubsidies.length === 0) {
+      return {
+        icon: Search,
+        title: 'Explorez les aides disponibles',
+        message: 'Commencez par rechercher des aides adaptees a votre entreprise et sauvegardez celles qui vous interessent.',
+        actionText: 'Rechercher des aides',
+        actionLink: '/app/search',
+      };
+    }
+
+    // Priority 4: Saved but no applications
+    if (stats.applied === 0 && stats.saved > 0) {
+      return {
+        icon: Send,
+        title: 'Passez a l\'action',
+        message: `Vous avez ${stats.saved} aide${stats.saved > 1 ? 's' : ''} sauvegardee${stats.saved > 1 ? 's' : ''}. Mettez a jour leur statut quand vous soumettez vos candidatures.`,
+        actionText: 'Voir mes aides',
+        actionLink: '/app/saved',
+      };
+    }
+
+    // Priority 5: Applications in progress
+    if (stats.applied > 0 && stats.received === 0) {
+      return {
+        icon: TrendingUp,
+        title: 'Candidatures en cours',
+        message: `Vous avez ${stats.applied} candidature${stats.applied > 1 ? 's' : ''} en cours. Pensez a suivre leur avancement et mettre a jour leur statut.`,
+        actionText: 'Suivre mes candidatures',
+        actionLink: '/app/saved?status=applied',
+      };
+    }
+
+    // Priority 6: Success - celebrate and encourage more
+    if (stats.received > 0) {
+      return {
+        icon: Trophy,
+        title: 'Felicitations pour vos succes !',
+        message: `Vous avez obtenu ${stats.received} aide${stats.received > 1 ? 's' : ''}${stats.fundingWon > 0 ? ` pour un total de ${formatCurrency(stats.fundingWon)}` : ''}. Continuez a explorer de nouvelles opportunites.`,
+        actionText: 'Trouver plus d\'aides',
+        actionLink: '/app/search',
+      };
+    }
+
+    // Default tip
+    return {
+      icon: TrendingUp,
+      title: 'Conseil du jour',
+      message: 'Completez votre profil avec le maximum d\'informations pour recevoir des recommandations d\'aides plus pertinentes.',
+      actionText: 'Voir mon profil',
+      actionLink: '/app/profile',
+    };
+  };
+
+  const dynamicTip = getDynamicTip();
+
+  // Calculate profile completion percentage
+  const calculateProfileCompletion = () => {
+    if (!profile) return 0;
+
+    const fields = [
+      { key: 'company_name', weight: 15 },
+      { key: 'siren', weight: 10 },
+      { key: 'region', weight: 10 },
+      { key: 'sector', weight: 10 },
+      { key: 'naf_code', weight: 10 },
+      { key: 'employees', weight: 10 },
+      { key: 'annual_revenue', weight: 10 },
+      { key: 'project_types', weight: 10, isArray: true },
+      { key: 'description', weight: 5 },
+      { key: 'website', weight: 5 },
+      { key: 'website_intelligence', weight: 5 },
+    ];
+
+    let completed = 0;
+    fields.forEach(field => {
+      const value = (profile as any)[field.key];
+      if (field.isArray) {
+        if (Array.isArray(value) && value.length > 0) completed += field.weight;
+      } else if (value && value !== '') {
+        completed += field.weight;
+      }
+    });
+
+    return Math.min(100, completed);
+  };
+
+  const profileCompletion = calculateProfileCompletion();
 
   if (profileLoading) {
     return (
@@ -175,7 +306,7 @@ export function DashboardPage() {
           </div>
         </Link>
 
-        {/* Funding Won */}
+        {/* Funding Won - Count */}
         <Link
           to="/app/saved?status=received"
           className="bg-white rounded-xl border border-slate-200 p-5 hover:border-emerald-300 hover:shadow-sm transition-all"
@@ -191,25 +322,56 @@ export function DashboardPage() {
           </div>
         </Link>
 
-        {/* Potential Funding */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5">
+        {/* Funding Won Amount or Potential */}
+        <Link
+          to="/app/saved?status=received"
+          className={`rounded-xl border p-5 hover:shadow-sm transition-all ${
+            stats.fundingWon > 0
+              ? 'bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200 hover:border-emerald-300'
+              : 'bg-white border-slate-200 hover:border-purple-300'
+          }`}
+        >
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 bg-purple-100 rounded-lg">
-              <Euro className="h-5 w-5 text-purple-600" />
+            <div className={`flex items-center justify-center w-10 h-10 rounded-lg ${
+              stats.fundingWon > 0 ? 'bg-emerald-200' : 'bg-purple-100'
+            }`}>
+              <Euro className={`h-5 w-5 ${stats.fundingWon > 0 ? 'text-emerald-700' : 'text-purple-600'}`} />
             </div>
             <div>
-              <p className="text-xs text-slate-500">Potentiel</p>
-              <p className="text-xl font-bold text-slate-900">
-                {stats.potentialFunding > 0 ? formatCurrency(stats.potentialFunding) : '-'}
+              <p className={`text-xs ${stats.fundingWon > 0 ? 'text-emerald-700' : 'text-slate-500'}`}>
+                {stats.fundingWon > 0 ? 'Obtenu' : 'Potentiel'}
+              </p>
+              <p className={`text-xl font-bold ${stats.fundingWon > 0 ? 'text-emerald-800' : 'text-slate-900'}`}>
+                {stats.fundingWon > 0
+                  ? formatCurrency(stats.fundingWon)
+                  : stats.potentialFunding > 0
+                    ? formatCurrency(stats.potentialFunding)
+                    : '-'}
               </p>
             </div>
           </div>
-        </div>
+        </Link>
       </div>
+
+      {/* Success Banner - Show when user has won funding */}
+      {stats.fundingWon > 0 && stats.potentialFunding > stats.fundingWon && (
+        <div className="bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl p-5 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-emerald-100 text-sm">Financement total obtenu</p>
+              <p className="text-3xl font-bold mt-1">{formatCurrency(stats.fundingWon)}</p>
+              <p className="text-emerald-100 text-sm mt-2">
+                + {formatCurrency(stats.potentialFunding - stats.fundingWon)} en cours de traitement
+              </p>
+            </div>
+            <Trophy className="h-16 w-16 text-emerald-200 opacity-50" />
+          </div>
+        </div>
+      )}
 
       {/* Profile Card */}
       <div className="bg-white rounded-xl border border-slate-200 p-5">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-10 h-10 bg-slate-100 rounded-lg">
               <Building2 className="h-5 w-5 text-slate-600" />
@@ -227,6 +389,27 @@ export function DashboardPage() {
             </Button>
           </Link>
         </div>
+        {hasProfile && (
+          <div className="pt-3 border-t border-slate-100">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-slate-500">Completion du profil</span>
+              <span className={`text-xs font-semibold ${profileCompletion >= 80 ? 'text-emerald-600' : profileCompletion >= 50 ? 'text-amber-600' : 'text-slate-600'}`}>
+                {profileCompletion}%
+              </span>
+            </div>
+            <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all ${profileCompletion >= 80 ? 'bg-emerald-500' : profileCompletion >= 50 ? 'bg-amber-500' : 'bg-blue-500'}`}
+                style={{ width: `${profileCompletion}%` }}
+              />
+            </div>
+            {profileCompletion < 80 && (
+              <p className="text-xs text-slate-500 mt-2">
+                Completez votre profil pour de meilleures recommandations
+              </p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Quick Actions */}
@@ -266,6 +449,51 @@ export function DashboardPage() {
           </Link>
         </div>
       </div>
+
+      {/* Upcoming Deadlines Alert */}
+      {upcomingDeadlines.length > 0 && (
+        <div className="bg-orange-50 border border-orange-200 rounded-xl p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <CalendarClock className="h-5 w-5 text-orange-600" />
+            <h2 className="font-semibold text-orange-800">
+              Deadlines a venir ({upcomingDeadlines.length})
+            </h2>
+          </div>
+          <div className="space-y-3">
+            {upcomingDeadlines.slice(0, 3).map((item) => {
+              const deadline = new Date(item.subsidy!.deadline!);
+              const daysUntil = Math.ceil((deadline.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+              const isUrgent = daysUntil <= 7;
+              const itemTitle = item.subsidy ? getSubsidyTitle(item.subsidy) : 'Aide';
+
+              return (
+                <Link
+                  key={item.id}
+                  to={`/app/subsidy/${item.subsidy_id}`}
+                  className="flex items-center justify-between p-3 bg-white rounded-lg hover:bg-orange-100 transition-colors"
+                >
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    {isUrgent && (
+                      <AlertTriangle className="h-4 w-4 text-orange-600 flex-shrink-0" />
+                    )}
+                    <span className="text-sm text-slate-700 truncate">
+                      {itemTitle}
+                    </span>
+                  </div>
+                  <span className={`text-xs font-semibold px-2 py-1 rounded-full flex-shrink-0 ml-2 ${isUrgent ? 'bg-orange-200 text-orange-800' : 'bg-orange-100 text-orange-700'}`}>
+                    {daysUntil} jour{daysUntil > 1 ? 's' : ''}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+          {upcomingDeadlines.length > 3 && (
+            <Link to="/app/saved" className="block text-center text-sm text-orange-700 hover:underline mt-3">
+              Voir {upcomingDeadlines.length - 3} autre{upcomingDeadlines.length - 3 > 1 ? 's' : ''} deadline{upcomingDeadlines.length - 3 > 1 ? 's' : ''}
+            </Link>
+          )}
+        </div>
+      )}
 
       {/* Activity Feed */}
       {savedSubsidies.length > 0 && (
@@ -363,18 +591,23 @@ export function DashboardPage() {
         )}
       </div>
 
-      {/* Tips */}
+      {/* Dynamic Tips */}
       <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
         <div className="flex items-start gap-4">
           <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-lg flex-shrink-0">
-            <TrendingUp className="h-5 w-5 text-blue-600" />
+            <dynamicTip.icon className="h-5 w-5 text-blue-600" />
           </div>
-          <div>
-            <h3 className="font-semibold text-slate-900">Conseil du jour</h3>
+          <div className="flex-1">
+            <h3 className="font-semibold text-slate-900">{dynamicTip.title}</h3>
             <p className="text-slate-600 text-sm mt-1">
-              Completez votre profil avec le maximum d'informations pour recevoir des
-              recommandations d'aides plus pertinentes et adaptees a votre situation.
+              {dynamicTip.message}
             </p>
+            <Link to={dynamicTip.actionLink}>
+              <Button variant="outline" size="sm" className="mt-3">
+                {dynamicTip.actionText}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
