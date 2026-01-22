@@ -3,6 +3,73 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { useConversationMemory } from './useConversationMemory';
 import type { QuickScoreData } from '@/components/chat/IntelligenceScoreCard';
+import type { MaSubventionProProfile } from '@/types';
+
+// Business tier types for AI context
+type BusinessTier = 'startup' | 'tpe' | 'pme' | 'eti' | 'ge' | 'association';
+
+/**
+ * Determine business tier based on profile characteristics
+ * This helps the AI provide more relevant and contextual responses
+ */
+function determineBusinessTier(profile: MaSubventionProProfile | null): BusinessTier {
+  if (!profile) return 'pme'; // Default fallback
+
+  const { employees, legal_form, year_created, annual_turnover, company_category } = profile;
+
+  // Association gets its own tier
+  if (legal_form === 'ASSO') {
+    return 'association';
+  }
+
+  // Check company_category if available (from INSEE data)
+  if (company_category) {
+    const categoryLower = company_category.toLowerCase();
+    if (categoryLower.includes('ge') || categoryLower.includes('grande entreprise')) return 'ge';
+    if (categoryLower.includes('eti')) return 'eti';
+    if (categoryLower.includes('pme')) return 'pme';
+    if (categoryLower.includes('tpe') || categoryLower.includes('micro')) return 'tpe';
+  }
+
+  // Determine by employee count
+  const employeeCount = employees || '';
+
+  // Large enterprise (GE): 250+ employees or very high turnover
+  if (employeeCount === '250+' || (annual_turnover && annual_turnover >= 50000000)) {
+    return 'ge';
+  }
+
+  // ETI: 250-4999 employees or turnover 50M-1.5B (we'll estimate from 51-250 range with high turnover)
+  if (employeeCount === '51-250' && annual_turnover && annual_turnover >= 10000000) {
+    return 'eti';
+  }
+
+  // PME: 10-249 employees
+  if (employeeCount === '51-250' || employeeCount === '11-50') {
+    return 'pme';
+  }
+
+  // Micro-enterprise legal form
+  if (legal_form === 'MICRO' || legal_form === 'EI') {
+    return 'tpe';
+  }
+
+  // Startup: Young company (< 5 years) with small team
+  const currentYear = new Date().getFullYear();
+  const companyAge = year_created ? currentYear - year_created : null;
+
+  if (companyAge !== null && companyAge <= 5 && (employeeCount === '1-10' || !employeeCount)) {
+    return 'startup';
+  }
+
+  // TPE: Very small business (1-10 employees)
+  if (employeeCount === '1-10') {
+    return 'tpe';
+  }
+
+  // Default to PME
+  return 'pme';
+}
 
 export interface ChatMessage {
   id: string;
@@ -97,7 +164,7 @@ interface UseStreamingAIReturn {
   intelligence: ChatIntelligence | null;
   conversationId: string | null;
   conversations: DbConversation[];
-  sendMessage: (content: string, profileId: string) => Promise<void>;
+  sendMessage: (content: string, profileId: string, profile?: MaSubventionProProfile | null) => Promise<void>;
   clearMessages: () => void;
   loadConversation: (profileId: string) => void;
   loadConversationById: (conversationId: string) => Promise<void>;
@@ -139,8 +206,11 @@ export function useStreamingAI(): UseStreamingAIReturn {
   );
 
   const sendMessage = useCallback(
-    async (content: string, profileId: string) => {
+    async (content: string, profileId: string, profile?: MaSubventionProProfile | null) => {
       if (!user || !content.trim()) return;
+
+      // Determine business tier from profile
+      const userTier = determineBusinessTier(profile || null);
 
       // Cancel any ongoing stream
       if (abortControllerRef.current) {
@@ -206,7 +276,7 @@ export function useStreamingAI(): UseStreamingAIReturn {
             profileId,
             conversationHistory,
             sessionId: null,
-            userTier: 'business', // MaSubventionPro users
+            userTier, // Dynamic tier based on profile: startup, tpe, pme, eti, ge, association
           }),
           signal: abortControllerRef.current.signal,
         });

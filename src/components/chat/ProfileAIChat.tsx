@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Bot,
@@ -10,6 +10,11 @@ import {
   Target,
   TrendingUp,
   Shield,
+  History,
+  Plus,
+  MessageSquare,
+  ChevronDown,
+  X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useStreamingAI } from '@/hooks/useStreamingAI';
@@ -33,12 +38,34 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
     isStreaming,
     error,
     intelligence,
+    conversationId,
+    conversations,
     sendMessage,
     clearMessages,
     loadConversation,
+    loadConversationById,
+    createNewConversation,
   } = useStreamingAI();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [showHistory, setShowHistory] = useState(false);
+  const historyRef = useRef<HTMLDivElement>(null);
+
+  // Close history dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (historyRef.current && !historyRef.current.contains(event.target as Node)) {
+        setShowHistory(false);
+      }
+    };
+
+    if (showHistory) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showHistory]);
 
   // Load conversation when profile changes
   useEffect(() => {
@@ -56,7 +83,7 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
 
   const handleSendMessage = (content: string) => {
     if (!profile?.id) return;
-    sendMessage(content, profile.id);
+    sendMessage(content, profile.id, profile);
   };
 
   const handleTrackSubsidy = async (subsidyId: string) => {
@@ -65,6 +92,32 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
     } catch (err) {
       console.error('Error saving subsidy:', err);
     }
+  };
+
+  const handleSelectConversation = async (id: string) => {
+    await loadConversationById(id);
+    setShowHistory(false);
+  };
+
+  const handleNewConversation = () => {
+    createNewConversation();
+    setShowHistory(false);
+  };
+
+  // Format relative time
+  const formatRelativeTime = (dateStr: string): string => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return "A l'instant";
+    if (diffMins < 60) return `Il y a ${diffMins} min`;
+    if (diffHours < 24) return `Il y a ${diffHours}h`;
+    if (diffDays < 7) return `Il y a ${diffDays}j`;
+    return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
   };
 
   // Format currency
@@ -127,6 +180,79 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
               <span>RGPD</span>
             </div>
           )}
+
+          {/* Conversation History Dropdown */}
+          <div className="relative" ref={historyRef}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowHistory(!showHistory)}
+              className="text-slate-500 hover:text-slate-700"
+            >
+              <History className="h-4 w-4 mr-1" />
+              Historique
+              <ChevronDown className={`h-3 w-3 ml-1 transition-transform ${showHistory ? 'rotate-180' : ''}`} />
+            </Button>
+
+            {/* Dropdown Panel */}
+            {showHistory && (
+              <div className="absolute right-0 top-full mt-1 w-72 bg-white rounded-lg shadow-lg border border-slate-200 z-50 overflow-hidden">
+                {/* Header */}
+                <div className="flex items-center justify-between px-3 py-2 border-b border-slate-100 bg-slate-50">
+                  <span className="text-sm font-medium text-slate-700">Conversations</span>
+                  <button
+                    onClick={() => setShowHistory(false)}
+                    className="p-1 hover:bg-slate-200 rounded"
+                  >
+                    <X className="h-4 w-4 text-slate-500" />
+                  </button>
+                </div>
+
+                {/* New Conversation Button */}
+                <button
+                  onClick={handleNewConversation}
+                  className="w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-purple-50 text-purple-600 border-b border-slate-100"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span className="text-sm font-medium">Nouvelle conversation</span>
+                </button>
+
+                {/* Conversation List */}
+                <div className="max-h-64 overflow-y-auto">
+                  {conversations.length === 0 ? (
+                    <div className="px-3 py-4 text-center text-sm text-slate-500">
+                      Aucune conversation precedente
+                    </div>
+                  ) : (
+                    conversations.map((conv) => (
+                      <button
+                        key={conv.id}
+                        onClick={() => handleSelectConversation(conv.id)}
+                        className={`w-full flex items-start gap-2 px-3 py-2.5 text-left hover:bg-slate-50 border-b border-slate-50 last:border-0 ${
+                          conv.id === conversationId ? 'bg-purple-50' : ''
+                        }`}
+                      >
+                        <MessageSquare className={`h-4 w-4 mt-0.5 flex-shrink-0 ${
+                          conv.id === conversationId ? 'text-purple-600' : 'text-slate-400'
+                        }`} />
+                        <div className="flex-1 min-w-0">
+                          <p className={`text-sm truncate ${
+                            conv.id === conversationId ? 'font-medium text-purple-700' : 'text-slate-700'
+                          }`}>
+                            {conv.title}
+                          </p>
+                          <p className="text-xs text-slate-400">
+                            {formatRelativeTime(conv.updated_at)}
+                          </p>
+                        </div>
+                      </button>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
           {messages.length > 0 && (
             <Button
               variant="ghost"
