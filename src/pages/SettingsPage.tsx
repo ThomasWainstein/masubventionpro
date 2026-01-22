@@ -15,7 +15,9 @@ import {
   Check,
   AlertCircle,
   ExternalLink,
+  Trash2,
 } from 'lucide-react';
+import { AccountDeletionDialog } from '@/components/settings/AccountDeletionDialog';
 
 export function SettingsPage() {
   const { user, signOut } = useAuth();
@@ -27,6 +29,7 @@ export function SettingsPage() {
   const [passwordLoading, setPasswordLoading] = useState(false);
   const [passwordSuccess, setPasswordSuccess] = useState(false);
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const userPlan = user?.user_metadata?.selected_plan || 'decouverte';
   const planInfo = {
@@ -253,10 +256,21 @@ export function SettingsPage() {
         <p className="text-red-700 text-sm mb-4">
           La suppression de votre compte est irreversible. Toutes vos donnees seront definitivement supprimees.
         </p>
-        <Button variant="outline" className="text-red-600 border-red-300 hover:bg-red-100">
+        <Button
+          variant="outline"
+          onClick={() => setShowDeleteDialog(true)}
+          className="text-red-600 border-red-300 hover:bg-red-100 gap-2"
+        >
+          <Trash2 className="h-4 w-4" />
           Supprimer mon compte
         </Button>
       </div>
+
+      {/* Account Deletion Dialog */}
+      <AccountDeletionDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+      />
     </div>
   );
 }

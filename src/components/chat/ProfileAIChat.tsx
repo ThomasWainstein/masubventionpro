@@ -25,6 +25,7 @@ import { ChatInput } from './ChatInput';
 import { TypingIndicator } from './TypingIndicator';
 import { SuggestedPrompts } from './SuggestedPrompts';
 import { IntelligenceScoreCard } from './IntelligenceScoreCard';
+import { PIIWarningDialog } from '@/components/ai';
 
 interface ProfileAIChatProps {
   className?: string;
@@ -40,7 +41,9 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
     intelligence,
     conversationId,
     conversations,
+    pendingPII,
     sendMessage,
+    handlePIIChoice,
     clearMessages,
     loadConversation,
     loadConversationById,
@@ -514,6 +517,13 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
           L'IA peut faire des erreurs. Verifiez les informations importantes.
         </p>
       </div>
+
+      {/* PII Warning Dialog */}
+      <PIIWarningDialog
+        open={!!pendingPII}
+        matches={pendingPII?.matches || []}
+        onChoice={handlePIIChoice}
+      />
     </div>
   );
 }

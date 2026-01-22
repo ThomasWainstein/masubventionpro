@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { BUSINESS_SECTORS } from '@/types';
 import { formatSIRET } from '@/lib/validation/siret';
+import { MaskedField } from '@/components/ui/MaskedField';
 import { DocumentUpload } from '@/components/profile/DocumentUpload';
 import { ProfileEnrichmentSection } from '@/components/profile/ProfileEnrichmentSection';
 import { WebsiteIntelligenceDisplay } from '@/components/profile/WebsiteIntelligenceDisplay';
@@ -79,7 +80,9 @@ export function ProfilePage() {
           <div>
             <h1 className="text-2xl font-bold text-slate-900">{profile.company_name}</h1>
             {profile.siret && (
-              <p className="text-slate-500 text-sm">SIRET: {formatSIRET(profile.siret)}</p>
+              <p className="text-slate-500 text-sm flex items-center gap-1">
+                SIRET: <MaskedField value={formatSIRET(profile.siret)} type="siret" className="text-slate-500" />
+              </p>
             )}
           </div>
         </div>
@@ -170,11 +173,17 @@ export function ProfilePage() {
           />
 
           {/* SIRET */}
-          <InfoItem
-            icon={Hash}
-            label="SIRET"
-            value={profile.siret ? formatSIRET(profile.siret) : null}
-          />
+          <div className="flex items-start gap-3">
+            <Hash className="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="text-sm text-slate-500">SIRET</p>
+              {profile.siret ? (
+                <MaskedField value={formatSIRET(profile.siret)} type="siret" className="font-medium" />
+              ) : (
+                <p className="text-slate-400 font-normal">Non renseigne</p>
+              )}
+            </div>
+          </div>
 
           {/* Sector */}
           <InfoItem

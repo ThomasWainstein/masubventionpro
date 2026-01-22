@@ -11,6 +11,7 @@ import {
   AlertTriangle,
   ExternalLink,
   Bookmark,
+  Circle,
 } from 'lucide-react';
 
 export interface QuickScoreData {
@@ -57,7 +58,7 @@ export function IntelligenceScoreCard({
         color: 'bg-emerald-50 border-emerald-200 text-emerald-700',
         borderColor: 'border-l-emerald-500',
         icon: CheckCircle,
-        emoji: '🟢',
+        indicator: <Circle className="w-3 h-3 fill-emerald-500 text-emerald-500" />,
       };
     if (score >= 50)
       return {
@@ -65,14 +66,14 @@ export function IntelligenceScoreCard({
         color: 'bg-amber-50 border-amber-200 text-amber-700',
         borderColor: 'border-l-amber-500',
         icon: MinusCircle,
-        emoji: '🟡',
+        indicator: <Circle className="w-3 h-3 fill-amber-500 text-amber-500" />,
       };
     return {
       label: 'Faible Probabilite',
       color: 'bg-red-50 border-red-200 text-red-700',
       borderColor: 'border-l-red-500',
       icon: AlertTriangle,
-      emoji: '🔴',
+      indicator: <Circle className="w-3 h-3 fill-red-500 text-red-500" />,
     };
   };
 
@@ -111,11 +112,11 @@ export function IntelligenceScoreCard({
           </div>
           <span
             className={cn(
-              'text-sm font-bold px-2 py-0.5 rounded-full',
+              'text-sm font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1.5',
               verdict.color
             )}
           >
-            {verdict.emoji} {data.final_score}%
+            {verdict.indicator} {data.final_score}%
           </span>
         </div>
 
@@ -225,11 +226,11 @@ export function IntelligenceScoreCard({
         </div>
         <span
           className={cn(
-            'text-lg font-bold px-3 py-1 rounded-full',
+            'text-lg font-bold px-3 py-1 rounded-full inline-flex items-center gap-1.5',
             verdict.color
           )}
         >
-          {verdict.emoji} {data.final_score}%
+          {verdict.indicator} {data.final_score}%
         </span>
       </div>
 

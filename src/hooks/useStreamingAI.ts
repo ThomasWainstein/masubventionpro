@@ -3,6 +3,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { useConversationMemory } from './useConversationMemory';
 import { useAIUsage, estimateTokens } from './useAIUsage';
+import { detectPII, maskPIIWithMatches } from '@/lib/pii';
+import type { PIIUserChoice, PendingPIIMessage } from '@/lib/pii';
 import type { QuickScoreData } from '@/components/chat/IntelligenceScoreCard';
 import type { MaSubventionProProfile } from '@/types';
 import type { AIUsageStatus } from '@/types/ai-usage';
@@ -168,7 +170,9 @@ interface UseStreamingAIReturn {
   conversations: DbConversation[];
   usageStatus: AIUsageStatus | null;
   isUsageBlocked: boolean;
+  pendingPII: PendingPIIMessage | null;
   sendMessage: (content: string, profileId: string, profile?: MaSubventionProProfile | null) => Promise<void>;
+  handlePIIChoice: (choice: PIIUserChoice) => void;
   clearMessages: () => void;
   loadConversation: (profileId: string) => void;
   loadConversationById: (conversationId: string) => Promise<void>;
@@ -184,6 +188,10 @@ export function useStreamingAI(): UseStreamingAIReturn {
   const [error, setError] = useState<string | null>(null);
   const [intelligence, setIntelligence] = useState<ChatIntelligence | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  // PII detection state
+  const [pendingPII, setPendingPII] = useState<PendingPIIMessage | null>(null);
+  const pendingContextRef = useRef<{ profileId: string; profile: MaSubventionProProfile | null } | null>(null);
 
   // AI usage tracking
   const { checkUsage, logUsage, canUseAI, status: usageStatus } = useAIUsage();
@@ -212,16 +220,10 @@ export function useStreamingAI(): UseStreamingAIReturn {
     [loadMessages]
   );
 
-  const sendMessage = useCallback(
+  // Internal function to actually send the message (after PII check passed)
+  const doSendMessage = useCallback(
     async (content: string, profileId: string, profile?: MaSubventionProProfile | null) => {
       if (!user || !content.trim()) return;
-
-      // Check AI usage before proceeding
-      const usageCheck = await checkUsage();
-      if (!usageCheck.allowed) {
-        setError(usageCheck.error || 'Limite d\'utilisation IA atteinte');
-        return;
-      }
 
       // Determine business tier from profile
       const userTier = determineBusinessTier(profile || null);
@@ -372,7 +374,67 @@ export function useStreamingAI(): UseStreamingAIReturn {
         abortControllerRef.current = null;
       }
     },
-    [user, messages, addMessage, updateLastMessage, checkUsage, logUsage]
+    [user, messages, addMessage, updateLastMessage, logUsage]
+  );
+
+  // Public sendMessage function with PII detection
+  const sendMessage = useCallback(
+    async (content: string, profileId: string, profile?: MaSubventionProProfile | null) => {
+      if (!user || !content.trim()) return;
+
+      // Check AI usage before proceeding
+      const usageCheck = await checkUsage();
+      if (!usageCheck.allowed) {
+        setError(usageCheck.error || 'Limite d\'utilisation IA atteinte');
+        return;
+      }
+
+      // Check for PII in the message
+      const piiResult = detectPII(content.trim());
+      if (piiResult.hasPII) {
+        // Store context for when user makes a choice
+        pendingContextRef.current = { profileId, profile: profile || null };
+        setPendingPII({ message: content.trim(), matches: piiResult.matches });
+        return; // Wait for user decision via handlePIIChoice
+      }
+
+      // No PII found, send directly
+      await doSendMessage(content, profileId, profile);
+    },
+    [user, checkUsage, doSendMessage]
+  );
+
+  // Handle user's choice after PII detection
+  const handlePIIChoice = useCallback(
+    (choice: PIIUserChoice) => {
+      if (!pendingPII || !pendingContextRef.current) {
+        setPendingPII(null);
+        return;
+      }
+
+      const { message, matches } = pendingPII;
+      const { profileId, profile } = pendingContextRef.current;
+
+      // Clear pending state
+      setPendingPII(null);
+      pendingContextRef.current = null;
+
+      switch (choice) {
+        case 'send':
+          // Send original message as-is
+          doSendMessage(message, profileId, profile);
+          break;
+        case 'mask':
+          // Mask PII and send
+          const maskedMessage = maskPIIWithMatches(message, matches);
+          doSendMessage(maskedMessage, profileId, profile);
+          break;
+        case 'cancel':
+          // User cancelled, do nothing
+          break;
+      }
+    },
+    [pendingPII, doSendMessage]
   );
 
   const clearMessages = useCallback(() => {
@@ -394,7 +456,9 @@ export function useStreamingAI(): UseStreamingAIReturn {
     conversations,
     usageStatus,
     isUsageBlocked: !canUseAI(),
+    pendingPII,
     sendMessage,
+    handlePIIChoice,
     clearMessages,
     loadConversation,
     loadConversationById,
