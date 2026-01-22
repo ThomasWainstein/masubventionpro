@@ -214,21 +214,41 @@ const LandingPage = () => {
   }
 
   // Step 7: Estimate total potential amounts
-  // Instead of summing ALL subsidies (unrealistic), show the largest single opportunity
+  // Pick top subsidy from each funding type (different types are typically cumulable)
+  // Then take a middle estimate (70%) to be realistic
   const estimateAmounts = async (subsidies: any[]): Promise<{ subsidies: any[], totalPotential: string }> => {
-    let maxSingleAmount = 0
+    // Group subsidies by funding type - different types can usually be combined
+    const byType: Record<string, { amount: number; subsidy: any }> = {}
 
     subsidies.forEach(subsidy => {
       const amount = Number(subsidy.amount_max) || Number(subsidy.amount_min) || 0
-      if (amount > maxSingleAmount) {
-        maxSingleAmount = amount
+      if (amount <= 0) return
+
+      const type = subsidy.funding_type?.toLowerCase() || 'other'
+      // Keep the highest amount per type
+      if (!byType[type] || amount > byType[type].amount) {
+        byType[type] = { amount, subsidy }
       }
     })
 
-    // Format the largest opportunity
-    const formatted = maxSingleAmount > 0
-      ? `Jusqu'a ${maxSingleAmount.toLocaleString("fr-FR")} EUR`
+    // Sum top subsidy from each type (typically cumulable)
+    const cumulableTypes = Object.values(byType)
+    const totalCumulable = cumulableTypes.reduce((sum, item) => sum + item.amount, 0)
+
+    // Apply 70% factor for realistic middle estimate
+    const middleEstimate = Math.round(totalCumulable * 0.7)
+
+    // Format the amount
+    const formatted = middleEstimate > 0
+      ? `~${middleEstimate.toLocaleString("fr-FR")} EUR`
       : "Variable selon profil"
+
+    console.log("[DEBUG] Amount estimation:", {
+      typesFound: Object.keys(byType),
+      amountsPerType: Object.entries(byType).map(([t, v]) => `${t}: ${v.amount}`),
+      totalCumulable,
+      middleEstimate
+    })
 
     return { subsidies, totalPotential: formatted }
   }
