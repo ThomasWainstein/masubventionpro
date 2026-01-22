@@ -214,22 +214,68 @@ const LandingPage = () => {
   }
 
   // Step 7: Estimate total potential amounts
+  // Instead of summing ALL subsidies (unrealistic), show the largest single opportunity
   const estimateAmounts = async (subsidies: any[]): Promise<{ subsidies: any[], totalPotential: string }> => {
-    let totalMax = 0
+    let maxSingleAmount = 0
 
     subsidies.forEach(subsidy => {
-      if (subsidy.amount_max) {
-        totalMax += Number(subsidy.amount_max) || 0
-      } else if (subsidy.amount_min) {
-        totalMax += Number(subsidy.amount_min) * 2 || 0
+      const amount = Number(subsidy.amount_max) || Number(subsidy.amount_min) || 0
+      if (amount > maxSingleAmount) {
+        maxSingleAmount = amount
       }
     })
 
-    const formatted = totalMax > 0
-      ? `${totalMax.toLocaleString("fr-FR")} EUR`
+    // Format the largest opportunity
+    const formatted = maxSingleAmount > 0
+      ? `Jusqu'a ${maxSingleAmount.toLocaleString("fr-FR")} EUR`
       : "Variable selon profil"
 
     return { subsidies, totalPotential: formatted }
+  }
+
+  // Helper: Convert database enum/technical values to readable French labels
+  const formatCategoryLabel = (raw: string): string => {
+    // Common enum mappings
+    const enumMap: Record<string, string> = {
+      // Sectors
+      'CONST_BUILDING': 'Construction',
+      'ENERGY_RENEWABLE': 'Energies renouvelables',
+      'ENERGY_EFFICIENCY': 'Efficacite energetique',
+      'AGRICULTURE': 'Agriculture',
+      'TOURISM': 'Tourisme',
+      'MANUFACTURING': 'Industrie',
+      'DIGITAL': 'Numerique',
+      'HEALTH': 'Sante',
+      'TRANSPORT': 'Transport',
+      'RETAIL': 'Commerce',
+      'SERVICES': 'Services',
+      'ENVIRONMENT': 'Environnement',
+      'INNOVATION': 'Innovation',
+      'EXPORT': 'Export',
+      'EMPLOYMENT': 'Emploi',
+      'TRAINING': 'Formation',
+      'R_AND_D': 'Recherche et developpement',
+      'RD': 'Recherche et developpement',
+      // Funding types
+      'GRANT': 'Subvention',
+      'LOAN': 'Pret',
+      'GUARANTEE': 'Garantie',
+      'TAX_CREDIT': 'Credit d\'impot',
+      'TAX_EXEMPTION': 'Exoneration fiscale',
+    }
+
+    // Check direct mapping first
+    const upperRaw = raw.toUpperCase().replace(/-/g, '_')
+    if (enumMap[upperRaw]) return enumMap[upperRaw]
+
+    // Clean up underscore/hyphen formatting and capitalize
+    const cleaned = raw
+      .replace(/_/g, ' ')
+      .replace(/-/g, ' ')
+      .toLowerCase()
+      .replace(/\b\w/g, c => c.toUpperCase())
+
+    return cleaned
   }
 
   // Step 8: Finalize and structure the report
@@ -252,17 +298,17 @@ const LandingPage = () => {
     subsidies.forEach(s => {
       // Funding types (e.g., "Subvention", "Pret", "Garantie", "Avance remboursable")
       if (s.funding_type && typeof s.funding_type === 'string' && s.funding_type.length > 2) {
-        fundingTypes.add(s.funding_type.charAt(0).toUpperCase() + s.funding_type.slice(1))
+        fundingTypes.add(formatCategoryLabel(s.funding_type))
       }
       // Primary sectors
       if (s.primary_sector && typeof s.primary_sector === 'string' && s.primary_sector.length > 2) {
-        sectors.add(s.primary_sector.charAt(0).toUpperCase() + s.primary_sector.slice(1))
+        sectors.add(formatCategoryLabel(s.primary_sector))
       }
       // Category tags from categories[] array
       if (s.categories && Array.isArray(s.categories)) {
         s.categories.forEach((c: string) => {
           if (c && typeof c === 'string' && c.trim().length > 2) {
-            categoryTags.add(c.trim().charAt(0).toUpperCase() + c.trim().slice(1))
+            categoryTags.add(formatCategoryLabel(c.trim()))
           }
         })
       }
@@ -270,7 +316,7 @@ const LandingPage = () => {
       if (s.keywords && Array.isArray(s.keywords)) {
         s.keywords.slice(0, 3).forEach((k: string) => {
           if (k && typeof k === 'string' && k.length > 3 && k.length < 20) {
-            keywordTags.add(k.charAt(0).toUpperCase() + k.slice(1))
+            keywordTags.add(formatCategoryLabel(k))
           }
         })
       }
@@ -1609,7 +1655,7 @@ const LandingPage = () => {
                       <div className="text-center">
                         <Lock className="w-10 h-10 text-slate-400 mx-auto mb-3" />
                         <h4 className="text-lg font-bold text-slate-900 mb-1">
-                          +{displayLocked.length} autres aides identifiees
+                          +{Math.max(0, displayLocked.length - 3)} autres aides identifiees
                         </h4>
                         <p className="text-slate-500 text-sm mb-4">
                           Debloquez l'acces complet : montants, deadlines, contacts et guide de demande
