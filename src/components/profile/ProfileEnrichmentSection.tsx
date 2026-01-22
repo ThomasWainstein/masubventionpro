@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useProfile } from '@/contexts/ProfileContext';
+import { useAIUsage, estimateTokens } from '@/hooks/useAIUsage';
 import type { WebsiteIntelligenceData } from '@/types';
 
 interface ProfileEnrichmentSectionProps {
@@ -28,6 +29,9 @@ interface ProfileEnrichmentSectionProps {
 
 export function ProfileEnrichmentSection({ onEnrichmentComplete }: ProfileEnrichmentSectionProps) {
   const { profile, updateProfile } = useProfile();
+
+  // AI usage tracking
+  const { checkUsage, logUsage, canUseAI, status: usageStatus } = useAIUsage();
 
   // Website analysis state
   const [showWebsiteDialog, setShowWebsiteDialog] = useState(false);
@@ -64,6 +68,13 @@ export function ProfileEnrichmentSection({ onEnrichmentComplete }: ProfileEnrich
       new URL(validUrl);
     } catch {
       setWebsiteError('URL invalide. Exemple: www.mon-entreprise.fr');
+      return;
+    }
+
+    // Check AI usage before proceeding
+    const usageCheck = await checkUsage();
+    if (!usageCheck.allowed) {
+      setWebsiteError(usageCheck.error || 'Limite d\'utilisation IA atteinte');
       return;
     }
 
@@ -105,6 +116,17 @@ export function ProfileEnrichmentSection({ onEnrichmentComplete }: ProfileEnrich
       if (!result.success) {
         throw new Error(result.error || 'Analyse echouee');
       }
+
+      // Log AI usage (estimate tokens from URL and result)
+      const inputTokens = result.usage?.input_tokens || estimateTokens(validUrl);
+      const outputTokens = result.usage?.output_tokens || estimateTokens(JSON.stringify(result.data));
+      logUsage({
+        function_name: 'analyze-company-website',
+        input_tokens: inputTokens,
+        output_tokens: outputTokens,
+        profile_id: profile?.id,
+        success: true,
+      });
 
       // Store the intelligence data
       setWebsiteIntelligence(result.data);
@@ -233,23 +255,38 @@ export function ProfileEnrichmentSection({ onEnrichmentComplete }: ProfileEnrich
             </div>
 
             {websiteUrl && (
-              <Button
-                onClick={handleAnalyzeWebsite}
-                disabled={analyzingWebsite}
-                className="w-full gap-2"
-              >
-                {analyzingWebsite ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Analyse en cours...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="h-4 w-4" />
-                    Analyser le site web
-                  </>
+              <div className="space-y-2">
+                <Button
+                  onClick={handleAnalyzeWebsite}
+                  disabled={analyzingWebsite || !canUseAI()}
+                  className="w-full gap-2"
+                >
+                  {analyzingWebsite ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Analyse en cours...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4" />
+                      Analyser le site web
+                    </>
+                  )}
+                </Button>
+                {usageStatus?.isBlocked && (
+                  <p className="text-xs text-red-600 text-center">
+                    Limite {usageStatus.blockedReason === 'daily' ? 'quotidienne' : usageStatus.blockedReason === 'weekly' ? 'hebdomadaire' : 'annuelle'} atteinte.
+                    {usageStatus.blockedReason === 'daily' && ' Reessayez demain.'}
+                    {usageStatus.blockedReason === 'weekly' && ' Reessayez lundi prochain.'}
+                    {usageStatus.blockedReason === 'yearly' && ' Contactez le support.'}
+                  </p>
                 )}
-              </Button>
+                {!usageStatus?.isBlocked && usageStatus?.percentages.daily && usageStatus.percentages.daily > 80 && (
+                  <p className="text-xs text-amber-600 text-center">
+                    Attention: Vous approchez de votre limite quotidienne
+                  </p>
+                )}
+              </div>
             )}
 
             {/* Success Message with Intelligence Data */}

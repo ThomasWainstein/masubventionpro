@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Subsidy, MaSubventionProProfile, getSubsidyTitle, getSubsidyDescription } from '@/types';
+import { useAIUsage, estimateTokens } from './useAIUsage';
+import type { AIUsageStatus } from '@/types/ai-usage';
 
 /**
  * Subsidy with match score for ranking
@@ -116,6 +118,8 @@ interface UseRecommendedSubsidiesReturn {
   refresh: () => Promise<void>;
   /** Whether AI scoring was used (vs client-side fallback) */
   isAIScored: boolean;
+  /** AI usage status for tracking limits */
+  usageStatus: AIUsageStatus | null;
 }
 
 const V5_MATCHER_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/v5-hybrid-calculate-matches`;
@@ -451,6 +455,9 @@ export function useRecommendedSubsidies(
   const [error, setError] = useState<string | null>(null);
   const [isAIScored, setIsAIScored] = useState(false);
 
+  // AI usage tracking
+  const { checkUsage, logUsage, status: usageStatus } = useAIUsage();
+
   const fetchRecommendations = useCallback(async (skipCache = false) => {
     if (!profile) {
       setRecommendations([]);
@@ -479,25 +486,44 @@ export function useRecommendedSubsidies(
     try {
       // Try AI-powered recommendations first if enabled
       if (useAIScoring && profile.id) {
-        const { data: sessionData } = await supabase.auth.getSession();
-        const accessToken = sessionData?.session?.access_token;
-
-        if (accessToken) {
-          console.log('[Recommendations] Trying AI scoring for profile:', profile.id);
-          const aiRecommendations = await fetchAIRecommendations(profile.id, accessToken);
-
-          if (aiRecommendations && aiRecommendations.length > 0) {
-            console.log('[Recommendations] AI scoring succeeded with', aiRecommendations.length, 'results');
-            // Cache the results
-            setCachedRecommendations(profile.id, aiRecommendations, true);
-            setRecommendations(aiRecommendations.slice(0, limit));
-            setIsAIScored(true);
-            setLoading(false);
-            return;
-          }
-          console.log('[Recommendations] AI scoring returned no results, falling back to client-side');
+        // Check AI usage before proceeding
+        const usageCheck = await checkUsage();
+        if (!usageCheck.allowed) {
+          console.log('[Recommendations] AI usage blocked:', usageCheck.error);
+          // Fall through to client-side scoring
         } else {
-          console.log('[Recommendations] No access token, skipping AI scoring');
+          const { data: sessionData } = await supabase.auth.getSession();
+          const accessToken = sessionData?.session?.access_token;
+
+          if (accessToken) {
+            console.log('[Recommendations] Trying AI scoring for profile:', profile.id);
+            const aiRecommendations = await fetchAIRecommendations(profile.id, accessToken);
+
+            if (aiRecommendations && aiRecommendations.length > 0) {
+              console.log('[Recommendations] AI scoring succeeded with', aiRecommendations.length, 'results');
+
+              // Log AI usage (estimate tokens from profile and results)
+              const inputTokens = estimateTokens(JSON.stringify(profile));
+              const outputTokens = estimateTokens(JSON.stringify(aiRecommendations));
+              logUsage({
+                function_name: 'v5-hybrid-calculate-matches',
+                input_tokens: inputTokens,
+                output_tokens: outputTokens,
+                profile_id: profile.id,
+                success: true,
+              });
+
+              // Cache the results
+              setCachedRecommendations(profile.id, aiRecommendations, true);
+              setRecommendations(aiRecommendations.slice(0, limit));
+              setIsAIScored(true);
+              setLoading(false);
+              return;
+            }
+            console.log('[Recommendations] AI scoring returned no results, falling back to client-side');
+          } else {
+            console.log('[Recommendations] No access token, skipping AI scoring');
+          }
         }
       }
 
@@ -573,7 +599,7 @@ export function useRecommendedSubsidies(
     } finally {
       setLoading(false);
     }
-  }, [profile, limit, enableScoring, useAIScoring]);
+  }, [profile, limit, enableScoring, useAIScoring, checkUsage, logUsage]);
 
   // Fetch on mount and when profile changes
   useEffect(() => {
@@ -591,6 +617,7 @@ export function useRecommendedSubsidies(
     error,
     refresh,
     isAIScored,
+    usageStatus,
   };
 }
 

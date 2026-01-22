@@ -2,8 +2,10 @@ import { useState, useCallback, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { useConversationMemory } from './useConversationMemory';
+import { useAIUsage, estimateTokens } from './useAIUsage';
 import type { QuickScoreData } from '@/components/chat/IntelligenceScoreCard';
 import type { MaSubventionProProfile } from '@/types';
+import type { AIUsageStatus } from '@/types/ai-usage';
 
 // Business tier types for AI context
 type BusinessTier = 'startup' | 'tpe' | 'pme' | 'eti' | 'ge' | 'association';
@@ -164,6 +166,8 @@ interface UseStreamingAIReturn {
   intelligence: ChatIntelligence | null;
   conversationId: string | null;
   conversations: DbConversation[];
+  usageStatus: AIUsageStatus | null;
+  isUsageBlocked: boolean;
   sendMessage: (content: string, profileId: string, profile?: MaSubventionProProfile | null) => Promise<void>;
   clearMessages: () => void;
   loadConversation: (profileId: string) => void;
@@ -180,6 +184,9 @@ export function useStreamingAI(): UseStreamingAIReturn {
   const [error, setError] = useState<string | null>(null);
   const [intelligence, setIntelligence] = useState<ChatIntelligence | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  // AI usage tracking
+  const { checkUsage, logUsage, canUseAI, status: usageStatus } = useAIUsage();
 
   // Use conversation memory for persistence
   const {
@@ -208,6 +215,13 @@ export function useStreamingAI(): UseStreamingAIReturn {
   const sendMessage = useCallback(
     async (content: string, profileId: string, profile?: MaSubventionProProfile | null) => {
       if (!user || !content.trim()) return;
+
+      // Check AI usage before proceeding
+      const usageCheck = await checkUsage();
+      if (!usageCheck.allowed) {
+        setError(usageCheck.error || 'Limite d\'utilisation IA atteinte');
+        return;
+      }
 
       // Determine business tier from profile
       const userTier = determineBusinessTier(profile || null);
@@ -322,6 +336,17 @@ export function useStreamingAI(): UseStreamingAIReturn {
 
                   // Mark message as complete
                   updateLastMessage(accumulatedContent, false);
+
+                  // Log AI usage (estimate tokens from content)
+                  const inputTokens = parsed.usage?.input_tokens || estimateTokens(content);
+                  const outputTokens = parsed.usage?.output_tokens || estimateTokens(accumulatedContent);
+                  logUsage({
+                    function_name: 'enhanced-profile-conversation-stream',
+                    input_tokens: inputTokens,
+                    output_tokens: outputTokens,
+                    profile_id: profileId,
+                    success: true,
+                  });
                 }
               } catch {
                 // Skip invalid JSON
@@ -347,7 +372,7 @@ export function useStreamingAI(): UseStreamingAIReturn {
         abortControllerRef.current = null;
       }
     },
-    [user, messages, addMessage, updateLastMessage]
+    [user, messages, addMessage, updateLastMessage, checkUsage, logUsage]
   );
 
   const clearMessages = useCallback(() => {
@@ -367,6 +392,8 @@ export function useStreamingAI(): UseStreamingAIReturn {
     intelligence,
     conversationId,
     conversations,
+    usageStatus,
+    isUsageBlocked: !canUseAI(),
     sendMessage,
     clearMessages,
     loadConversation,
