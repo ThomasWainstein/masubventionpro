@@ -1160,7 +1160,7 @@ const LandingPage = () => {
                   "Rapport PDF detaille",
                   "Scores d'eligibilite personnalises",
                   "Montants historiques reels",
-                  "Assistant IA expert illimite",
+                  "Assistant IA expert",
                   "Support",
                   "Moteur de recherche (10 000+ aides)",
                   "Alertes email personnalisees",
@@ -1199,7 +1199,7 @@ const LandingPage = () => {
                   "Rapport PDF detaille",
                   "Scores d'eligibilite personnalises",
                   "Montants historiques reels",
-                  "Assistant IA expert illimite",
+                  "Assistant IA expert",
                   "Support",
                   "Moteur de recherche (10 000+ aides)",
                   "Alertes email personnalisees",
@@ -1335,8 +1335,6 @@ const LandingPage = () => {
               <div className="space-y-3">
                 <a href="https://subvention360.com" target="_blank" rel="noopener noreferrer" className="block text-white/70 hover:text-white transition-colors">subvention360 Pro</a>
                 <a href="#" className="block text-white/70 hover:text-white transition-colors">Devenir partenaire</a>
-                <a href="#" className="block text-white/70 hover:text-white transition-colors">API</a>
-                <a href="#" className="block text-white/70 hover:text-white transition-colors">Affiliation</a>
               </div>
             </div>
           </div>
