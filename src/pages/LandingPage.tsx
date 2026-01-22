@@ -91,7 +91,8 @@ const LandingPage = () => {
     try {
       const { data, error } = await supabase
         .from("subsidies")
-        .select("id, name, type, source, description, amount_min, amount_max, deadline, eligible_naf_codes, eligible_regions")
+        .select("id, title, funding_type, agency, description, amount_min, amount_max, deadline, region, primary_sector, categories, source_url")
+        .eq("is_active", true)
         .limit(200)
 
       if (error) {
@@ -99,14 +100,15 @@ const LandingPage = () => {
         return []
       }
 
-      // Filter by NAF code if available
-      if (companyData?.codeNaf && data) {
-        const nafCode = companyData.codeNaf.substring(0, 2) // First 2 digits
-        return data.filter(s =>
-          !s.eligible_naf_codes ||
-          s.eligible_naf_codes.length === 0 ||
-          s.eligible_naf_codes.some((code: string) => code.startsWith(nafCode))
-        )
+      // Filter by sector if available (using primary_sector)
+      if (companyData?.libelleNaf && data) {
+        const sectorKeywords = companyData.libelleNaf.toLowerCase().split(/\s+/)
+        return data.filter(s => {
+          // Include if no sector restriction or matches
+          if (!s.primary_sector) return true
+          const subsidySector = s.primary_sector.toLowerCase()
+          return sectorKeywords.some((kw: string) => kw.length > 3 && subsidySector.includes(kw))
+        })
       }
 
       return data || []
@@ -118,17 +120,20 @@ const LandingPage = () => {
 
   // Step 4: Query subsidies by geography from Supabase
   const analyzeGeography = async (companyData: any, sectorSubsidies: any[]): Promise<any[]> => {
-    const region = companyData?.region || profileData.region
-    if (!region) return sectorSubsidies
+    const userRegion = companyData?.region || profileData.region
+    if (!userRegion) return sectorSubsidies
 
     // Filter sector subsidies by region
-    return sectorSubsidies.filter(s =>
-      !s.eligible_regions ||
-      s.eligible_regions.length === 0 ||
-      s.eligible_regions.includes(region) ||
-      s.eligible_regions.includes("National") ||
-      s.eligible_regions.includes("France entiere")
-    )
+    return sectorSubsidies.filter(s => {
+      if (!s.region || s.region.length === 0) return true // No restriction
+      return s.region.some((r: string) =>
+        r === userRegion ||
+        r === "National" ||
+        r === "France entiere" ||
+        r.toLowerCase().includes("national") ||
+        r.toLowerCase().includes("france")
+      )
+    })
   }
 
   // Step 5: Match eligibility - dedupe and validate
@@ -361,7 +366,9 @@ const LandingPage = () => {
           .select("*", { count: "exact", head: true })
 
         if (!error && count) {
-          setSubsidyCount(count.toLocaleString("fr-FR"))
+          // Round to nearest thousand
+          const roundedCount = Math.round(count / 1000) * 1000
+          setSubsidyCount(roundedCount.toLocaleString("fr-FR"))
         }
       } catch (err) {
         console.error("Error fetching subsidy count:", err)
@@ -660,7 +667,7 @@ const LandingPage = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(59,130,246,0.1)_0%,transparent_50%),radial-gradient(circle_at_80%_80%,rgba(5,150,105,0.1)_0%,transparent_50%)]" />
 
         <div className="max-w-[1400px] mx-auto relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-16 items-stretch">
             {/* Hero Text */}
             <div>
               <h1 className="text-4xl lg:text-[3.75rem] font-extrabold leading-[1.1] mb-6">
@@ -707,52 +714,54 @@ const LandingPage = () => {
             </div>
 
             {/* CTA Card */}
-            <div className="bg-white rounded-2xl p-10 shadow-2xl border border-white/30">
+            <div className="bg-white rounded-2xl p-12 shadow-2xl border border-white/30 flex flex-col justify-between">
               <div className="text-center mb-8">
-                <span className="inline-block bg-emerald-600 text-white px-4 py-1.5 rounded-full text-sm font-bold mb-4">
+                <span className="inline-block bg-emerald-600 text-white px-5 py-2 rounded-full text-base font-bold mb-6">
                   COMMENCEZ MAINTENANT
                 </span>
-                <h3 className="text-2xl font-bold text-slate-900 mb-3">
+                <h3 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-5">
                   Identifiez vos aides en quelques minutes
                 </h3>
-                <p className="text-slate-600 text-sm leading-relaxed">
+                <p className="text-slate-600 text-2xl leading-relaxed">
                   Creez votre profil entreprise et notre IA analysera instantanement plus de {subsidyCount} dispositifs d'aides publiques pour vous reveler toutes les opportunites auxquelles vous pourriez etre eligible : subventions, prets, garanties, exonerations fiscales et bien plus encore.
                 </p>
               </div>
 
               {/* Key benefits */}
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Check className="w-4 h-4 text-emerald-600" />
+              <div className="space-y-5 mb-10 flex-grow flex flex-col justify-center">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Check className="w-6 h-6 text-emerald-600" />
                   </div>
-                  <span className="text-slate-700">Analyse de {subsidyCount} dispositifs d'aides</span>
+                  <span className="text-slate-700 text-xl font-medium">Analyse de {subsidyCount} dispositifs d'aides</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Check className="w-4 h-4 text-emerald-600" />
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Check className="w-6 h-6 text-emerald-600" />
                   </div>
-                  <span className="text-slate-700">Enrichissement automatique par SIRET</span>
+                  <span className="text-slate-700 text-xl font-medium">Enrichissement automatique par SIRET</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Check className="w-4 h-4 text-emerald-600" />
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Check className="w-6 h-6 text-emerald-600" />
                   </div>
-                  <span className="text-slate-700">Scores d'eligibilite personnalises</span>
+                  <span className="text-slate-700 text-xl font-medium">Scores d'eligibilite personnalises</span>
                 </div>
               </div>
 
-              <button
-                onClick={openProfileModal}
-                className="w-full px-8 py-4 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold text-lg shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-800/30 transition-all flex items-center justify-center gap-2"
-              >
-                Lancer ma simulation
-                <ArrowRight className="w-5 h-5" />
-              </button>
+              <div>
+                <button
+                  onClick={openProfileModal}
+                  className="w-full px-8 py-5 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-xl font-semibold text-xl shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-800/30 transition-all flex items-center justify-center gap-3"
+                >
+                  Lancer ma simulation
+                  <ArrowRight className="w-6 h-6" />
+                </button>
 
-              <p className="text-center text-slate-400 text-xs mt-4">
-                Vos donnees restent 100% confidentielles
-              </p>
+                <p className="text-center text-slate-400 text-sm mt-5">
+                  Vos donnees restent 100% confidentielles
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -1384,6 +1393,15 @@ const LandingPage = () => {
 
               {/* Results View */}
               {showResults && !isAnalyzing && (() => {
+                // Helper to extract title (can be string or object)
+                const getTitle = (subsidy: any) => {
+                  if (!subsidy.title && subsidy.name) return subsidy.name // Fallback for mock data
+                  if (typeof subsidy.title === 'string') return subsidy.title
+                  if (subsidy.title?.fr) return subsidy.title.fr
+                  if (subsidy.title?.en) return subsidy.title.en
+                  return 'Aide sans titre'
+                }
+
                 // Use real results if available, fallback to mock data
                 const displaySubsidies = analysisResults?.matchedSubsidies || mockSubsidies
                 const displayAmount = analysisResults?.totalAmount || totalPotentialAmount
@@ -1450,7 +1468,7 @@ const LandingPage = () => {
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1">
-                                <h5 className="font-bold text-slate-900">{subsidy.name}</h5>
+                                <h5 className="font-bold text-slate-900">{getTitle(subsidy)}</h5>
                                 <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
                                   subsidy.eligibilityScore >= 80 ? 'bg-emerald-100 text-emerald-700' :
                                   subsidy.eligibilityScore >= 60 ? 'bg-amber-100 text-amber-700' :
@@ -1462,9 +1480,9 @@ const LandingPage = () => {
                               <div className="flex items-center gap-4 text-sm text-slate-500">
                                 <span className="flex items-center gap-1">
                                   <TrendingUp className="w-3 h-3" />
-                                  {subsidy.type || "Aide"}
+                                  {subsidy.funding_type || subsidy.type || "Aide"}
                                 </span>
-                                <span>{subsidy.source || "Source officielle"}</span>
+                                <span>{subsidy.agency || subsidy.source || "Source officielle"}</span>
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
@@ -1496,13 +1514,13 @@ const LandingPage = () => {
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1">
-                                <h5 className="font-bold text-slate-600">{subsidy.name}</h5>
+                                <h5 className="font-bold text-slate-600">{getTitle(subsidy)}</h5>
                                 <span className="px-2 py-0.5 rounded text-xs font-semibold bg-slate-200 text-slate-500">
                                   {subsidy.eligibilityScore}% eligible
                                 </span>
                               </div>
                               <div className="flex items-center gap-4 text-sm text-slate-400">
-                                <span>{subsidy.type || subsidy.category || "Aide"}</span>
+                                <span>{subsidy.funding_type || subsidy.type || subsidy.category || "Aide"}</span>
                               </div>
                             </div>
                           </div>
