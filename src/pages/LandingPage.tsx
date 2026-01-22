@@ -6,7 +6,7 @@ import { Menu, X } from "lucide-react"
 
 /**
  * MaSubventionPro Landing Page v7
- * Complete redesign with "23 milliards" hook, segment selector, corrected claims
+ * Complete redesign with "des milliards" hook, segment selector, corrected claims
  * All certification claims verified and corrected
  */
 const LandingPage = () => {
@@ -75,10 +75,10 @@ const LandingPage = () => {
   return (
     <>
       <Helmet>
-        <title>MaSubventionPro - Ne laissez plus 23 milliards d'euros d'aides sur la table</title>
+        <title>MaSubventionPro - Ne laissez plus des milliards d'euros d'aides sur la table</title>
         <meta
           name="description"
-          content="23 milliards d'euros d'aides publiques par an sont non reclamees. Notre IA analyse plus de 10 000 dispositifs pour identifier toutes vos opportunites."
+          content="Des milliards d'euros d'aides publiques par an sont non reclamees. Notre IA analyse plus de 10 000 dispositifs pour identifier toutes vos opportunites."
         />
         <link rel="canonical" href="https://masubventionpro.com" />
       </Helmet>
@@ -144,7 +144,7 @@ const LandingPage = () => {
             {/* Hero Text */}
             <div>
               <h1 className="text-4xl lg:text-[3.75rem] font-extrabold leading-[1.1] mb-6">
-                <span className="bg-gradient-to-br from-amber-400 to-amber-300 bg-clip-text text-transparent block text-5xl lg:text-[4rem]">23 milliards d'euros</span>
+                <span className="bg-gradient-to-br from-amber-400 to-amber-300 bg-clip-text text-transparent block text-5xl lg:text-[4rem]">Des milliards d'euros</span>
                 d'aides publiques par an sont non reclamees.
               </h1>
               <h2 className="text-3xl lg:text-[2.5rem] font-bold mb-6 leading-tight">
@@ -560,13 +560,12 @@ const LandingPage = () => {
               </div>
               <ul className="space-y-0">
                 {[
-                  "1 simulation complete",
-                  "Identification de toutes les aides eligibles",
-                  "Rapport PDF detaille telechargeable",
+                  "Simulation et identification des aides",
+                  "Rapport PDF detaille",
                   "Scores d'eligibilite personnalises",
                   "Montants historiques reels",
                   "Assistant IA expert",
-                  "Acces 30 jours",
+                  "Support",
                 ].map((item, j, arr) => (
                   <li key={j} className={`py-3.5 flex items-start gap-3 text-sm ${j < arr.length - 1 ? 'border-b border-slate-200' : ''}`}>
                     <span className="text-emerald-600 font-extrabold text-xl flex-shrink-0">✓</span>
@@ -599,13 +598,15 @@ const LandingPage = () => {
               </div>
               <ul className="space-y-0">
                 {[
-                  "Connexion 1 an et actualisation illimitee",
-                  "Rapports PDF detailles",
-                  "Assistant IA expert ILLIMITE",
-                  "Moteur de recherche complet (10 000+ aides)",
-                  "Alertes mensuelles personnalisees par email",
-                  "Notifications nouveaux dispositifs",
-                  "Historique et suivi de vos aides",
+                  "Simulation et identification des aides",
+                  "Rapport PDF detaille",
+                  "Scores d'eligibilite personnalises",
+                  "Montants historiques reels",
+                  "Assistant IA expert illimite",
+                  "Moteur de recherche (10 000+ aides)",
+                  "Alertes email personnalisees",
+                  "Historique et suivi",
+                  "Support",
                 ].map((item, j, arr) => (
                   <li key={j} className={`py-3.5 flex items-start gap-3 text-sm ${j < arr.length - 1 ? 'border-b border-slate-200' : ''}`}>
                     <span className="text-emerald-600 font-extrabold text-xl flex-shrink-0">✓</span>
@@ -636,13 +637,16 @@ const LandingPage = () => {
               </div>
               <ul className="space-y-0">
                 {[
-                  "Multi-sites (10 societes incluses)",
-                  "Recherches illimitees",
-                  "Assistant IA contextuel",
-                  "Rapports white-label",
-                  "Accompagnement expert dedie",
-                  "Support prioritaire 24h",
-                  "API Access",
+                  "Simulation et identification des aides",
+                  "Rapport PDF detaille",
+                  "Scores d'eligibilite personnalises",
+                  "Montants historiques reels",
+                  "Assistant IA expert illimite",
+                  "Moteur de recherche (10 000+ aides)",
+                  "Alertes email personnalisees",
+                  "Historique et suivi",
+                  "Multi-societes (10 incluses)",
+                  "Support",
                 ].map((item, j, arr) => (
                   <li key={j} className={`py-3.5 flex items-start gap-3 text-sm ${j < arr.length - 1 ? 'border-b border-slate-200' : ''}`}>
                     <span className="text-emerald-600 font-extrabold text-xl flex-shrink-0">✓</span>
