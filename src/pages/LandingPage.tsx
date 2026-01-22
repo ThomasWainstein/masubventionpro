@@ -214,40 +214,35 @@ const LandingPage = () => {
   }
 
   // Step 7: Estimate total potential amounts
-  // Pick top subsidy from each funding type (different types are typically cumulable)
-  // Then take a middle estimate (70%) to be realistic
+  // Show a realistic range from top matched subsidies
   const estimateAmounts = async (subsidies: any[]): Promise<{ subsidies: any[], totalPotential: string }> => {
-    // Group subsidies by funding type - different types can usually be combined
-    const byType: Record<string, { amount: number; subsidy: any }> = {}
+    // Get all valid amounts from top subsidies (already sorted by match score)
+    const amounts = subsidies
+      .slice(0, 5) // Consider top 5 matches only
+      .map(s => Number(s.amount_max) || Number(s.amount_min) || 0)
+      .filter(a => a > 0)
+      .sort((a, b) => a - b)
 
-    subsidies.forEach(subsidy => {
-      const amount = Number(subsidy.amount_max) || Number(subsidy.amount_min) || 0
-      if (amount <= 0) return
+    if (amounts.length === 0) {
+      return { subsidies, totalPotential: "Variable selon profil" }
+    }
 
-      const type = subsidy.funding_type?.toLowerCase() || 'other'
-      // Keep the highest amount per type
-      if (!byType[type] || amount > byType[type].amount) {
-        byType[type] = { amount, subsidy }
-      }
-    })
+    // Min: median of top matches (realistic single subsidy)
+    // Max: largest subsidy amount
+    const medianIdx = Math.floor(amounts.length / 2)
+    const minAmount = amounts[medianIdx] // median
+    const maxAmount = amounts[amounts.length - 1] // largest
 
-    // Sum top subsidy from each type (typically cumulable)
-    const cumulableTypes = Object.values(byType)
-    const totalCumulable = cumulableTypes.reduce((sum, item) => sum + item.amount, 0)
-
-    // Apply 70% factor for realistic middle estimate
-    const middleEstimate = Math.round(totalCumulable * 0.7)
-
-    // Format the amount
-    const formatted = middleEstimate > 0
-      ? `~${middleEstimate.toLocaleString("fr-FR")} EUR`
-      : "Variable selon profil"
+    // Format the range
+    const formatted = minAmount === maxAmount
+      ? `${maxAmount.toLocaleString("fr-FR")} EUR`
+      : `Entre ${minAmount.toLocaleString("fr-FR")} et ${maxAmount.toLocaleString("fr-FR")} EUR`
 
     console.log("[DEBUG] Amount estimation:", {
-      typesFound: Object.keys(byType),
-      amountsPerType: Object.entries(byType).map(([t, v]) => `${t}: ${v.amount}`),
-      totalCumulable,
-      middleEstimate
+      topAmounts: amounts,
+      minAmount,
+      maxAmount,
+      formatted
     })
 
     return { subsidies, totalPotential: formatted }
