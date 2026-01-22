@@ -91,13 +91,26 @@ const LandingPage = () => {
     try {
       const { data, error } = await supabase
         .from("subsidies")
-        .select("id, title, funding_type, agency, description, amount_min, amount_max, deadline, region, primary_sector, categories, source_url")
+        .select("id, title, funding_type, agency, description, amount_min, amount_max, deadline, region, primary_sector, categories, keywords, source_url")
         .eq("is_active", true)
         .limit(200)
 
       if (error) {
         console.error("Supabase sector query error:", error)
         return []
+      }
+
+      // Debug: Log sample of fetched data to check categories
+      if (data && data.length > 0) {
+        console.log("[DEBUG] Sample subsidy fields:", {
+          sample: data.slice(0, 3).map(s => ({
+            id: s.id,
+            funding_type: s.funding_type,
+            primary_sector: s.primary_sector,
+            categories: s.categories,
+            keywords: s.keywords?.slice(0, 3)
+          }))
+        })
       }
 
       // Filter by sector if available (using primary_sector)
@@ -182,11 +195,14 @@ const LandingPage = () => {
     const scoredSubsidies = subsidies.map((subsidy: Subsidy) => {
       const { score, reasons } = calculateMatchScore(subsidy, simulatedProfile as MaSubventionProProfile)
 
+      // Convert raw score to percentage (max possible ~105 points)
+      const percentageScore = Math.min(100, Math.round((score / 105) * 100))
+
       return {
         ...subsidy,
         matchScore: score,
         matchReasons: reasons,
-        eligibilityScore: score, // For display compatibility
+        eligibilityScore: percentageScore,
       } as ScoredSubsidy
     })
 
@@ -210,7 +226,7 @@ const LandingPage = () => {
     })
 
     const formatted = totalMax > 0
-      ? `${Math.round(totalMax / 1000)} 000 EUR`
+      ? `${totalMax.toLocaleString("fr-FR")} EUR`
       : "Variable selon profil"
 
     return { subsidies, totalPotential: formatted }
@@ -227,8 +243,68 @@ const LandingPage = () => {
     totalAmount: string;
     categories: string[];
   }> => {
-    // Extract unique categories/types
-    const categories = [...new Set(subsidies.map(s => s.type || "Autre"))].slice(0, 6)
+    // Extract DIVERSE categories - collect from each field type separately
+    const fundingTypes = new Set<string>()
+    const sectors = new Set<string>()
+    const categoryTags = new Set<string>()
+    const keywordTags = new Set<string>()
+
+    subsidies.forEach(s => {
+      // Funding types (e.g., "Subvention", "Pret", "Garantie", "Avance remboursable")
+      if (s.funding_type && typeof s.funding_type === 'string' && s.funding_type.length > 2) {
+        fundingTypes.add(s.funding_type.charAt(0).toUpperCase() + s.funding_type.slice(1))
+      }
+      // Primary sectors
+      if (s.primary_sector && typeof s.primary_sector === 'string' && s.primary_sector.length > 2) {
+        sectors.add(s.primary_sector.charAt(0).toUpperCase() + s.primary_sector.slice(1))
+      }
+      // Category tags from categories[] array
+      if (s.categories && Array.isArray(s.categories)) {
+        s.categories.forEach((c: string) => {
+          if (c && typeof c === 'string' && c.trim().length > 2) {
+            categoryTags.add(c.trim().charAt(0).toUpperCase() + c.trim().slice(1))
+          }
+        })
+      }
+      // Keywords as fallback
+      if (s.keywords && Array.isArray(s.keywords)) {
+        s.keywords.slice(0, 3).forEach((k: string) => {
+          if (k && typeof k === 'string' && k.length > 3 && k.length < 20) {
+            keywordTags.add(k.charAt(0).toUpperCase() + k.slice(1))
+          }
+        })
+      }
+    })
+
+    // Build diverse list: pick from each type to ensure variety
+    const categories: string[] = []
+    const exclude = new Set(['Autre', 'autre', 'Other', 'N/a'])
+
+    // Take up to 2 unique funding types first
+    Array.from(fundingTypes).filter(c => !exclude.has(c)).slice(0, 2).forEach(c => categories.push(c))
+    // Then up to 2 sectors
+    Array.from(sectors).filter(c => !exclude.has(c)).slice(0, 2).forEach(c => {
+      if (!categories.includes(c)) categories.push(c)
+    })
+    // Fill remaining with category tags
+    Array.from(categoryTags).filter(c => !exclude.has(c)).forEach(c => {
+      if (categories.length < 6 && !categories.includes(c)) categories.push(c)
+    })
+    // Fill remaining with keywords if needed
+    Array.from(keywordTags).filter(c => !exclude.has(c)).forEach(c => {
+      if (categories.length < 6 && !categories.includes(c)) categories.push(c)
+    })
+
+    if (categories.length === 0) categories.push("Aides aux entreprises")
+
+    // Debug: Log extracted categories
+    console.log("[DEBUG] Extracted categories:", {
+      fundingTypes: Array.from(fundingTypes),
+      sectors: Array.from(sectors),
+      categoryTags: Array.from(categoryTags),
+      keywords: Array.from(keywordTags).slice(0, 5),
+      final: categories
+    })
 
     return {
       companyData,
@@ -1406,8 +1482,8 @@ const LandingPage = () => {
                 const displaySubsidies = analysisResults?.matchedSubsidies || mockSubsidies
                 const displayAmount = analysisResults?.totalAmount || totalPotentialAmount
                 const displayCategories = analysisResults?.categories || categories
-                const displayVisible = displaySubsidies.slice(0, 5)
-                const displayLocked = displaySubsidies.slice(5)
+                const displayVisible = displaySubsidies.slice(0, 3)
+                const displayLocked = displaySubsidies.slice(3)
 
                 return (
                 <div className="space-y-6">
@@ -1443,7 +1519,7 @@ const LandingPage = () => {
                       </div>
                       <div className="bg-white/20 rounded-lg p-4 text-center">
                         <div className="text-3xl font-extrabold">{displayCategories.length}</div>
-                        <div className="text-sm opacity-90">Categories</div>
+                        <div className="text-sm opacity-90">{displayCategories.length === 1 ? "Categorie" : "Categories"}</div>
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-2 mt-4">
