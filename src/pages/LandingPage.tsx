@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { Helmet } from "react-helmet-async"
 import { supabase } from "@/lib/supabase"
-import { Menu, X, Building2, ArrowRight, Check, Upload, FileText, Trash2, Lock, Star, TrendingUp } from "lucide-react"
+import { Menu, X, Building2, ArrowRight, Check, Upload, FileText, Trash2, Lock, Star, TrendingUp, Search, BarChart3, Factory, MapPin, Bot, Coins, ClipboardList, Rocket, RefreshCw, Target, Clock, Shield } from "lucide-react"
 import { calculateMatchScore, ScoredSubsidy } from "@/hooks/useRecommendedSubsidies"
 import { MaSubventionProProfile, Subsidy } from "@/types"
 
@@ -164,6 +164,35 @@ const LandingPage = () => {
 
   // Step 6: Calculate eligibility scores using V5 Hybrid Matcher
   const calculateScores = async (subsidies: any[], companyData: any): Promise<ScoredSubsidy[]> => {
+    // Infer project types based on profile type and sector
+    const inferredProjectTypes: string[] = []
+    if (profileType === 'creation') {
+      inferredProjectTypes.push('creation', 'tresorerie', 'investissement')
+    } else {
+      // Existing company - likely interested in development
+      inferredProjectTypes.push('investissement', 'numerique', 'emploi')
+    }
+    // Add eco transition as it's widely applicable
+    inferredProjectTypes.push('transition-eco')
+
+    // Map NAF code prefix to sector for better matching
+    const nafPrefix = (companyData?.codeNaf || profileData.sector || '').substring(0, 2)
+    const nafToSector: Record<string, string> = {
+      '01': 'agriculture', '02': 'agriculture', '03': 'agriculture',
+      '10': 'agriculture', '11': 'agriculture',
+      '41': 'construction', '42': 'construction', '43': 'construction',
+      '45': 'commerce', '46': 'commerce', '47': 'commerce',
+      '49': 'transport', '50': 'transport', '51': 'transport', '52': 'transport',
+      '55': 'tourisme', '56': 'tourisme',
+      '62': 'tech', '63': 'tech',
+      '64': 'finance', '65': 'finance', '66': 'finance',
+      '68': 'immobilier',
+      '69': 'services', '70': 'services', '71': 'services', '72': 'tech', '73': 'services',
+      '74': 'services', '75': 'sante', '86': 'sante', '87': 'sante', '88': 'sante',
+      '85': 'education',
+    }
+    const mappedSector = nafToSector[nafPrefix] || profileData.sector || 'services'
+
     // Build a MaSubventionProProfile from the company data for V5 matcher
     const simulatedProfile: Partial<MaSubventionProProfile> = {
       id: 'simulation',
@@ -173,18 +202,18 @@ const LandingPage = () => {
       siren: companyData?.siren || null,
       naf_code: companyData?.codeNaf || profileData.sector || null,
       naf_label: companyData?.libelleNaf || null,
-      sector: profileData.sector || companyData?.codeNaf?.substring(0, 2) || null,
+      sector: mappedSector,
       region: companyData?.region || profileData.region || null,
       department: companyData?.departement || null,
       city: companyData?.commune || null,
       postal_code: companyData?.codePostal || null,
-      employees: companyData?.trancheEffectif || null,
-      company_category: companyData?.categorieEntreprise || null,
+      employees: companyData?.trancheEffectif || '1-10',
+      company_category: companyData?.categorieEntreprise || 'PME',
       legal_form: companyData?.formeJuridique || null,
       year_created: companyData?.dateCreation ? new Date(companyData.dateCreation).getFullYear() : null,
       website_url: profileData.website || null,
       description: profileData.description || null,
-      project_types: [], // Could be enhanced with form selection
+      project_types: inferredProjectTypes,
       certifications: [],
       website_intelligence: null,
       created_at: new Date().toISOString(),
@@ -381,49 +410,49 @@ const LandingPage = () => {
       title: "Verification de votre profil",
       description: "Nous validons les informations de votre entreprise aupres des registres officiels...",
       duration: 15,
-      icon: "🔍"
+      icon: <Search className="w-5 h-5" />
     },
     {
       title: "Enrichissement des donnees",
       description: "Recuperation des donnees complementaires : effectifs, chiffre d'affaires, code NAF, forme juridique...",
       duration: 20,
-      icon: "📊"
+      icon: <BarChart3 className="w-5 h-5" />
     },
     {
       title: "Analyse sectorielle",
       description: "Identification des dispositifs specifiques a votre secteur d'activite...",
       duration: 40,
-      icon: "🏭"
+      icon: <Factory className="w-5 h-5" />
     },
     {
       title: "Analyse geographique",
       description: "Recherche des aides regionales, departementales et communales disponibles dans votre zone...",
       duration: 45,
-      icon: "📍"
+      icon: <MapPin className="w-5 h-5" />
     },
     {
       title: "Matching eligibilite",
       description: "Notre IA compare votre profil avec plus de 10 000 criteres d'eligibilite...",
       duration: 60,
-      icon: "🤖"
+      icon: <Bot className="w-5 h-5" />
     },
     {
       title: "Calcul des scores",
       description: "Attribution d'un score de pertinence pour chaque aide identifiee...",
       duration: 50,
-      icon: "📈"
+      icon: <TrendingUp className="w-5 h-5" />
     },
     {
       title: "Estimation des montants",
       description: "Analyse des montants historiquement accordes pour des profils similaires...",
       duration: 40,
-      icon: "💰"
+      icon: <Coins className="w-5 h-5" />
     },
     {
       title: "Finalisation du rapport",
       description: "Preparation de votre rapport personnalise avec recommandations prioritaires...",
       duration: 30,
-      icon: "📋"
+      icon: <ClipboardList className="w-5 h-5" />
     }
   ]
 
@@ -826,14 +855,6 @@ const LandingPage = () => {
                 </p>
               </div>
 
-              {/* Data Promise Box */}
-              <div className="bg-emerald-500/15 border-2 border-emerald-500/30 px-6 py-5 rounded-xl mb-6">
-                <h4 className="text-lg font-bold text-emerald-400 mb-2">VOS DONNEES VOUS APPARTIENNENT</h4>
-                <p className="text-base opacity-95 leading-relaxed">
-                  Aucune utilisation commerciale. Aucun partage. Aucune revente. Vos informations sont utilisees UNIQUEMENT pour vous fournir le service souscrit. Point final.
-                </p>
-              </div>
-
               <div className="flex flex-wrap gap-4">
                 <span className="bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full text-sm font-semibold border border-white/20">
                   {subsidyCount} dispositifs
@@ -904,36 +925,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Social Proof Section */}
-      <section className="bg-slate-50 py-12 px-8 text-center">
-        <div className="max-w-[1400px] mx-auto">
-          <h3 className="text-2xl font-bold text-slate-900 mb-2">
-            Une technologie eprouvee, des resultats concrets
-          </h3>
-          <p className="text-slate-500 text-lg mb-8">Propulse par subvention360, la base de donnees de reference</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-6 bg-white rounded-xl shadow-sm">
-              <span className="text-5xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
-                {subsidyCount}
-              </span>
-              <p className="text-slate-500 font-semibold">Dispositifs d'aides dans notre base</p>
-            </div>
-            <div className="p-6 bg-white rounded-xl shadow-sm">
-              <span className="text-5xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
-                20+
-              </span>
-              <p className="text-slate-500 font-semibold">Sources officielles analysees</p>
-            </div>
-            <div className="p-6 bg-white rounded-xl shadow-sm">
-              <span className="text-5xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
-                Quotidien
-              </span>
-              <p className="text-slate-500 font-semibold">Frequence de mise a jour des donnees</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Segment Selector Section */}
       <section id="profils" className="bg-white py-16 px-8 shadow-[0_-10px_40px_rgba(0,0,0,0.08)]">
         <div className="max-w-[1400px] mx-auto text-center">
@@ -947,28 +938,28 @@ const LandingPage = () => {
             {[
               {
                 id: 'creation',
-                icon: '🚀',
+                icon: <Rocket className="w-12 h-12" />,
                 title: 'Createur',
                 desc: 'Vous lancez votre activite et avez besoin de capital de depart',
                 benefit: 'Identifiez votre capital de depart et les aides au financement de stock',
               },
               {
                 id: 'repreneur',
-                icon: '🔄',
+                icon: <RefreshCw className="w-12 h-12" />,
                 title: 'Repreneur',
                 desc: 'Vous reprenez une entreprise existante',
                 benefit: 'Decouvrez les aides transmission et garanties bancaires disponibles',
               },
               {
                 id: 'pme',
-                icon: '📈',
+                icon: <TrendingUp className="w-12 h-12" />,
                 title: 'Dirigeant PME/PMI',
                 desc: 'Vous developpez votre entreprise etablie',
                 benefit: 'Identifiez les aides transition ecologique, recrutement et developpement',
               },
               {
                 id: 'groupe',
-                icon: '🏢',
+                icon: <Building2 className="w-12 h-12" />,
                 title: 'Groupe / Holding',
                 desc: 'Vous gerez plusieurs societes',
                 benefit: 'Decouvrez les opportunites d\'aides pour toutes vos filiales',
@@ -983,7 +974,7 @@ const LandingPage = () => {
                     : 'border-slate-200'
                 }`}
               >
-                <div className="text-5xl mb-4">{segment.icon}</div>
+                <div className="text-blue-800 mb-4 flex justify-center">{segment.icon}</div>
                 <h3 className="text-2xl font-bold text-slate-900 mb-3">{segment.title}</h3>
                 <p className="text-slate-500 leading-relaxed mb-4">{segment.desc}</p>
                 <div className="bg-slate-50 p-4 rounded-lg text-sm font-semibold text-blue-800">
@@ -1051,37 +1042,37 @@ const LandingPage = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
             {[
               {
-                icon: "🎯",
+                icon: <Target className="w-8 h-8 text-white" />,
                 title: "Matching IA ultra-precis",
                 desc: "Nos algorithmes analysent en profondeur votre profil (activite, secteur, effectifs, localisation, projets) et identifient automatiquement les dispositifs pertinents parmi les aides disponibles.",
                 highlight: "Score d'eligibilite calcule pour chaque aide (ex: 92%)",
               },
               {
-                icon: "📊",
+                icon: <BarChart3 className="w-8 h-8 text-white" />,
                 title: "Donnees historiques reelles",
                 desc: "Pour chaque aide : montants reellement accordes (min, max, moyenne), nombre de beneficiaires, delais de reponse. Des donnees concretes, pas des estimations.",
                 highlight: "Historique sur 3 ans si disponible",
               },
               {
-                icon: "🔍",
+                icon: <Search className="w-8 h-8 text-white" />,
                 title: "Moteur de recherche expert",
                 desc: "Explorez librement les dispositifs avec filtres avances : region, secteur, montant, deadline, type d'aide. Trouvez exactement ce que vous cherchez.",
                 highlight: "Recherche textuelle + 15 filtres combinables",
               },
               {
-                icon: "🤖",
+                icon: <Bot className="w-8 h-8 text-white" />,
                 title: "Assistant IA expert - Pas un chatbot",
                 desc: "Un veritable analyste financier augmente qui consulte la base subvention360 en temps reel. Soumettez votre projet complet, l'IA l'analyse en profondeur et identifie toutes les opportunites.",
                 highlight: "Reponses sourcees avec references officielles",
               },
               {
-                icon: "📄",
+                icon: <FileText className="w-8 h-8 text-white" />,
                 title: "Rapports PDF professionnels",
                 desc: "Dossier complet pour chaque aide : criteres d'eligibilite, montants, demarches detaillees, contacts directs des organismes, calendrier. Pret a utiliser.",
                 highlight: "Export Excel pour suivi personnalise",
               },
               {
-                icon: "⏰",
+                icon: <Clock className="w-8 h-8 text-white" />,
                 title: "Alertes d'urgence",
                 desc: "Soyez notifie des qu'un nouveau dispositif correspond a votre profil. Certaines aides ont des deadlines - ne manquez plus jamais une opportunite.",
                 highlight: "Email mensuel personnalise (offre annuelle)",
@@ -1259,23 +1250,23 @@ const LandingPage = () => {
           <div className="grid md:grid-cols-3 gap-8 mt-12">
             {[
               {
-                icon: "🔒",
+                icon: <Lock className="w-6 h-6" />,
                 title: "Zero revente de donnees",
                 desc: "Vos donnees ne seront JAMAIS vendues, louees ou cedees a des tiers. C'est un engagement absolu et irrevocable.",
               },
               {
-                icon: "🇪🇺",
+                icon: <Shield className="w-6 h-6" />,
                 title: "100% conforme RGPD",
                 desc: "Respect total du reglement europeen. DPO dedie. Hebergement UE exclusivement. Infrastructure certifiee SOC 2 Type 2.",
               },
               {
-                icon: "🤖",
+                icon: <Bot className="w-6 h-6" />,
                 title: "IA ethique et privee",
                 desc: "Vos donnees ne servent PAS a entrainer nos IA. Traitement 100% confidentiel sur nos serveurs. Conforme IA Act europeen.",
               },
             ].map((card, i) => (
               <div key={i} className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20">
-                <h3 className="text-xl font-bold mb-4">{card.icon} {card.title}</h3>
+                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">{card.icon} {card.title}</h3>
                 <p className="opacity-90 leading-relaxed">{card.desc}</p>
               </div>
             ))}
@@ -1808,7 +1799,7 @@ const LandingPage = () => {
                   >
                     <div className="flex items-start gap-4">
                       <div className="w-14 h-14 bg-gradient-to-br from-emerald-600 to-emerald-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <span className="text-2xl">🚀</span>
+                        <Rocket className="w-7 h-7 text-white" />
                       </div>
                       <div className="flex-1">
                         <h4 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-emerald-600">Creation / Reprise d'entreprise</h4>
