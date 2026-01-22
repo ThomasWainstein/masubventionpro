@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { Helmet } from "react-helmet-async"
 import { supabase } from "@/lib/supabase"
-import { Menu, X, Building2, ArrowRight, Check, Upload, FileText, Trash2, Lock, Star, TrendingUp, Search, BarChart3, Factory, MapPin, Bot, Coins, ClipboardList, Rocket, RefreshCw, Target, Clock, Shield } from "lucide-react"
+import { Menu, X, Building2, ArrowRight, Check, Upload, FileText, Trash2, Lock, Star, TrendingUp, Search, BarChart3, Factory, MapPin, Bot, Coins, ClipboardList, Rocket, RefreshCw, Target, Clock, Shield, Circle } from "lucide-react"
 import { calculateMatchScore, ScoredSubsidy } from "@/hooks/useRecommendedSubsidies"
 import { MaSubventionProProfile, Subsidy } from "@/types"
 
@@ -1126,7 +1126,7 @@ const LandingPage = () => {
                   "Support",
                 ].map((item, j, arr) => (
                   <li key={j} className={`py-3.5 flex items-start gap-3 text-sm ${j < arr.length - 1 ? 'border-b border-slate-200' : ''}`}>
-                    <span className="text-emerald-600 font-extrabold text-xl flex-shrink-0">✓</span>
+                    <Check className="w-5 h-5 text-emerald-600 flex-shrink-0" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -1167,7 +1167,7 @@ const LandingPage = () => {
                   "Historique et suivi",
                 ].map((item, j, arr) => (
                   <li key={j} className={`py-3.5 flex items-start gap-3 text-sm ${j < arr.length - 1 ? 'border-b border-slate-200' : ''}`}>
-                    <span className="text-emerald-600 font-extrabold text-xl flex-shrink-0">✓</span>
+                    <Check className="w-5 h-5 text-emerald-600 flex-shrink-0" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -1207,7 +1207,7 @@ const LandingPage = () => {
                   "Multi-societes (10 incluses)",
                 ].map((item, j, arr) => (
                   <li key={j} className={`py-3.5 flex items-start gap-3 text-sm ${j < arr.length - 1 ? 'border-b border-slate-200' : ''}`}>
-                    <span className="text-emerald-600 font-extrabold text-xl flex-shrink-0">✓</span>
+                    <Check className="w-5 h-5 text-emerald-600 flex-shrink-0" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -1961,26 +1961,26 @@ const LandingPage = () => {
 
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 text-sm">
-                          <span className={`font-medium ${profileData.siret ? 'text-emerald-600' : 'text-slate-500'}`}>
-                            {profileData.siret ? '✓' : '○'} SIRET
+                          <span className={`font-medium flex items-center gap-1.5 ${profileData.siret ? 'text-emerald-600' : 'text-slate-500'}`}>
+                            {profileData.siret ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} SIRET
                           </span>
                           <span className="text-red-500 text-xs">Obligatoire</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
-                          <span className={`font-medium ${profileData.website ? 'text-emerald-600' : 'text-slate-400'}`}>
-                            {profileData.website ? '✓' : '○'} Site web
+                          <span className={`font-medium flex items-center gap-1.5 ${profileData.website ? 'text-emerald-600' : 'text-slate-400'}`}>
+                            {profileData.website ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Site web
                           </span>
                           <span className="text-slate-400 text-xs">Recommande</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
-                          <span className={`font-medium ${profileData.description ? 'text-emerald-600' : 'text-slate-400'}`}>
-                            {profileData.description ? '✓' : '○'} Description
+                          <span className={`font-medium flex items-center gap-1.5 ${profileData.description ? 'text-emerald-600' : 'text-slate-400'}`}>
+                            {profileData.description ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Description
                           </span>
                           <span className="text-slate-400 text-xs">Recommande</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
-                          <span className={`font-medium ${documents.length > 0 ? 'text-emerald-600' : 'text-slate-400'}`}>
-                            {documents.length > 0 ? '✓' : '○'} Documents
+                          <span className={`font-medium flex items-center gap-1.5 ${documents.length > 0 ? 'text-emerald-600' : 'text-slate-400'}`}>
+                            {documents.length > 0 ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Documents
                           </span>
                           <span className="text-slate-400 text-xs">Recommande</span>
                         </div>
@@ -2132,41 +2132,41 @@ const LandingPage = () => {
 
                       <div className="space-y-2">
                         <div className="text-sm">
-                          <span className={`font-medium ${profileData.companyName ? 'text-emerald-600' : 'text-slate-500'}`}>
-                            {profileData.companyName ? '✓' : '○'} Nom de l'entreprise
+                          <span className={`font-medium flex items-center gap-1.5 ${profileData.companyName ? 'text-emerald-600' : 'text-slate-500'}`}>
+                            {profileData.companyName ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Nom de l'entreprise
                           </span>
                           <span className="text-red-500 text-xs ml-2">Obligatoire</span>
                         </div>
                         <div className="text-sm">
-                          <span className={`font-medium ${profileData.sector ? 'text-emerald-600' : 'text-slate-500'}`}>
-                            {profileData.sector ? '✓' : '○'} Secteur d'activite
+                          <span className={`font-medium flex items-center gap-1.5 ${profileData.sector ? 'text-emerald-600' : 'text-slate-500'}`}>
+                            {profileData.sector ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Secteur d'activite
                           </span>
                           <span className="text-red-500 text-xs ml-2">Obligatoire</span>
                         </div>
                         <div className="text-sm">
-                          <span className={`font-medium ${profileData.region ? 'text-emerald-600' : 'text-slate-500'}`}>
-                            {profileData.region ? '✓' : '○'} Region d'implantation
+                          <span className={`font-medium flex items-center gap-1.5 ${profileData.region ? 'text-emerald-600' : 'text-slate-500'}`}>
+                            {profileData.region ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Region d'implantation
                           </span>
                           <span className="text-red-500 text-xs ml-2">Obligatoire</span>
                           <p className="text-xs text-slate-400 mt-1">Choisissez "A determiner" pour explorer les aides dans differentes regions.</p>
                         </div>
                         <div className="text-sm">
-                          <span className={`font-medium ${profileData.website ? 'text-emerald-600' : 'text-slate-400'}`}>
-                            {profileData.website ? '✓' : '○'} Site web
+                          <span className={`font-medium flex items-center gap-1.5 ${profileData.website ? 'text-emerald-600' : 'text-slate-400'}`}>
+                            {profileData.website ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Site web
                           </span>
                           <span className="text-slate-400 text-xs ml-2">Recommande</span>
                           <p className="text-xs text-slate-400 mt-1">Notre IA analyse le site pour identifier des aides ciblees.</p>
                         </div>
                         <div className="text-sm">
-                          <span className={`font-medium ${profileData.description ? 'text-emerald-600' : 'text-slate-400'}`}>
-                            {profileData.description ? '✓' : '○'} Description
+                          <span className={`font-medium flex items-center gap-1.5 ${profileData.description ? 'text-emerald-600' : 'text-slate-400'}`}>
+                            {profileData.description ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Description
                           </span>
                           <span className="text-slate-400 text-xs ml-2">Recommande</span>
                           <p className="text-xs text-slate-400 mt-1">Plus les activites sont detaillees, plus les resultats seront pertinents.</p>
                         </div>
                         <div className="text-sm">
-                          <span className={`font-medium ${documents.length > 0 ? 'text-emerald-600' : 'text-slate-400'}`}>
-                            {documents.length > 0 ? '✓' : '○'} Documents
+                          <span className={`font-medium flex items-center gap-1.5 ${documents.length > 0 ? 'text-emerald-600' : 'text-slate-400'}`}>
+                            {documents.length > 0 ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Documents
                           </span>
                           <span className="text-slate-400 text-xs ml-2">Recommande</span>
                           <p className="text-xs text-slate-400 mt-1">Business plan, Kbis ou presentation pour une analyse approfondie.</p>
