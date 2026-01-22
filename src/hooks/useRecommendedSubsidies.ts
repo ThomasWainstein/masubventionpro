@@ -258,8 +258,9 @@ function hasSectorKeywords(text: string, sector: string): boolean {
 
 /**
  * Calculate match score between profile and subsidy
+ * Exported for use in landing page simulation
  */
-function calculateMatchScore(
+export function calculateMatchScore(
   subsidy: Subsidy,
   profile: MaSubventionProProfile
 ): { score: number; reasons: string[] } {

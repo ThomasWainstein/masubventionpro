@@ -353,7 +353,7 @@ export function DashboardPage() {
             </Button>
           </Link>
         </div>
-        {hasProfile && (
+        {hasProfile && profileCompletion < 100 && (
           <div className="pt-3 border-t border-slate-100">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-slate-500">Completion du profil</span>
