@@ -167,11 +167,19 @@ const PrivacyPage = () => {
           <div className="space-y-3">
             <div className="bg-slate-50 p-3 rounded-lg">
               <p className="font-medium text-slate-800">Supabase (hébergement base de données)</p>
-              <p className="text-sm text-slate-600">Données hébergées dans la région Europe (eu-west). Clauses contractuelles types (SCC) en place.</p>
+              <p className="text-sm text-slate-600">
+                <strong>Données hébergées en Union Européenne</strong> (région eu-central-1, Francfort, Allemagne).
+                Supabase est certifié <strong>SOC 2 Type 2</strong> et conforme RGPD avec DPA et clauses
+                contractuelles types (SCC) en place. Vos données utilisateur ne quittent jamais la région EU.
+              </p>
             </div>
             <div className="bg-slate-50 p-3 rounded-lg">
               <p className="font-medium text-slate-800">Vercel (hébergement application)</p>
-              <p className="text-sm text-slate-600">Infrastructure aux États-Unis avec SCC conformes au RGPD.</p>
+              <p className="text-sm text-slate-600">
+                Certifié <strong>SOC 2 Type 2</strong> et <strong>ISO 27001:2022</strong>. Vercel est certifié
+                sous le EU-US Data Privacy Framework (DPF). Les fonctions serverless sont configurées en région
+                européenne. Certaines métadonnées (protection DDoS) peuvent transiter par les US conformément aux SCC.
+              </p>
             </div>
             <div className="bg-slate-50 p-3 rounded-lg">
               <p className="font-medium text-slate-800">Stripe (paiements)</p>

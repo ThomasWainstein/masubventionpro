@@ -36,7 +36,7 @@ const MentionsLegalesPage = () => {
     name: 'Supabase Inc.',
     address: '970 Toa Payoh North, #07-04, Singapore 318992',
     website: 'https://supabase.com',
-    note: 'Données hébergées dans la région Europe (eu-west)',
+    note: 'Données hébergées en Union Européenne (région eu-central-1, Francfort, Allemagne). Certifié SOC 2 Type 2.',
   };
 
   return (

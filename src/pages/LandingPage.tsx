@@ -1300,10 +1300,10 @@ const LandingPage = () => {
               2026 MaSubventionPro. Tous droits réservés. | Propulsé par subvention360
             </p>
             <div className="flex flex-wrap gap-4 justify-center mt-4">
-              <span className="bg-white/10 px-4 py-2 rounded-full text-sm">Données hébergées en Europe (UE)</span>
+              <span className="bg-white/10 px-4 py-2 rounded-full text-sm">Base de données hébergée en UE</span>
               <span className="bg-white/10 px-4 py-2 rounded-full text-sm">100% conforme RGPD</span>
-              <span className="bg-white/10 px-4 py-2 rounded-full text-sm">Infrastructure SOC 2 Type 2</span>
-              <span className="bg-white/10 px-4 py-2 rounded-full text-sm">Conforme IA Act</span>
+              <span className="bg-white/10 px-4 py-2 rounded-full text-sm">Certifié SOC 2 Type 2</span>
+              <span className="bg-white/10 px-4 py-2 rounded-full text-sm">IA française (Mistral)</span>
             </div>
           </div>
         </div>
