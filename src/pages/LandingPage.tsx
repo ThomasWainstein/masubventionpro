@@ -1537,16 +1537,16 @@ const LandingPage = () => {
                       <Star className="w-6 h-6 text-amber-300" />
                       <h3 className="text-xl font-bold">Résultats de votre simulation</h3>
                     </div>
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="bg-white/20 rounded-lg p-4 text-center">
+                    <div className="flex justify-center gap-4">
+                      <div className="bg-white/20 rounded-lg p-4 text-center min-w-[120px]">
                         <div className="text-3xl font-extrabold">{displaySubsidies.length}</div>
                         <div className="text-sm opacity-90">Aides identifiées</div>
                       </div>
-                      <div className="bg-white/20 rounded-lg p-4 text-center">
+                      <div className="bg-white/20 rounded-lg p-4 text-center min-w-[120px]">
                         <div className="text-3xl font-extrabold">{displayAmount}</div>
                         <div className="text-sm opacity-90">Montant potentiel</div>
                       </div>
-                      <div className="bg-white/20 rounded-lg p-4 text-center">
+                      <div className="bg-white/20 rounded-lg p-4 text-center min-w-[120px]">
                         <div className="text-3xl font-extrabold">{displayCategories.length}</div>
                         <div className="text-sm opacity-90">{displayCategories.length === 1 ? "Catégorie" : "Catégories"}</div>
                       </div>
