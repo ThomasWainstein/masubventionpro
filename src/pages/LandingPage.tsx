@@ -407,50 +407,50 @@ const LandingPage = () => {
   // Analysis steps with timing
   const analysisSteps = [
     {
-      title: "Verification de votre profil",
-      description: "Nous validons les informations de votre entreprise aupres des registres officiels...",
+      title: "Vérification de votre profil",
+      description: "Nous validons les informations de votre entreprise auprès des registres officiels...",
       duration: 15,
       icon: <Search className="w-5 h-5" />
     },
     {
-      title: "Enrichissement des donnees",
-      description: "Recuperation des donnees complementaires : effectifs, chiffre d'affaires, code NAF, forme juridique...",
+      title: "Enrichissement des données",
+      description: "Récupération des données complémentaires : effectifs, chiffre d'affaires, code NAF, forme juridique...",
       duration: 20,
       icon: <BarChart3 className="w-5 h-5" />
     },
     {
       title: "Analyse sectorielle",
-      description: "Identification des dispositifs specifiques a votre secteur d'activite...",
+      description: "Identification des dispositifs spécifiques à votre secteur d'activité...",
       duration: 40,
       icon: <Factory className="w-5 h-5" />
     },
     {
-      title: "Analyse geographique",
-      description: "Recherche des aides regionales, departementales et communales disponibles dans votre zone...",
+      title: "Analyse géographique",
+      description: "Recherche des aides régionales, départementales et communales disponibles dans votre zone...",
       duration: 45,
       icon: <MapPin className="w-5 h-5" />
     },
     {
-      title: "Matching eligibilite",
-      description: "Notre IA compare votre profil avec plus de 10 000 criteres d'eligibilite...",
+      title: "Matching éligibilité",
+      description: "Notre IA compare votre profil avec plus de 10 000 critères d'éligibilité...",
       duration: 60,
       icon: <Bot className="w-5 h-5" />
     },
     {
       title: "Calcul des scores",
-      description: "Attribution d'un score de pertinence pour chaque aide identifiee...",
+      description: "Attribution d'un score de pertinence pour chaque aide identifiée...",
       duration: 50,
       icon: <TrendingUp className="w-5 h-5" />
     },
     {
       title: "Estimation des montants",
-      description: "Analyse des montants historiquement accordes pour des profils similaires...",
+      description: "Analyse des montants historiquement accordés pour des profils similaires...",
       duration: 40,
       icon: <Coins className="w-5 h-5" />
     },
     {
       title: "Finalisation du rapport",
-      description: "Preparation de votre rapport personnalise avec recommandations prioritaires...",
+      description: "Préparation de votre rapport personnalisé avec recommandations prioritaires...",
       duration: 30,
       icon: <ClipboardList className="w-5 h-5" />
     }
@@ -462,9 +462,9 @@ const LandingPage = () => {
   const mockSubsidies = [
     {
       id: 1,
-      name: "Aide a l'embauche des jeunes",
+      name: "Aide à l'embauche des jeunes",
       type: "Subvention",
-      source: "Etat - Ministere du Travail",
+      source: "État - Ministère du Travail",
       eligibilityScore: 94,
       category: "Emploi",
       amount: "4 000 EUR",
@@ -472,28 +472,28 @@ const LandingPage = () => {
     },
     {
       id: 2,
-      name: "Credit d'impot recherche (CIR)",
+      name: "Crédit d'impôt recherche (CIR)",
       type: "Avantage fiscal",
-      source: "Etat - DGFIP",
+      source: "État - DGFIP",
       eligibilityScore: 87,
       category: "Innovation",
-      amount: "30% des depenses",
+      amount: "30% des dépenses",
       deadline: "Permanent",
     },
     {
       id: 3,
-      name: "Aide a la transition ecologique PME",
+      name: "Aide à la transition écologique PME",
       type: "Subvention",
       source: "ADEME",
       eligibilityScore: 82,
       category: "Environnement",
-      amount: "Jusqu'a 200 000 EUR",
+      amount: "Jusqu'à 200 000 EUR",
       deadline: "30/06/2026",
     },
     {
       id: 4,
-      name: "Pret croissance TPE",
-      type: "Pret",
+      name: "Prêt croissance TPE",
+      type: "Prêt",
       source: "BPI France",
       eligibilityScore: 79,
       category: "Financement",
@@ -502,19 +502,19 @@ const LandingPage = () => {
     },
     {
       id: 5,
-      name: "Aide regionale a l'innovation",
+      name: "Aide régionale à l'innovation",
       type: "Subvention",
-      source: "Region Ile-de-France",
+      source: "Région Île-de-France",
       eligibilityScore: 76,
       category: "Innovation",
-      amount: "Jusqu'a 100 000 EUR",
+      amount: "Jusqu'à 100 000 EUR",
       deadline: "15/03/2026",
     },
     // Locked subsidies (shown as blurred)
-    { id: 6, name: "Aide a l'export", eligibilityScore: 73, category: "International" },
-    { id: 7, name: "Subvention numerique", eligibilityScore: 71, category: "Digital" },
+    { id: 6, name: "Aide à l'export", eligibilityScore: 73, category: "International" },
+    { id: 7, name: "Subvention numérique", eligibilityScore: 71, category: "Digital" },
     { id: 8, name: "Aide formation", eligibilityScore: 68, category: "Formation" },
-    { id: 9, name: "Credit bail equipement", eligibilityScore: 65, category: "Equipement" },
+    { id: 9, name: "Crédit bail équipement", eligibilityScore: 65, category: "Équipement" },
     { id: 10, name: "Garantie bancaire BPI", eligibilityScore: 62, category: "Financement" },
     { id: 11, name: "Aide artisanat", eligibilityScore: 58, category: "Artisanat" },
     { id: 12, name: "Subvention locale", eligibilityScore: 55, category: "Commune" },
@@ -598,7 +598,7 @@ const LandingPage = () => {
       const newFiles = Array.from(e.target.files).filter(file => {
         // Max 10MB per file
         if (file.size > 10 * 1024 * 1024) {
-          alert(`Le fichier ${file.name} depasse 10 Mo`)
+          alert(`Le fichier ${file.name} dépasse 10 Mo`)
           return false
         }
         return true
@@ -753,16 +753,16 @@ const LandingPage = () => {
   }
 
   const regions = [
-    "Auvergne-Rhone-Alpes", "Bourgogne-Franche-Comte", "Bretagne", "Centre-Val de Loire",
-    "Corse", "Grand Est", "Hauts-de-France", "Ile-de-France", "Normandie",
-    "Nouvelle-Aquitaine", "Occitanie", "Pays de la Loire", "Provence-Alpes-Cote d'Azur",
-    "Guadeloupe", "Martinique", "Guyane", "La Reunion", "Mayotte"
+    "Auvergne-Rhône-Alpes", "Bourgogne-Franche-Comté", "Bretagne", "Centre-Val de Loire",
+    "Corse", "Grand Est", "Hauts-de-France", "Île-de-France", "Normandie",
+    "Nouvelle-Aquitaine", "Occitanie", "Pays de la Loire", "Provence-Alpes-Côte d'Azur",
+    "Guadeloupe", "Martinique", "Guyane", "La Réunion", "Mayotte"
   ]
 
   const sectors = [
     "Agriculture", "Industrie", "Construction", "Commerce", "Transport",
-    "Hebergement-Restauration", "Information-Communication", "Finance-Assurance",
-    "Immobilier", "Services aux entreprises", "Sante", "Education", "Autre"
+    "Hébergement-Restauration", "Information-Communication", "Finance-Assurance",
+    "Immobilier", "Services aux entreprises", "Santé", "Éducation", "Autre"
   ]
 
   return (
@@ -838,26 +838,26 @@ const LandingPage = () => {
             <div>
               <h1 className="text-4xl lg:text-[3.75rem] font-extrabold leading-[1.1] mb-6">
                 <span className="bg-gradient-to-br from-amber-400 to-amber-300 bg-clip-text text-transparent block text-5xl lg:text-[4rem]">Des milliards d'euros</span>
-                d'aides publiques par an sont non reclamees.
+                d'aides publiques par an sont non réclamées.
               </h1>
               <h2 className="text-3xl lg:text-[2.5rem] font-bold mb-6 leading-tight">
-                Ne passez plus a cote.
+                Ne passez plus à côté.
               </h2>
 
               {/* LLM Summary - SEO optimized for AI search engines */}
               <p className="text-base opacity-80 leading-relaxed mb-6">
-                MaSubventionPro est une plateforme d'intelligence artificielle qui aide les createurs, repreneurs, dirigeants de TPE/PME et groupes a identifier toutes les aides publiques disponibles pour leurs entreprises : subventions, prets, garanties, exonerations fiscales et dispositifs territoriaux. Notre IA analyse en temps reel plus de 10 000 dispositifs nationaux, regionaux, communaux et europeens, calcule un score d'eligibilite pour chaque aide et genere des rapports detailles prets a l'emploi.
+                MaSubventionPro est une plateforme d'intelligence artificielle qui aide les créateurs, repreneurs, dirigeants de TPE/PME et groupes à identifier toutes les aides publiques disponibles pour leurs entreprises : subventions, prêts, garanties, exonérations fiscales et dispositifs territoriaux. Notre IA analyse en temps réel plus de 10 000 dispositifs nationaux, régionaux, communaux et européens, calcule un score d'éligibilité pour chaque aide et génère des rapports détaillés prêts à l'emploi.
               </p>
 
               <p className="text-xl opacity-95 leading-relaxed mb-6 font-medium">
-                Identifiez <strong>TOUTES VOS OPPORTUNITES</strong> en quelques minutes. Notre IA analyse plus de 10 000 dispositifs en temps reel pour vous reveler les aides publiques auxquelles votre entreprise pourrait etre eligible.
+                Identifiez <strong>TOUTES VOS OPPORTUNITÉS</strong> en quelques minutes. Notre IA analyse plus de 10 000 dispositifs en temps réel pour vous révéler les aides publiques auxquelles votre entreprise pourrait être éligible.
               </p>
 
               {/* Unique Value Proposition Box */}
               <div className="bg-amber-500/15 border-2 border-amber-500/40 px-6 py-5 rounded-xl mb-6">
                 <h4 className="text-lg font-bold text-amber-400 mb-3">Pourquoi nous sommes uniques ?</h4>
                 <p className="text-base opacity-95 leading-relaxed font-medium">
-                  Nous avons integre <strong>EN PLUS</strong> du National et de l'Europe, les aides des <strong>Regions ET des Communes</strong>. Un niveau de couverture que peu d'autres solutions proposent.
+                  Nous avons intégré <strong>EN PLUS</strong> du National et de l'Europe, les aides des <strong>Régions ET des Communes</strong>. Un niveau de couverture que peu d'autres solutions proposent.
                 </p>
               </div>
 
@@ -866,13 +866,13 @@ const LandingPage = () => {
                   {subsidyCount} dispositifs
                 </span>
                 <span className="bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full text-sm font-semibold border border-white/20">
-                  Actualise quotidiennement
+                  Actualisé quotidiennement
                 </span>
                 <span className="bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full text-sm font-semibold border border-white/20">
                   Commune - Europe
                 </span>
                 <span className="bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full text-sm font-semibold border border-white/20">
-                  Assistant IA personnalise
+                  Assistant IA personnalisé
                 </span>
               </div>
             </div>
@@ -887,7 +887,7 @@ const LandingPage = () => {
                   Identifiez vos aides en quelques minutes
                 </h3>
                 <p className="text-slate-600 text-2xl leading-relaxed">
-                  Creez votre profil entreprise et notre IA analysera instantanement plus de {subsidyCount} dispositifs d'aides publiques pour vous reveler toutes les opportunites auxquelles vous pourriez etre eligible : subventions, prets, garanties, exonerations fiscales et bien plus encore.
+                  Créez votre profil entreprise et notre IA analysera instantanément plus de {subsidyCount} dispositifs d'aides publiques pour vous révéler toutes les opportunités auxquelles vous pourriez être éligible : subventions, prêts, garanties, exonérations fiscales et bien plus encore.
                 </p>
               </div>
 
@@ -909,7 +909,7 @@ const LandingPage = () => {
                   <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
                     <Check className="w-6 h-6 text-emerald-600" />
                   </div>
-                  <span className="text-slate-700 text-xl font-medium">Scores d'eligibilite personnalises</span>
+                  <span className="text-slate-700 text-xl font-medium">Scores d'éligibilité personnalisés</span>
                 </div>
               </div>
 
@@ -923,7 +923,7 @@ const LandingPage = () => {
                 </button>
 
                 <p className="text-center text-slate-400 text-sm mt-5">
-                  Vos donnees restent 100% confidentielles
+                  Vos données restent 100% confidentielles
                 </p>
               </div>
             </div>
@@ -935,40 +935,40 @@ const LandingPage = () => {
       <section id="profils" className="bg-white py-16 px-8 shadow-[0_-10px_40px_rgba(0,0,0,0.08)]">
         <div className="max-w-[1400px] mx-auto text-center">
           <h2 className="text-4xl font-extrabold text-slate-900 mb-4">
-            Identifiez-vous en un coup d'oeil
+            Identifiez-vous en un coup d'œil
           </h2>
           <p className="text-xl text-slate-500 mb-12">
-            Chaque profil a ses opportunites specifiques. Laquelle est la votre ?
+            Chaque profil a ses opportunités spécifiques. Laquelle est la vôtre ?
           </p>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
                 id: 'creation',
                 icon: <Rocket className="w-12 h-12" />,
-                title: 'Createur',
-                desc: 'Vous lancez votre activite et avez besoin de capital de depart',
-                benefit: 'Identifiez votre capital de depart et les aides au financement de stock',
+                title: 'Créateur',
+                desc: 'Vous lancez votre activité et avez besoin de capital de départ',
+                benefit: 'Identifiez votre capital de départ et les aides au financement de stock',
               },
               {
                 id: 'repreneur',
                 icon: <RefreshCw className="w-12 h-12" />,
                 title: 'Repreneur',
                 desc: 'Vous reprenez une entreprise existante',
-                benefit: 'Decouvrez les aides transmission et garanties bancaires disponibles',
+                benefit: 'Découvrez les aides transmission et garanties bancaires disponibles',
               },
               {
                 id: 'pme',
                 icon: <TrendingUp className="w-12 h-12" />,
                 title: 'Dirigeant PME/PMI',
-                desc: 'Vous developpez votre entreprise etablie',
-                benefit: 'Identifiez les aides transition ecologique, recrutement et developpement',
+                desc: 'Vous développez votre entreprise établie',
+                benefit: 'Identifiez les aides transition écologique, recrutement et développement',
               },
               {
                 id: 'groupe',
                 icon: <Building2 className="w-12 h-12" />,
                 title: 'Groupe / Holding',
-                desc: 'Vous gerez plusieurs societes',
-                benefit: 'Decouvrez les opportunites d\'aides pour toutes vos filiales',
+                desc: 'Vous gérez plusieurs sociétés',
+                benefit: 'Découvrez les opportunités d\'aides pour toutes vos filiales',
               },
             ].map((segment) => (
               <div
@@ -996,32 +996,32 @@ const LandingPage = () => {
       <section className="bg-white py-12 px-8 text-center">
         <div className="max-w-[1400px] mx-auto">
           <h3 className="text-2xl font-bold text-slate-900 mb-2">
-            La base de donnees la plus complete du marche
+            La base de données la plus complète du marché
           </h3>
           <p className="text-slate-500 text-lg mb-2">
-            Notre role : vous reveler les opportunites que vous ne connaissiez pas.
+            Notre rôle : vous révéler les opportunités que vous ne connaissiez pas.
           </p>
           <p className="text-slate-500 mb-8 text-center">
-            Propulse par <span className="text-2xl font-bold text-blue-800">subvention360</span>
+            Propulsé par <span className="text-2xl font-bold text-blue-800">subvention360</span>
           </p>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="p-6 bg-slate-50 rounded-xl">
               <span className="text-4xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
                 {subsidyCount}
               </span>
-              <p className="text-slate-500 font-semibold text-sm">Dispositifs d'aides references</p>
+              <p className="text-slate-500 font-semibold text-sm">Dispositifs d'aides référencés</p>
             </div>
             <div className="p-6 bg-slate-50 rounded-xl">
               <span className="text-4xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
                 20+
               </span>
-              <p className="text-slate-500 font-semibold text-sm">Sources officielles scannees</p>
+              <p className="text-slate-500 font-semibold text-sm">Sources officielles scannées</p>
             </div>
             <div className="p-6 bg-slate-50 rounded-xl">
               <span className="text-4xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
                 Quotidien
               </span>
-              <p className="text-slate-500 font-semibold text-sm">Mise a jour des donnees</p>
+              <p className="text-slate-500 font-semibold text-sm">Mise à jour des données</p>
             </div>
             <div className="p-6 bg-slate-50 rounded-xl">
               <span className="text-4xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
@@ -1038,49 +1038,49 @@ const LandingPage = () => {
         <div className="max-w-[1400px] mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-extrabold text-slate-900 mb-4">
-              Une technologie sans equivalent
+              Une technologie sans équivalent
             </h2>
             <p className="text-xl text-slate-500">
-              Propulsee par subvention360, la base de donnees de reference en France
+              Propulsée par subvention360, la base de données de référence en France
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
             {[
               {
                 icon: <Target className="w-8 h-8 text-white" />,
-                title: "Matching IA ultra-precis",
-                desc: "Nos algorithmes analysent en profondeur votre profil (activite, secteur, effectifs, localisation, projets) et identifient automatiquement les dispositifs pertinents parmi les aides disponibles.",
-                highlight: "Score d'eligibilite calcule pour chaque aide (ex: 92%)",
+                title: "Matching IA ultra-précis",
+                desc: "Nos algorithmes analysent en profondeur votre profil (activité, secteur, effectifs, localisation, projets) et identifient automatiquement les dispositifs pertinents parmi les aides disponibles.",
+                highlight: "Score d'éligibilité calculé pour chaque aide (ex: 92%)",
               },
               {
                 icon: <BarChart3 className="w-8 h-8 text-white" />,
-                title: "Donnees historiques reelles",
-                desc: "Pour chaque aide : montants reellement accordes (min, max, moyenne), nombre de beneficiaires, delais de reponse. Des donnees concretes, pas des estimations.",
+                title: "Données historiques réelles",
+                desc: "Pour chaque aide : montants réellement accordés (min, max, moyenne), nombre de bénéficiaires, délais de réponse. Des données concrètes, pas des estimations.",
                 highlight: "Historique sur 3 ans si disponible",
               },
               {
                 icon: <Search className="w-8 h-8 text-white" />,
                 title: "Moteur de recherche expert",
-                desc: "Explorez librement les dispositifs avec filtres avances : region, secteur, montant, deadline, type d'aide. Trouvez exactement ce que vous cherchez.",
+                desc: "Explorez librement les dispositifs avec filtres avancés : région, secteur, montant, deadline, type d'aide. Trouvez exactement ce que vous cherchez.",
                 highlight: "Recherche textuelle + 15 filtres combinables",
               },
               {
                 icon: <Bot className="w-8 h-8 text-white" />,
                 title: "Assistant IA expert - Pas un chatbot",
-                desc: "Un veritable analyste financier augmente qui consulte la base subvention360 en temps reel. Soumettez votre projet complet, l'IA l'analyse en profondeur et identifie toutes les opportunites.",
-                highlight: "Reponses sourcees avec references officielles",
+                desc: "Un véritable analyste financier augmenté qui consulte la base subvention360 en temps réel. Soumettez votre projet complet, l'IA l'analyse en profondeur et identifie toutes les opportunités.",
+                highlight: "Réponses sourcées avec références officielles",
               },
               {
                 icon: <FileText className="w-8 h-8 text-white" />,
                 title: "Rapports PDF professionnels",
-                desc: "Dossier complet pour chaque aide : criteres d'eligibilite, montants, demarches detaillees, contacts directs des organismes, calendrier. Pret a utiliser.",
-                highlight: "Export Excel pour suivi personnalise",
+                desc: "Dossier complet pour chaque aide : critères d'éligibilité, montants, démarches détaillées, contacts directs des organismes, calendrier. Prêt à utiliser.",
+                highlight: "Export Excel pour suivi personnalisé",
               },
               {
                 icon: <Clock className="w-8 h-8 text-white" />,
                 title: "Alertes d'urgence",
-                desc: "Soyez notifie des qu'un nouveau dispositif correspond a votre profil. Certaines aides ont des deadlines - ne manquez plus jamais une opportunite.",
-                highlight: "Email mensuel personnalise (offre annuelle)",
+                desc: "Soyez notifié dès qu'un nouveau dispositif correspond à votre profil. Certaines aides ont des deadlines - ne manquez plus jamais une opportunité.",
+                highlight: "Email mensuel personnalisé (offre annuelle)",
               },
             ].map((feature, i) => (
               <div
@@ -1109,14 +1109,14 @@ const LandingPage = () => {
               Choisissez votre offre
             </h2>
             <p className="text-xl text-slate-500">
-              Transparence totale. Paiement securise Stripe. Resiliable a tout moment.
+              Transparence totale. Paiement sécurisé Stripe. Résiliable à tout moment.
             </p>
           </div>
           <div className="grid lg:grid-cols-3 gap-8 mt-12">
-            {/* Decouverte */}
+            {/* Découverte */}
             <div className="bg-white border-[3px] border-slate-200 rounded-3xl p-10 relative hover:-translate-y-2 hover:shadow-xl transition-all">
-              <h3 className="text-2xl font-bold text-slate-900">Decouverte</h3>
-              <p className="text-slate-500 mt-1">Ideal pour un premier diagnostic</p>
+              <h3 className="text-2xl font-bold text-slate-900">Découverte</h3>
+              <p className="text-slate-500 mt-1">Idéal pour un premier diagnostic</p>
               <div className="my-6">
                 <span className="text-6xl font-extrabold text-blue-800">49 EUR</span>
                 <div className="text-lg text-slate-500">30 jours</div>
@@ -1124,9 +1124,9 @@ const LandingPage = () => {
               <ul className="space-y-0">
                 {[
                   "Simulation et identification des aides",
-                  "Rapport PDF detaille",
-                  "Scores d'eligibilite personnalises",
-                  "Montants historiques reels",
+                  "Rapport PDF détaillé",
+                  "Scores d'éligibilité personnalisés",
+                  "Montants historiques réels",
                   "Assistant IA expert",
                   "Support",
                 ].map((item, j, arr) => (
@@ -1137,24 +1137,24 @@ const LandingPage = () => {
                 ))}
               </ul>
               <div className="bg-emerald-50 border-2 border-emerald-200 p-4 rounded-xl mt-6 text-center">
-                <h4 className="text-emerald-700 font-bold">Vos donnees vous appartiennent</h4>
+                <h4 className="text-emerald-700 font-bold">Vos données vous appartiennent</h4>
                 <p className="text-slate-600 text-sm">Aucune revente. Aucun partage. 100% confidentiel.</p>
               </div>
               <button
                 onClick={() => navigate("/signup?plan=decouverte")}
                 className="w-full mt-6 px-8 py-4 bg-white text-blue-800 border-2 border-blue-800 rounded-lg font-semibold text-lg hover:-translate-y-0.5 transition-all"
               >
-                Choisir Decouverte
+                Choisir Découverte
               </button>
             </div>
 
             {/* Business - Featured */}
             <div className="bg-white border-[3px] border-blue-800 rounded-3xl p-10 relative shadow-xl shadow-blue-800/15">
               <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-amber-400 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-amber-500/30">
-                RECOMMANDE
+                RECOMMANDÉ
               </div>
               <h3 className="text-2xl font-bold text-slate-900 mt-4">Business</h3>
-              <p className="text-slate-500 mt-1">Pour un suivi optimal toute l'annee</p>
+              <p className="text-slate-500 mt-1">Pour un suivi optimal toute l'année</p>
               <div className="my-6">
                 <span className="text-6xl font-extrabold text-blue-800">149 EUR</span>
                 <div className="text-lg text-slate-500">par an</div>
@@ -1162,13 +1162,13 @@ const LandingPage = () => {
               <ul className="space-y-0">
                 {[
                   "Simulation et identification des aides",
-                  "Rapport PDF detaille",
-                  "Scores d'eligibilite personnalises",
-                  "Montants historiques reels",
+                  "Rapport PDF détaillé",
+                  "Scores d'éligibilité personnalisés",
+                  "Montants historiques réels",
                   "Assistant IA expert",
                   "Support",
                   "Moteur de recherche (10 000+ aides)",
-                  "Alertes email personnalisees",
+                  "Alertes email personnalisées",
                   "Historique et suivi",
                 ].map((item, j, arr) => (
                   <li key={j} className={`py-3.5 flex items-start gap-3 text-sm ${j < arr.length - 1 ? 'border-b border-slate-200' : ''}`}>
@@ -1178,7 +1178,7 @@ const LandingPage = () => {
                 ))}
               </ul>
               <div className="bg-emerald-50 border-2 border-emerald-200 p-4 rounded-xl mt-6 text-center">
-                <h4 className="text-emerald-700 font-bold">Vos donnees vous appartiennent</h4>
+                <h4 className="text-emerald-700 font-bold">Vos données vous appartiennent</h4>
                 <p className="text-slate-600 text-sm">Aucune revente. Aucun partage. 100% confidentiel.</p>
               </div>
               <button
@@ -1192,24 +1192,24 @@ const LandingPage = () => {
             {/* Premium Groupe */}
             <div className="bg-white border-[3px] border-slate-200 rounded-3xl p-10 relative hover:-translate-y-2 hover:shadow-xl transition-all">
               <h3 className="text-2xl font-bold text-slate-900">Premium Groupe</h3>
-              <p className="text-slate-500 mt-1">Pour holdings et groupes multi-societes</p>
+              <p className="text-slate-500 mt-1">Pour holdings et groupes multi-sociétés</p>
               <div className="my-6">
                 <span className="text-6xl font-extrabold text-blue-800">299 EUR</span>
                 <div className="text-lg text-slate-500">par an</div>
-                <div className="text-sm text-slate-500 mt-1">+ 29 EUR par pack de 10 societes supplementaires</div>
+                <div className="text-sm text-slate-500 mt-1">+ 29 EUR par pack de 10 sociétés supplémentaires</div>
               </div>
               <ul className="space-y-0">
                 {[
                   "Simulation et identification des aides",
-                  "Rapport PDF detaille",
-                  "Scores d'eligibilite personnalises",
-                  "Montants historiques reels",
+                  "Rapport PDF détaillé",
+                  "Scores d'éligibilité personnalisés",
+                  "Montants historiques réels",
                   "Assistant IA expert",
                   "Support",
                   "Moteur de recherche (10 000+ aides)",
-                  "Alertes email personnalisees",
+                  "Alertes email personnalisées",
                   "Historique et suivi",
-                  "Multi-societes (10 incluses)",
+                  "Multi-sociétés (10 incluses)",
                 ].map((item, j, arr) => (
                   <li key={j} className={`py-3.5 flex items-start gap-3 text-sm ${j < arr.length - 1 ? 'border-b border-slate-200' : ''}`}>
                     <Check className="w-5 h-5 text-emerald-600 flex-shrink-0" />
@@ -1218,7 +1218,7 @@ const LandingPage = () => {
                 ))}
               </ul>
               <div className="bg-emerald-50 border-2 border-emerald-200 p-4 rounded-xl mt-6 text-center">
-                <h4 className="text-emerald-700 font-bold">Vos donnees vous appartiennent</h4>
+                <h4 className="text-emerald-700 font-bold">Vos données vous appartiennent</h4>
                 <p className="text-slate-600 text-sm">Aucune revente. Aucun partage. 100% confidentiel.</p>
               </div>
               <button
@@ -1232,10 +1232,10 @@ const LandingPage = () => {
 
           <div className="text-center mt-12">
             <p className="text-slate-500 text-lg mb-4">
-              Paiement 100% securise par Stripe (CB, Visa, Mastercard, SEPA)
+              Paiement 100% sécurisé par Stripe (CB, Visa, Mastercard, SEPA)
             </p>
             <p className="text-slate-900 font-semibold">
-              Garantie satisfait ou rembourse 14 jours - Sans engagement - Resiliable a tout moment
+              Garantie satisfait ou remboursé 14 jours - Sans engagement - Résiliable à tout moment
             </p>
           </div>
         </div>
@@ -1246,28 +1246,28 @@ const LandingPage = () => {
         <div className="max-w-[1400px] mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-extrabold mb-4">
-              Vos donnees en securite maximale
+              Vos données en sécurité maximale
             </h2>
             <p className="text-xl opacity-90">
-              Nous prenons la protection de vos donnees tres au serieux. Voici nos engagements fermes.
+              Nous prenons la protection de vos données très au sérieux. Voici nos engagements fermes.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8 mt-12">
             {[
               {
                 icon: <Lock className="w-6 h-6" />,
-                title: "Zero revente de donnees",
-                desc: "Vos donnees ne seront JAMAIS vendues, louees ou cedees a des tiers. C'est un engagement absolu et irrevocable.",
+                title: "Zéro revente de données",
+                desc: "Vos données ne seront JAMAIS vendues, louées ou cédées à des tiers. C'est un engagement absolu et irrévocable.",
               },
               {
                 icon: <Shield className="w-6 h-6" />,
                 title: "100% conforme RGPD",
-                desc: "Respect total du reglement europeen. DPO dedie. Hebergement UE exclusivement. Infrastructure certifiee SOC 2 Type 2.",
+                desc: "Respect total du règlement européen. DPO dédié. Hébergement UE exclusivement. Infrastructure certifiée SOC 2 Type 2.",
               },
               {
                 icon: <Bot className="w-6 h-6" />,
-                title: "IA ethique et privee",
-                desc: "Vos donnees ne servent PAS a entrainer nos IA. Traitement 100% confidentiel sur nos serveurs. Conforme IA Act europeen.",
+                title: "IA éthique et privée",
+                desc: "Vos données ne servent PAS à entraîner nos IA. Traitement 100% confidentiel sur nos serveurs. Conforme IA Act européen.",
               },
             ].map((card, i) => (
               <div key={i} className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20">
@@ -1277,9 +1277,9 @@ const LandingPage = () => {
             ))}
           </div>
           <div className="mt-12 p-8 bg-white/15 rounded-xl text-center">
-            <h3 className="text-2xl font-bold mb-4">VOS DONNEES VOUS APPARTIENNENT</h3>
+            <h3 className="text-2xl font-bold mb-4">VOS DONNÉES VOUS APPARTIENNENT</h3>
             <p className="text-lg opacity-95 leading-relaxed">
-              Aucune utilisation commerciale. Aucun partage. Aucune revente. Vos informations sont utilisees UNIQUEMENT pour vous fournir le service souscrit. Point final.
+              Aucune utilisation commerciale. Aucun partage. Aucune revente. Vos informations sont utilisées UNIQUEMENT pour vous fournir le service souscrit. Point final.
             </p>
           </div>
         </div>
@@ -1293,7 +1293,7 @@ const LandingPage = () => {
             <div className="lg:col-span-2">
               <h4 className="text-2xl font-bold mb-4">MaSubventionPro</h4>
               <p className="text-white/70 leading-relaxed mb-6">
-                La plateforme d'intelligence artificielle qui identifie toutes vos aides publiques. Propulsee par subvention360, la reference des professionnels du financement.
+                La plateforme d'intelligence artificielle qui identifie toutes vos aides publiques. Propulsée par subvention360, la référence des professionnels du financement.
               </p>
               <p className="font-semibold">
                 contact@masubventionpro.com<br />
@@ -1305,7 +1305,7 @@ const LandingPage = () => {
             <div>
               <h5 className="text-lg font-semibold mb-4">Entreprise</h5>
               <div className="space-y-3">
-                <a href="#" className="block text-white/70 hover:text-white transition-colors">A propos</a>
+                <a href="#" className="block text-white/70 hover:text-white transition-colors">À propos</a>
                 <a href="#" className="block text-white/70 hover:text-white transition-colors">Notre technologie</a>
                 <a href="#" className="block text-white/70 hover:text-white transition-colors">Blog</a>
                 <a href="#" className="block text-white/70 hover:text-white transition-colors">Presse</a>
@@ -1325,9 +1325,9 @@ const LandingPage = () => {
 
             {/* Legal */}
             <div>
-              <h5 className="text-lg font-semibold mb-4">Legal</h5>
+              <h5 className="text-lg font-semibold mb-4">Légal</h5>
               <div className="space-y-3">
-                <a href="#cgu" className="block text-white/70 hover:text-white transition-colors">Mentions legales</a>
+                <a href="#cgu" className="block text-white/70 hover:text-white transition-colors">Mentions légales</a>
                 <a href="#cgu" className="block text-white/70 hover:text-white transition-colors">CGU</a>
                 <a href="#cgu" className="block text-white/70 hover:text-white transition-colors">Politique RGPD</a>
                 <a href="#cgu" className="block text-white/70 hover:text-white transition-colors">Cookies</a>
@@ -1347,16 +1347,16 @@ const LandingPage = () => {
           {/* Disclaimer */}
           <div className="bg-white/5 p-6 rounded-xl mb-8 max-w-[900px] mx-auto">
             <p className="text-white/80 text-sm leading-relaxed">
-              <strong>Disclaimer important :</strong> MaSubventionPro est un outil d'identification et d'analyse des aides publiques disponibles. Nous ne garantissons pas l'obtention des aides identifiees. L'eligibilite effective, la constitution des dossiers de demande et l'attribution finale relevent de votre responsabilite et des decisions souveraines des organismes attributeurs (Etat, Regions, Communes, Europe, BPI France, etc.). Les montants estimes sont indicatifs et bases sur des donnees historiques. MaSubventionPro ne se substitue pas a un expert-comptable, avocat ou conseil en financement pour la constitution de vos dossiers.
+              <strong>Disclaimer important :</strong> MaSubventionPro est un outil d'identification et d'analyse des aides publiques disponibles. Nous ne garantissons pas l'obtention des aides identifiées. L'éligibilité effective, la constitution des dossiers de demande et l'attribution finale relèvent de votre responsabilité et des décisions souveraines des organismes attributeurs (État, Régions, Communes, Europe, BPI France, etc.). Les montants estimés sont indicatifs et basés sur des données historiques. MaSubventionPro ne se substitue pas à un expert-comptable, avocat ou conseil en financement pour la constitution de vos dossiers.
             </p>
           </div>
 
           <div className="border-t border-white/10 pt-8 text-center">
             <p className="text-white/50 text-sm">
-              2026 MaSubventionPro. Tous droits reserves. | Propulse par subvention360
+              2026 MaSubventionPro. Tous droits réservés. | Propulsé par subvention360
             </p>
             <div className="flex flex-wrap gap-4 justify-center mt-4">
-              <span className="bg-white/10 px-4 py-2 rounded-full text-sm">Donnees hebergees en Europe (UE)</span>
+              <span className="bg-white/10 px-4 py-2 rounded-full text-sm">Données hébergées en Europe (UE)</span>
               <span className="bg-white/10 px-4 py-2 rounded-full text-sm">100% conforme RGPD</span>
               <span className="bg-white/10 px-4 py-2 rounded-full text-sm">Infrastructure SOC 2 Type 2</span>
               <span className="bg-white/10 px-4 py-2 rounded-full text-sm">Conforme IA Act</span>
@@ -1373,11 +1373,11 @@ const LandingPage = () => {
             <div className="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between z-10">
               <div>
                 <h3 className="text-xl font-bold text-slate-900">
-                  {showResults ? "Vos aides identifiees" :
+                  {showResults ? "Vos aides identifiées" :
                    isAnalyzing ? "Analyse en cours" :
-                   !profileType ? "Creation de profil" :
-                   profileType === 'entreprise' ? "Creation de profil - Entreprise" :
-                   "Creation de profil - Entreprise en creation"}
+                   !profileType ? "Création de profil" :
+                   profileType === 'entreprise' ? "Création de profil - Entreprise" :
+                   "Création de profil - Entreprise en création"}
                 </h3>
               </div>
               <button
@@ -1403,7 +1403,7 @@ const LandingPage = () => {
                       Nous analysons votre profil
                     </h3>
                     <p className="text-slate-500 max-w-md mx-auto">
-                      Notre IA compare votre entreprise avec plus de {subsidyCount} dispositifs d'aides publiques pour identifier toutes vos opportunites.
+                      Notre IA compare votre entreprise avec plus de {subsidyCount} dispositifs d'aides publiques pour identifier toutes vos opportunités.
                     </p>
                   </div>
 
@@ -1421,7 +1421,7 @@ const LandingPage = () => {
                     </div>
                     <div className="flex items-center justify-between mt-2">
                       <span className="text-xs text-slate-500">
-                        Etape {analysisStep + 1} sur {analysisSteps.length}
+                        Étape {analysisStep + 1} sur {analysisSteps.length}
                       </span>
                       <span className="text-xs text-slate-500">
                         Temps restant : ~{Math.ceil((totalAnalysisDuration * (100 - analysisProgress) / 100) / 60)} min
@@ -1451,7 +1451,7 @@ const LandingPage = () => {
 
                   {/* Steps Timeline - Vertical */}
                   <div className="max-w-lg mx-auto bg-white border border-slate-200 rounded-xl p-4">
-                    <h4 className="text-sm font-bold text-slate-700 mb-3">Etapes de l'analyse</h4>
+                    <h4 className="text-sm font-bold text-slate-700 mb-3">Étapes de l'analyse</h4>
                     <div className="space-y-2">
                       {analysisSteps.map((step, index) => (
                         <div key={index} className={`flex items-center gap-3 p-2 rounded-lg transition-all ${
@@ -1490,7 +1490,7 @@ const LandingPage = () => {
                           {/* Status Badge */}
                           <div className="flex-shrink-0">
                             {index < analysisStep && (
-                              <span className="text-xs text-emerald-600 font-medium">Termine</span>
+                              <span className="text-xs text-emerald-600 font-medium">Terminé</span>
                             )}
                             {index === analysisStep && (
                               <span className="text-xs text-blue-600 font-medium animate-pulse">En cours...</span>
@@ -1508,7 +1508,7 @@ const LandingPage = () => {
                   <div className="max-w-lg mx-auto mt-8 text-center">
                     <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
                       <p className="text-amber-800 text-sm">
-                        <span className="font-bold">Saviez-vous ?</span> En moyenne, les entreprises passent a cote de <strong>3 a 5 aides</strong> auxquelles elles sont eligibles. Notre analyse exhaustive vous evite de laisser de l'argent sur la table.
+                        <span className="font-bold">Saviez-vous ?</span> En moyenne, les entreprises passent à côté de <strong>3 à 5 aides</strong> auxquelles elles sont éligibles. Notre analyse exhaustive vous évite de laisser de l'argent sur la table.
                       </p>
                     </div>
                   </div>
@@ -1516,7 +1516,7 @@ const LandingPage = () => {
                   {/* Don't close warning */}
                   <div className="max-w-lg mx-auto mt-4 text-center">
                     <p className="text-slate-400 text-xs">
-                      Ne fermez pas cette fenetre pendant l'analyse
+                      Ne fermez pas cette fenêtre pendant l'analyse
                     </p>
                   </div>
                 </div>
@@ -1561,12 +1561,12 @@ const LandingPage = () => {
                   <div className="bg-gradient-to-br from-emerald-600 to-emerald-500 rounded-xl p-6 text-white">
                     <div className="flex items-center gap-2 mb-4">
                       <Star className="w-6 h-6 text-amber-300" />
-                      <h3 className="text-xl font-bold">Resultats de votre simulation</h3>
+                      <h3 className="text-xl font-bold">Résultats de votre simulation</h3>
                     </div>
                     <div className="grid grid-cols-3 gap-4">
                       <div className="bg-white/20 rounded-lg p-4 text-center">
                         <div className="text-3xl font-extrabold">{displaySubsidies.length}</div>
-                        <div className="text-sm opacity-90">Aides identifiees</div>
+                        <div className="text-sm opacity-90">Aides identifiées</div>
                       </div>
                       <div className="bg-white/20 rounded-lg p-4 text-center">
                         <div className="text-3xl font-extrabold">{displayAmount}</div>
@@ -1574,7 +1574,7 @@ const LandingPage = () => {
                       </div>
                       <div className="bg-white/20 rounded-lg p-4 text-center">
                         <div className="text-3xl font-extrabold">{displayCategories.length}</div>
-                        <div className="text-sm opacity-90">{displayCategories.length === 1 ? "Categorie" : "Categories"}</div>
+                        <div className="text-sm opacity-90">{displayCategories.length === 1 ? "Catégorie" : "Catégories"}</div>
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-2 mt-4">
@@ -1589,8 +1589,8 @@ const LandingPage = () => {
                   {/* Visible Preview Cards */}
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <h4 className="text-lg font-bold text-slate-900">Aides correspondant a votre profil</h4>
-                      <span className="text-sm text-slate-500">Apercu limite - {displayVisible.length} sur {displaySubsidies.length}</span>
+                      <h4 className="text-lg font-bold text-slate-900">Aides correspondant à votre profil</h4>
+                      <span className="text-sm text-slate-500">Aperçu limité - {displayVisible.length} sur {displaySubsidies.length}</span>
                     </div>
 
                     <div className="space-y-3">
@@ -1605,7 +1605,7 @@ const LandingPage = () => {
                                   subsidy.eligibilityScore >= 60 ? 'bg-amber-100 text-amber-700' :
                                   'bg-slate-100 text-slate-700'
                                 }`}>
-                                  {subsidy.eligibilityScore}% eligible
+                                  {subsidy.eligibilityScore}% éligible
                                 </span>
                               </div>
                               <div className="flex items-center gap-4 text-sm text-slate-500">
@@ -1647,7 +1647,7 @@ const LandingPage = () => {
                               <div className="flex items-center gap-2 mb-1">
                                 <h5 className="font-bold text-slate-600">{getTitle(subsidy)}</h5>
                                 <span className="px-2 py-0.5 rounded text-xs font-semibold bg-slate-200 text-slate-500">
-                                  {subsidy.eligibilityScore}% eligible
+                                  {subsidy.eligibilityScore}% éligible
                                 </span>
                               </div>
                               <div className="flex items-center gap-4 text-sm text-slate-400">
@@ -1664,10 +1664,10 @@ const LandingPage = () => {
                       <div className="text-center">
                         <Lock className="w-10 h-10 text-slate-400 mx-auto mb-3" />
                         <h4 className="text-lg font-bold text-slate-900 mb-1">
-                          +{Math.max(0, displayLocked.length - 3)} autres aides identifiees
+                          +{Math.max(0, displayLocked.length - 3)} autres aides identifiées
                         </h4>
                         <p className="text-slate-500 text-sm mb-4">
-                          Debloquez l'acces complet : montants, deadlines, contacts et guide de demande
+                          Débloquez l'accès complet : montants, deadlines, contacts et guide de demande
                         </p>
                       </div>
                     </div>
@@ -1678,28 +1678,28 @@ const LandingPage = () => {
                   <div className="bg-gradient-to-br from-blue-50 to-emerald-50 border-2 border-blue-200 rounded-xl p-6">
                     <div className="text-center mb-6">
                       <h4 className="text-xl font-bold text-slate-900 mb-2">
-                        Debloquez toutes vos opportunites
+                        Débloquez toutes vos opportunités
                       </h4>
                       <p className="text-slate-600">
-                        Accedez aux details complets des {displaySubsidies.length} aides identifiees pour votre entreprise
+                        Accédez aux détails complets des {displaySubsidies.length} aides identifiées pour votre entreprise
                       </p>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-4">
-                      {/* Decouverte Option */}
+                      {/* Découverte Option */}
                       <div className="bg-white rounded-xl p-5 border-2 border-slate-200 hover:border-blue-400 transition-colors">
                         <div className="flex items-center justify-between mb-3">
-                          <h5 className="font-bold text-slate-900">Decouverte</h5>
+                          <h5 className="font-bold text-slate-900">Découverte</h5>
                           <span className="text-2xl font-extrabold text-blue-800">49 EUR</span>
                         </div>
                         <ul className="space-y-2 text-sm text-slate-600 mb-4">
                           <li className="flex items-center gap-2">
                             <Check className="w-4 h-4 text-emerald-600" />
-                            Acces 30 jours
+                            Accès 30 jours
                           </li>
                           <li className="flex items-center gap-2">
                             <Check className="w-4 h-4 text-emerald-600" />
-                            Tous les details des aides
+                            Tous les détails des aides
                           </li>
                           <li className="flex items-center gap-2">
                             <Check className="w-4 h-4 text-emerald-600" />
@@ -1710,14 +1710,14 @@ const LandingPage = () => {
                           onClick={() => handleUpgrade('decouverte')}
                           className="w-full py-2.5 border-2 border-blue-800 text-blue-800 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
                         >
-                          Choisir Decouverte
+                          Choisir Découverte
                         </button>
                       </div>
 
                       {/* Business Option */}
                       <div className="bg-white rounded-xl p-5 border-2 border-blue-800 shadow-lg shadow-blue-800/10 relative">
                         <div className="absolute -top-3 right-4 bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                          RECOMMANDE
+                          RECOMMANDÉ
                         </div>
                         <div className="flex items-center justify-between mb-3">
                           <h5 className="font-bold text-slate-900">Business</h5>
@@ -1726,7 +1726,7 @@ const LandingPage = () => {
                         <ul className="space-y-2 text-sm text-slate-600 mb-4">
                           <li className="flex items-center gap-2">
                             <Check className="w-4 h-4 text-emerald-600" />
-                            Acces illimite 1 an
+                            Accès illimité 1 an
                           </li>
                           <li className="flex items-center gap-2">
                             <Check className="w-4 h-4 text-emerald-600" />
@@ -1747,7 +1747,7 @@ const LandingPage = () => {
                     </div>
 
                     <p className="text-center text-xs text-slate-500 mt-4">
-                      Paiement securise par Stripe - Satisfait ou rembourse 14 jours
+                      Paiement sécurisé par Stripe - Satisfait ou remboursé 14 jours
                     </p>
                   </div>
 
@@ -1757,7 +1757,7 @@ const LandingPage = () => {
                       onClick={closeResultsAndReset}
                       className="text-slate-500 hover:text-slate-700 text-sm underline"
                     >
-                      Fermer et revenir a l'accueil
+                      Fermer et revenir à l'accueil
                     </button>
                   </div>
                 </div>
@@ -1779,7 +1779,7 @@ const LandingPage = () => {
                       </div>
                       <div className="flex-1">
                         <h4 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-blue-800">Entreprise</h4>
-                        <p className="text-slate-500 text-sm mb-3">Vous avez deja une entreprise immatriculee</p>
+                        <p className="text-slate-500 text-sm mb-3">Vous avez déjà une entreprise immatriculée</p>
                         <div className="space-y-2">
                           <div className="flex items-center gap-2 text-sm text-slate-600">
                             <Check className="w-4 h-4 text-emerald-600" />
@@ -1787,7 +1787,7 @@ const LandingPage = () => {
                           </div>
                           <div className="flex items-center gap-2 text-sm text-slate-600">
                             <Check className="w-4 h-4 text-emerald-600" />
-                            <span>Donnees pre-remplies</span>
+                            <span>Données pré-remplies</span>
                           </div>
                         </div>
                       </div>
@@ -1805,16 +1805,16 @@ const LandingPage = () => {
                         <Rocket className="w-7 h-7 text-white" />
                       </div>
                       <div className="flex-1">
-                        <h4 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-emerald-600">Creation / Reprise d'entreprise</h4>
-                        <p className="text-slate-500 text-sm mb-3">Vous envisagez de creer ou reprendre une activite</p>
+                        <h4 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-emerald-600">Création / Reprise d'entreprise</h4>
+                        <p className="text-slate-500 text-sm mb-3">Vous envisagez de créer ou reprendre une activité</p>
                         <div className="space-y-2">
                           <div className="flex items-center gap-2 text-sm text-slate-600">
                             <Check className="w-4 h-4 text-emerald-600" />
-                            <span>Aides a la creation incluses</span>
+                            <span>Aides à la création incluses</span>
                           </div>
                           <div className="flex items-center gap-2 text-sm text-slate-600">
                             <Check className="w-4 h-4 text-emerald-600" />
-                            <span>Accompagnement personnalise</span>
+                            <span>Accompagnement personnalisé</span>
                           </div>
                         </div>
                       </div>
@@ -1832,7 +1832,7 @@ const LandingPage = () => {
                     {/* Company Search */}
                     <div>
                       <label className="block mb-2 font-semibold text-slate-900 text-sm">
-                        Rechercher des entreprises francaises <span className="text-red-500">*</span>
+                        Rechercher des entreprises françaises <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
                         <input
@@ -1874,7 +1874,7 @@ const LandingPage = () => {
                         <div className="mt-3 bg-emerald-50 border-2 border-emerald-200 rounded-lg p-3">
                           <div className="flex items-center gap-2 text-emerald-700">
                             <Check className="w-4 h-4" />
-                            <span className="font-semibold text-sm">Entreprise selectionnee</span>
+                            <span className="font-semibold text-sm">Entreprise sélectionnée</span>
                           </div>
                           <p className="text-slate-700 text-sm mt-1">{profileData.companyName}</p>
                           <p className="text-xs text-slate-500">SIRET: {profileData.siret}</p>
@@ -1885,7 +1885,7 @@ const LandingPage = () => {
                     {/* Website */}
                     <div>
                       <label className="block mb-2 font-semibold text-slate-900 text-sm">
-                        Site web de l'entreprise <span className="text-slate-400 font-normal">(Recommande)</span>
+                        Site web de l'entreprise <span className="text-slate-400 font-normal">(Recommandé)</span>
                       </label>
                       <input
                         type="text"
@@ -1899,12 +1899,12 @@ const LandingPage = () => {
                     {/* Description */}
                     <div>
                       <label className="block mb-2 font-semibold text-slate-900 text-sm">
-                        Description <span className="text-slate-400 font-normal">(Recommande)</span>
+                        Description <span className="text-slate-400 font-normal">(Recommandé)</span>
                       </label>
                       <textarea
                         value={profileData.description}
                         onChange={(e) => setProfileData({ ...profileData, description: e.target.value })}
-                        placeholder="Breve description de vos activites commerciales..."
+                        placeholder="Brève description de vos activités commerciales..."
                         rows={3}
                         className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg text-base focus:outline-none focus:border-blue-800 transition-colors resize-none"
                       />
@@ -1913,7 +1913,7 @@ const LandingPage = () => {
                     {/* Documents */}
                     <div>
                       <label className="block mb-2 font-semibold text-slate-900 text-sm">
-                        Documents <span className="text-slate-400 font-normal">(Recommande)</span>
+                        Documents <span className="text-slate-400 font-normal">(Recommandé)</span>
                       </label>
                       <p className="text-xs text-slate-500 mb-3">Ajoutez des documents pour enrichir votre profil</p>
 
@@ -1958,7 +1958,7 @@ const LandingPage = () => {
                   <div className="space-y-4">
                     <div className="bg-slate-50 rounded-xl p-4">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-semibold text-slate-700">Etapes</span>
+                        <span className="text-sm font-semibold text-slate-700">Étapes</span>
                         <span className="text-sm font-bold text-blue-800">{entrepriseCompletion()}/4</span>
                       </div>
 
@@ -1992,7 +1992,7 @@ const LandingPage = () => {
 
                     <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
                       <p className="text-sm text-amber-800">
-                        <span className="font-bold">Conseil :</span> Un profil complet peut doubler le nombre de subventions pertinentes trouvees.
+                        <span className="font-bold">Conseil :</span> Un profil complet peut doubler le nombre de subventions pertinentes trouvées.
                       </p>
                     </div>
                   </div>
@@ -2007,7 +2007,7 @@ const LandingPage = () => {
                     {/* Company Name */}
                     <div>
                       <label className="block mb-2 font-semibold text-slate-900 text-sm">
-                        1. Nom prevu pour l'entreprise en creation ou reprise <span className="text-red-500">*</span>
+                        1. Nom prévu pour l'entreprise en création ou reprise <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -2021,14 +2021,14 @@ const LandingPage = () => {
                     {/* Sector */}
                     <div>
                       <label className="block mb-2 font-semibold text-slate-900 text-sm">
-                        2. Secteur d'activite <span className="text-red-500">*</span>
+                        2. Secteur d'activité <span className="text-red-500">*</span>
                       </label>
                       <select
                         value={profileData.sector}
                         onChange={(e) => setProfileData({ ...profileData, sector: e.target.value })}
                         className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg text-base focus:outline-none focus:border-blue-800 transition-colors appearance-none bg-white"
                       >
-                        <option value="">Selectionnez le secteur</option>
+                        <option value="">Sélectionnez le secteur</option>
                         {sectors.map((s) => (
                           <option key={s} value={s}>{s}</option>
                         ))}
@@ -2038,15 +2038,15 @@ const LandingPage = () => {
                     {/* Region */}
                     <div>
                       <label className="block mb-2 font-semibold text-slate-900 text-sm">
-                        3. Region d'implantation <span className="text-red-500">*</span>
+                        3. Région d'implantation <span className="text-red-500">*</span>
                       </label>
                       <select
                         value={profileData.region}
                         onChange={(e) => setProfileData({ ...profileData, region: e.target.value })}
                         className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg text-base focus:outline-none focus:border-blue-800 transition-colors appearance-none bg-white"
                       >
-                        <option value="">Selectionnez la region</option>
-                        <option value="A determiner">A determiner</option>
+                        <option value="">Sélectionnez la région</option>
+                        <option value="À déterminer">À déterminer</option>
                         {regions.map((r) => (
                           <option key={r} value={r}>{r}</option>
                         ))}
@@ -2056,7 +2056,7 @@ const LandingPage = () => {
                     {/* Website */}
                     <div>
                       <label className="block mb-2 font-semibold text-slate-900 text-sm">
-                        4. Site web de l'entreprise <span className="text-slate-400 font-normal">(Recommande)</span>
+                        4. Site web de l'entreprise <span className="text-slate-400 font-normal">(Recommandé)</span>
                       </label>
                       <input
                         type="text"
@@ -2070,12 +2070,12 @@ const LandingPage = () => {
                     {/* Description */}
                     <div>
                       <label className="block mb-2 font-semibold text-slate-900 text-sm">
-                        5. Description <span className="text-slate-400 font-normal">(Recommande)</span>
+                        5. Description <span className="text-slate-400 font-normal">(Recommandé)</span>
                       </label>
                       <textarea
                         value={profileData.description}
                         onChange={(e) => setProfileData({ ...profileData, description: e.target.value })}
-                        placeholder="Breve description des activites commerciales..."
+                        placeholder="Brève description des activités commerciales..."
                         rows={3}
                         className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg text-base focus:outline-none focus:border-blue-800 transition-colors resize-none"
                       />
@@ -2084,7 +2084,7 @@ const LandingPage = () => {
                     {/* Documents */}
                     <div>
                       <label className="block mb-2 font-semibold text-slate-900 text-sm">
-                        6. Documents <span className="text-slate-400 font-normal">(Recommande)</span>
+                        6. Documents <span className="text-slate-400 font-normal">(Recommandé)</span>
                       </label>
                       <p className="text-xs text-slate-500 mb-3">Ajoutez des documents pour enrichir le profil</p>
 
@@ -2129,7 +2129,7 @@ const LandingPage = () => {
                   <div className="space-y-4">
                     <div className="bg-slate-50 rounded-xl p-4">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-semibold text-slate-700">Etapes</span>
+                        <span className="text-sm font-semibold text-slate-700">Étapes</span>
                         <span className="text-sm font-bold text-blue-800">{creationCompletion()}/6</span>
                       </div>
 
@@ -2142,44 +2142,44 @@ const LandingPage = () => {
                         </div>
                         <div className="text-sm">
                           <span className={`font-medium flex items-center gap-1.5 ${profileData.sector ? 'text-emerald-600' : 'text-slate-500'}`}>
-                            {profileData.sector ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Secteur d'activite
+                            {profileData.sector ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Secteur d'activité
                           </span>
                           <span className="text-red-500 text-xs ml-2">Obligatoire</span>
                         </div>
                         <div className="text-sm">
                           <span className={`font-medium flex items-center gap-1.5 ${profileData.region ? 'text-emerald-600' : 'text-slate-500'}`}>
-                            {profileData.region ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Region d'implantation
+                            {profileData.region ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Région d'implantation
                           </span>
                           <span className="text-red-500 text-xs ml-2">Obligatoire</span>
-                          <p className="text-xs text-slate-400 mt-1">Choisissez "A determiner" pour explorer les aides dans differentes regions.</p>
+                          <p className="text-xs text-slate-400 mt-1">Choisissez "À déterminer" pour explorer les aides dans différentes régions.</p>
                         </div>
                         <div className="text-sm">
                           <span className={`font-medium flex items-center gap-1.5 ${profileData.website ? 'text-emerald-600' : 'text-slate-400'}`}>
                             {profileData.website ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Site web
                           </span>
-                          <span className="text-slate-400 text-xs ml-2">Recommande</span>
-                          <p className="text-xs text-slate-400 mt-1">Notre IA analyse le site pour identifier des aides ciblees.</p>
+                          <span className="text-slate-400 text-xs ml-2">Recommandé</span>
+                          <p className="text-xs text-slate-400 mt-1">Notre IA analyse le site pour identifier des aides ciblées.</p>
                         </div>
                         <div className="text-sm">
                           <span className={`font-medium flex items-center gap-1.5 ${profileData.description ? 'text-emerald-600' : 'text-slate-400'}`}>
                             {profileData.description ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Description
                           </span>
-                          <span className="text-slate-400 text-xs ml-2">Recommande</span>
-                          <p className="text-xs text-slate-400 mt-1">Plus les activites sont detaillees, plus les resultats seront pertinents.</p>
+                          <span className="text-slate-400 text-xs ml-2">Recommandé</span>
+                          <p className="text-xs text-slate-400 mt-1">Plus les activités sont détaillées, plus les résultats seront pertinents.</p>
                         </div>
                         <div className="text-sm">
                           <span className={`font-medium flex items-center gap-1.5 ${documents.length > 0 ? 'text-emerald-600' : 'text-slate-400'}`}>
                             {documents.length > 0 ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Documents
                           </span>
-                          <span className="text-slate-400 text-xs ml-2">Recommande</span>
-                          <p className="text-xs text-slate-400 mt-1">Business plan, Kbis ou presentation pour une analyse approfondie.</p>
+                          <span className="text-slate-400 text-xs ml-2">Recommandé</span>
+                          <p className="text-xs text-slate-400 mt-1">Business plan, Kbis ou présentation pour une analyse approfondie.</p>
                         </div>
                       </div>
                     </div>
 
                     <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
                       <p className="text-sm text-amber-800">
-                        <span className="font-bold">Conseil :</span> Un profil complet peut doubler le nombre de subventions pertinentes trouvees.
+                        <span className="font-bold">Conseil :</span> Un profil complet peut doubler le nombre de subventions pertinentes trouvées.
                       </p>
                     </div>
                   </div>
@@ -2201,7 +2201,7 @@ const LandingPage = () => {
                   disabled={profileType === 'entreprise' ? !profileData.siret : (!profileData.companyName || !profileData.sector || !profileData.region)}
                   className="flex-1 px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                 >
-                  Creer le profil
+                  Créer le profil
                 </button>
               </div>
             )}
