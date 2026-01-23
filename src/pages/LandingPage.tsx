@@ -1446,6 +1446,13 @@ const LandingPage = () => {
                   return 'Aide sans titre'
                 }
 
+                // Helper to truncate title to 5-6 words
+                const truncateTitle = (title: string, maxWords: number = 6) => {
+                  const words = title.split(/\s+/)
+                  if (words.length <= maxWords) return title
+                  return words.slice(0, maxWords).join(' ') + '...'
+                }
+
                 // Use real results if available, fallback to mock data
                 const allSubsidies = analysisResults?.matchedSubsidies || mockSubsidies
                 // Filter out subsidies with deadlines less than 1 month away
@@ -1459,6 +1466,30 @@ const LandingPage = () => {
                 const displayCategories = analysisResults?.categories || categories
                 const displayVisible = displaySubsidies.slice(0, 3)
                 const displayLocked = displaySubsidies.slice(3)
+
+                // Group subsidies by agency/source for Option 2 summary
+                const groupedByAgency = displaySubsidies.reduce((acc: Record<string, { subsidies: any[], types: Set<string>, categories: Set<string> }>, subsidy: any) => {
+                  const agency = subsidy.agency || subsidy.source || 'Autres organismes'
+                  if (!acc[agency]) {
+                    acc[agency] = { subsidies: [], types: new Set(), categories: new Set() }
+                  }
+                  acc[agency].subsidies.push(subsidy)
+                  const type = subsidy.funding_type || subsidy.type || 'Aide'
+                  acc[agency].types.add(type)
+                  if (subsidy.primary_sector) acc[agency].categories.add(subsidy.primary_sector)
+                  return acc
+                }, {})
+
+                // Convert to array and sort by count
+                const agencyGroups = Object.entries(groupedByAgency)
+                  .map(([agency, data]) => ({
+                    agency,
+                    count: data.subsidies.length,
+                    types: Array.from(data.types),
+                    categories: Array.from(data.categories).slice(0, 3)
+                  }))
+                  .sort((a, b) => b.count - a.count)
+                  .slice(0, 4) // Show top 4 agencies
 
                 return (
                 <div className="space-y-6">
@@ -1519,7 +1550,38 @@ const LandingPage = () => {
                     </div>
                   </div>
 
-                  {/* Visible Preview Cards */}
+                  {/* Option 2: Category Summary by Agency */}
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-lg font-bold text-slate-900">Résumé par organisme</h4>
+                    </div>
+                    <div className="space-y-3">
+                      {agencyGroups.map((group, index) => (
+                        <div key={index} className="bg-white border-2 border-slate-200 rounded-xl p-4 hover:border-blue-300 transition-colors">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <h5 className="font-bold text-slate-900 mb-1">
+                                {group.count} {group.types.join(', ')} {group.agency}
+                              </h5>
+                              <p className="text-sm text-slate-500">
+                                {group.categories.length > 0
+                                  ? group.categories.join(', ')
+                                  : group.types.join(', ')}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2 text-slate-400">
+                              <div className="flex items-center gap-1 bg-slate-100 px-3 py-1.5 rounded text-xs font-medium">
+                                <Lock className="w-3 h-3" />
+                                <span>Voir détails</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Option 1: Visible Preview Cards with Truncated Titles */}
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <h4 className="text-lg font-bold text-slate-900">Aides correspondant à votre profil</h4>
@@ -1532,7 +1594,7 @@ const LandingPage = () => {
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1">
-                                <h5 className="font-bold text-slate-900">{getTitle(subsidy)}</h5>
+                                <h5 className="font-bold text-slate-900">{truncateTitle(getTitle(subsidy))}</h5>
                               </div>
                               <div className="flex items-center gap-4 text-sm text-slate-500">
                                 <span className="flex items-center gap-1">
@@ -1578,7 +1640,7 @@ const LandingPage = () => {
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1">
-                                <h5 className="font-bold text-slate-600">{getTitle(subsidy)}</h5>
+                                <h5 className="font-bold text-slate-600">{truncateTitle(getTitle(subsidy))}</h5>
                               </div>
                               <div className="flex items-center gap-4 text-sm text-slate-400">
                                 <span>{subsidy.funding_type || subsidy.type || subsidy.category || "Aide"}</span>
