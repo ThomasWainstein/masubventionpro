@@ -1551,7 +1551,7 @@ const LandingPage = () => {
                         <div className="text-sm opacity-90">{displayCategories.length === 1 ? "Catégorie" : "Catégories"}</div>
                       </div>
                     </div>
-                    <div className="flex flex-wrap gap-2 mt-4">
+                    <div className="flex flex-wrap justify-center gap-2 mt-4">
                       {displayCategories.map((cat) => {
                         // Normalize category: proper capitalization and translate common English terms
                         const translations: Record<string, string> = {
