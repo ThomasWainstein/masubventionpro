@@ -11,19 +11,52 @@ import type {
   AIPricing,
 } from '@/types/ai-usage';
 
-// Default usage limits in EUR
-const DEFAULT_LIMITS: AIUsageLimits = {
-  daily: 0.50,
-  weekly: 2.00,
-  yearly: 10.00,
+// Plan-based usage limits in EUR
+// Base: €1/month, Business 10x, Premium 30x
+// Découverte: 30-day plan (monthly = their total period)
+// Business/Premium: Annual subscriptions
+const PLAN_LIMITS: Record<string, AIUsageLimits> = {
+  decouverte: {
+    daily: 0.03,    // €1/30 days (~60 Q&A/day)
+    weekly: 0.25,   // €1/4 weeks (~500 Q&A/week)
+    yearly: 1.00,   // €1 total for 30-day period (~2,000 Q&A)
+  },
+  business: {
+    daily: 0.33,    // €10/30 days (~660 Q&A/day)
+    weekly: 2.50,   // €10/4 weeks (~5,000 Q&A/week)
+    yearly: 120.00, // €10/month × 12 (~240,000 Q&A/year)
+  },
+  premium: {
+    daily: 1.00,    // €30/30 days (~2,000 Q&A/day)
+    weekly: 7.50,   // €30/4 weeks (~15,000 Q&A/week)
+    yearly: 360.00, // €30/month × 12 (~720,000 Q&A/year)
+  },
 };
 
-// DeepSeek pricing (USD per 1M tokens)
-const DEEPSEEK_PRICING: AIPricing = {
-  input: 0.14,
-  output: 0.28,
-  cachedOutput: 0.014,
+/**
+ * Get usage limits based on user's subscription plan
+ */
+function getLimitsForPlan(plan: string | undefined): AIUsageLimits {
+  return PLAN_LIMITS[plan || 'decouverte'] || PLAN_LIMITS.decouverte;
+}
+
+// Mistral AI pricing (USD per 1M tokens)
+// Using Mistral Small for cost-effective, GDPR-compliant AI
+const MISTRAL_PRICING: AIPricing = {
+  input: 0.10,
+  output: 0.30,
+  cachedOutput: 0.03, // Mistral doesn't have caching discount like DeepSeek
 };
+
+// Legacy DeepSeek pricing (kept for reference)
+// const DEEPSEEK_PRICING: AIPricing = {
+//   input: 0.14,
+//   output: 0.28,
+//   cachedOutput: 0.014,
+// };
+
+// Active pricing configuration
+const ACTIVE_PRICING = MISTRAL_PRICING;
 
 // USD to EUR conversion rate
 const USD_TO_EUR = 0.92;
@@ -33,7 +66,7 @@ const USD_TO_EUR = 0.92;
  */
 export function calculateCost(
   tokens: TokenUsage,
-  pricing: AIPricing = DEEPSEEK_PRICING
+  pricing: AIPricing = ACTIVE_PRICING
 ): number {
   const inputCostUSD = (tokens.inputTokens / 1_000_000) * pricing.input;
   const outputCostUSD = (tokens.outputTokens / 1_000_000) * pricing.output;
@@ -110,7 +143,8 @@ export function useAIUsage(): UseAIUsageReturn {
 
   // Calculate status from summary
   const calculateStatus = useCallback((summary: AIUsageSummary | null): AIUsageStatus => {
-    const limits = DEFAULT_LIMITS;
+    const userPlan = user?.user_metadata?.selected_plan as string | undefined;
+    const limits = getLimitsForPlan(userPlan);
 
     if (!summary) {
       return {
@@ -157,7 +191,7 @@ export function useAIUsage(): UseAIUsageReturn {
         yearly: Math.min(100, (summary.yearly_cost_eur / limits.yearly) * 100),
       },
     };
-  }, []);
+  }, [user]);
 
   // Refresh usage data
   const refresh = useCallback(async () => {
@@ -231,7 +265,7 @@ export function useAIUsage(): UseAIUsageReturn {
           output_tokens: input.output_tokens,
           cached_tokens: input.cached_tokens || 0,
           cost_cents: costCents,
-          model_provider: input.model_provider || 'deepseek',
+          model_provider: input.model_provider || 'mistral',
           profile_id: input.profile_id,
           success: input.success ?? true,
         });

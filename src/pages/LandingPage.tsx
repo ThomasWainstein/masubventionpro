@@ -1269,10 +1269,12 @@ const LandingPage = () => {
             <div>
               <h5 className="text-lg font-semibold mb-4">Légal</h5>
               <div className="space-y-3">
-                <a href="#cgu" className="block text-white/70 hover:text-white transition-colors">Mentions légales</a>
-                <a href="#cgu" className="block text-white/70 hover:text-white transition-colors">CGU</a>
-                <a href="#cgu" className="block text-white/70 hover:text-white transition-colors">Politique RGPD</a>
-                <a href="#cgu" className="block text-white/70 hover:text-white transition-colors">Cookies</a>
+                <Link to="/mentions-legales" className="block text-white/70 hover:text-white transition-colors">Mentions légales</Link>
+                <Link to="/cgu" className="block text-white/70 hover:text-white transition-colors">CGU</Link>
+                <Link to="/cgv" className="block text-white/70 hover:text-white transition-colors">CGV</Link>
+                <Link to="/privacy" className="block text-white/70 hover:text-white transition-colors">Politique RGPD</Link>
+                <Link to="/cookies" className="block text-white/70 hover:text-white transition-colors">Cookies</Link>
+                <Link to="/ai-transparency" className="block text-white/70 hover:text-white transition-colors">Transparence IA</Link>
               </div>
             </div>
 
