@@ -1738,7 +1738,7 @@ const LandingPage = () => {
                     </div>
 
                     <p className="text-center text-xs text-slate-500 mt-4">
-                      Paiement sécurisé par Stripe - Satisfait ou remboursé 14 jours
+                      Paiement sécurisé par Stripe
                     </p>
                   </div>
 
