@@ -6,6 +6,7 @@ import OnboardingWizard from './pages/OnboardingWizard'
 import SuccessPage from './pages/SuccessPage'
 import LoginPage from './pages/LoginPage'
 import NotFound from './pages/NotFound'
+import SubsidyDisplayDemo from './pages/SubsidyDisplayDemo'
 
 // Protected pages
 import DashboardPage from './pages/DashboardPage'
@@ -32,6 +33,7 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/connexion" element={<LoginPage />} />
       <Route path="/success" element={<SuccessPage />} />
+      <Route path="/demo/display" element={<SubsidyDisplayDemo />} />
 
       {/* Protected routes */}
       <Route element={<ProtectedRoute />}>

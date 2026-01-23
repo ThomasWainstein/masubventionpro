@@ -828,12 +828,12 @@ const LandingPage = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-600 text-white pt-32 pb-24 px-8 mt-[70px] relative overflow-hidden">
+      <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-600 text-white pt-16 pb-24 px-8 mt-[70px] relative overflow-hidden">
         {/* Background gradients */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(59,130,246,0.1)_0%,transparent_50%),radial-gradient(circle_at_80%_80%,rgba(5,150,105,0.1)_0%,transparent_50%)]" />
 
         <div className="max-w-[1400px] mx-auto relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-stretch">
+          <div className="grid lg:grid-cols-[7fr_3fr] gap-16 items-stretch">
             {/* Hero Text */}
             <div>
               <h1 className="text-4xl lg:text-[3.75rem] font-extrabold leading-[1.1] mb-6">
@@ -877,118 +877,63 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* CTA Card */}
-            <div className="bg-white rounded-2xl p-12 shadow-2xl border border-white/30 flex flex-col justify-between">
-              <div className="text-center mb-8">
-                <span className="inline-block bg-emerald-600 text-white px-5 py-2 rounded-full text-base font-bold mb-6">
-                  COMMENCEZ MAINTENANT
-                </span>
-                <h3 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-5">
-                  Identifiez vos aides en quelques minutes
-                </h3>
-                <p className="text-slate-600 text-2xl leading-relaxed">
-                  Créez votre profil entreprise et notre IA analysera instantanément plus de {subsidyCount} dispositifs d'aides publiques pour vous révéler toutes les opportunités auxquelles vous pourriez être éligible : subventions, prêts, garanties, exonérations fiscales et bien plus encore.
-                </p>
-              </div>
-
-              {/* Key benefits */}
-              <div className="space-y-5 mb-10 flex-grow flex flex-col justify-center">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Check className="w-6 h-6 text-emerald-600" />
-                  </div>
-                  <span className="text-slate-700 text-xl font-medium">Analyse de {subsidyCount} dispositifs d'aides</span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Check className="w-6 h-6 text-emerald-600" />
-                  </div>
-                  <span className="text-slate-700 text-xl font-medium">Enrichissement automatique par SIRET</span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Check className="w-6 h-6 text-emerald-600" />
-                  </div>
-                  <span className="text-slate-700 text-xl font-medium">Scores d'éligibilité personnalisés</span>
-                </div>
-              </div>
-
-              <div>
-                <button
-                  onClick={openProfileModal}
-                  className="w-full px-8 py-5 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-xl font-semibold text-xl shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-800/30 transition-all flex items-center justify-center gap-3"
+            {/* Profile Selector Cards */}
+            <div className="flex flex-col gap-3 h-full">
+              {[
+                {
+                  id: 'pme',
+                  icon: <TrendingUp className="w-10 h-10" />,
+                  title: 'Dirigeant PME/PMI',
+                  desc: 'Vous développez votre entreprise établie',
+                },
+                {
+                  id: 'creation',
+                  icon: <Rocket className="w-10 h-10" />,
+                  title: 'Créateur',
+                  desc: 'Vous lancez votre activité et avez besoin de capital de départ',
+                },
+                {
+                  id: 'groupe',
+                  icon: <Building2 className="w-10 h-10" />,
+                  title: 'Groupe / Holding',
+                  desc: 'Vous gérez plusieurs sociétés',
+                },
+                {
+                  id: 'repreneur',
+                  icon: <RefreshCw className="w-10 h-10" />,
+                  title: 'Repreneur',
+                  desc: 'Vous reprenez une entreprise existante',
+                },
+              ].map((segment) => (
+                <div
+                  key={segment.id}
+                  onClick={() => handleSegmentClick(segment.id)}
+                  className={`bg-white border-[3px] rounded-xl p-4 text-center cursor-pointer transition-all hover:border-blue-800 hover:shadow-lg hover:-translate-y-1 flex-1 flex flex-col justify-center ${
+                    activeSegment === segment.id
+                      ? 'border-blue-800 shadow-lg bg-gradient-to-br from-blue-800/5 to-emerald-600/5'
+                      : 'border-slate-200'
+                  }`}
                 >
-                  Lancer ma simulation
-                  <ArrowRight className="w-6 h-6" />
-                </button>
-
-                <p className="text-center text-slate-400 text-sm mt-5">
-                  Vos données restent 100% confidentielles
-                </p>
-              </div>
+                  <div className="text-blue-800 mb-2 flex justify-center">{segment.icon}</div>
+                  <h3 className="text-lg font-bold text-slate-900 mb-1">{segment.title}</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed">{segment.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Segment Selector Section */}
-      <section id="profils" className="bg-white py-16 px-8 shadow-[0_-10px_40px_rgba(0,0,0,0.08)]">
-        <div className="max-w-[1400px] mx-auto text-center">
-          <h2 className="text-4xl font-extrabold text-slate-900 mb-4">
-            Identifiez-vous en un coup d'œil
-          </h2>
-          <p className="text-xl text-slate-500 mb-12">
-            Chaque profil a ses opportunités spécifiques. Laquelle est la vôtre ?
-          </p>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                id: 'creation',
-                icon: <Rocket className="w-12 h-12" />,
-                title: 'Créateur',
-                desc: 'Vous lancez votre activité et avez besoin de capital de départ',
-                benefit: 'Identifiez votre capital de départ et les aides au financement de stock',
-              },
-              {
-                id: 'repreneur',
-                icon: <RefreshCw className="w-12 h-12" />,
-                title: 'Repreneur',
-                desc: 'Vous reprenez une entreprise existante',
-                benefit: 'Découvrez les aides transmission et garanties bancaires disponibles',
-              },
-              {
-                id: 'pme',
-                icon: <TrendingUp className="w-12 h-12" />,
-                title: 'Dirigeant PME/PMI',
-                desc: 'Vous développez votre entreprise établie',
-                benefit: 'Identifiez les aides transition écologique, recrutement et développement',
-              },
-              {
-                id: 'groupe',
-                icon: <Building2 className="w-12 h-12" />,
-                title: 'Groupe / Holding',
-                desc: 'Vous gérez plusieurs sociétés',
-                benefit: 'Découvrez les opportunités d\'aides pour toutes vos filiales',
-              },
-            ].map((segment) => (
-              <div
-                key={segment.id}
-                onClick={() => handleSegmentClick(segment.id)}
-                className={`bg-white border-[3px] rounded-2xl p-8 text-center cursor-pointer transition-all hover:border-blue-800 hover:shadow-lg hover:-translate-y-1 ${
-                  activeSegment === segment.id
-                    ? 'border-blue-800 shadow-lg bg-gradient-to-br from-blue-800/5 to-emerald-600/5'
-                    : 'border-slate-200'
-                }`}
-              >
-                <div className="text-blue-800 mb-4 flex justify-center">{segment.icon}</div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-3">{segment.title}</h3>
-                <p className="text-slate-500 leading-relaxed mb-4">{segment.desc}</p>
-                <div className="bg-slate-50 p-4 rounded-lg text-sm font-semibold text-blue-800">
-                  "{segment.benefit}"
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* CTA Button */}
+      <section className="bg-white py-8 px-8">
+        <div className="max-w-3xl mx-auto">
+          <button
+            onClick={openProfileModal}
+            className="w-full px-8 py-5 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-xl font-semibold text-xl shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-800/30 transition-all flex items-center justify-center gap-3"
+          >
+            Lancer ma simulation
+            <ArrowRight className="w-6 h-6" />
+          </button>
         </div>
       </section>
 
@@ -1010,12 +955,6 @@ const LandingPage = () => {
                 {subsidyCount}
               </span>
               <p className="text-slate-500 font-semibold text-sm">Dispositifs d'aides référencés</p>
-            </div>
-            <div className="p-6 bg-slate-50 rounded-xl">
-              <span className="text-4xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
-                20+
-              </span>
-              <p className="text-slate-500 font-semibold text-sm">Sources officielles scannées</p>
             </div>
             <div className="p-6 bg-slate-50 rounded-xl">
               <span className="text-4xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
@@ -1234,9 +1173,6 @@ const LandingPage = () => {
             <p className="text-slate-500 text-lg mb-4">
               Paiement 100% sécurisé par Stripe (CB, Visa, Mastercard, SEPA)
             </p>
-            <p className="text-slate-900 font-semibold">
-              Garantie satisfait ou remboursé 14 jours - Sans engagement - Résiliable à tout moment
-            </p>
           </div>
         </div>
       </section>
@@ -1368,7 +1304,7 @@ const LandingPage = () => {
       {/* Profile Creation Modal */}
       {showProfileModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[2000] flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl">
+          <div className="bg-white rounded-2xl w-full max-w-6xl max-h-[90vh] overflow-y-auto shadow-2xl">
             {/* Modal Header */}
             <div className="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between z-10">
               <div>
@@ -1393,20 +1329,6 @@ const LandingPage = () => {
               {/* Analyzing Animation */}
               {isAnalyzing && (
                 <div className="py-8">
-                  {/* Header */}
-                  <div className="text-center mb-8">
-                    <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
-                      <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
-                      Analyse en cours
-                    </div>
-                    <h3 className="text-2xl font-bold text-slate-900 mb-2">
-                      Nous analysons votre profil
-                    </h3>
-                    <p className="text-slate-500 max-w-md mx-auto">
-                      Notre IA compare votre entreprise avec plus de {subsidyCount} dispositifs d'aides publiques pour identifier toutes vos opportunités.
-                    </p>
-                  </div>
-
                   {/* Progress Bar */}
                   <div className="max-w-lg mx-auto mb-8">
                     <div className="flex items-center justify-between mb-2">
@@ -1504,15 +1426,6 @@ const LandingPage = () => {
                     </div>
                   </div>
 
-                  {/* Value Reminder */}
-                  <div className="max-w-lg mx-auto mt-8 text-center">
-                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                      <p className="text-amber-800 text-sm">
-                        <span className="font-bold">Saviez-vous ?</span> En moyenne, les entreprises passent à côté de <strong>3 à 5 aides</strong> auxquelles elles sont éligibles. Notre analyse exhaustive vous évite de laisser de l'argent sur la table.
-                      </p>
-                    </div>
-                  </div>
-
                   {/* Don't close warning */}
                   <div className="max-w-lg mx-auto mt-4 text-center">
                     <p className="text-slate-400 text-xs">
@@ -1534,7 +1447,14 @@ const LandingPage = () => {
                 }
 
                 // Use real results if available, fallback to mock data
-                const displaySubsidies = analysisResults?.matchedSubsidies || mockSubsidies
+                const allSubsidies = analysisResults?.matchedSubsidies || mockSubsidies
+                // Filter out subsidies with deadlines less than 1 month away
+                const oneMonthFromNow = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+                const displaySubsidies = allSubsidies.filter((subsidy: any) => {
+                  if (!subsidy.deadline) return true // No deadline = permanent, keep it
+                  const deadlineDate = new Date(subsidy.deadline)
+                  return deadlineDate > oneMonthFromNow
+                })
                 const displayAmount = analysisResults?.totalAmount || totalPotentialAmount
                 const displayCategories = analysisResults?.categories || categories
                 const displayVisible = displaySubsidies.slice(0, 3)
@@ -1578,11 +1498,24 @@ const LandingPage = () => {
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-2 mt-4">
-                      {displayCategories.map((cat) => (
-                        <span key={cat} className="bg-white/20 px-3 py-1 rounded-full text-xs font-medium">
-                          {cat}
-                        </span>
-                      ))}
+                      {displayCategories.map((cat) => {
+                        // Normalize category: proper capitalization and translate common English terms
+                        const translations: Record<string, string> = {
+                          'waste recycling': 'Recyclage',
+                          'economic development': 'Développement économique',
+                          'renewable energy': 'Énergies renouvelables',
+                          'energies renouvelables': 'Énergies renouvelables',
+                          'développement économique': 'Développement économique',
+                        }
+                        const lower = cat.toLowerCase()
+                        const normalized = translations[lower] ||
+                          cat.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
+                        return (
+                          <span key={cat} className="bg-white/20 px-3 py-1 rounded-full text-xs font-medium">
+                            {normalized}
+                          </span>
+                        )
+                      })}
                     </div>
                   </div>
 
@@ -1600,13 +1533,6 @@ const LandingPage = () => {
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1">
                                 <h5 className="font-bold text-slate-900">{getTitle(subsidy)}</h5>
-                                <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
-                                  subsidy.eligibilityScore >= 80 ? 'bg-emerald-100 text-emerald-700' :
-                                  subsidy.eligibilityScore >= 60 ? 'bg-amber-100 text-amber-700' :
-                                  'bg-slate-100 text-slate-700'
-                                }`}>
-                                  {subsidy.eligibilityScore}% éligible
-                                </span>
                               </div>
                               <div className="flex items-center gap-4 text-sm text-slate-500">
                                 <span className="flex items-center gap-1">
@@ -1623,10 +1549,17 @@ const LandingPage = () => {
                                   <Lock className="w-3 h-3" />
                                   <span>Montant</span>
                                 </div>
-                                <div className="flex items-center gap-1 bg-slate-100 px-2 py-1 rounded text-xs">
-                                  <Lock className="w-3 h-3" />
-                                  <span>Deadline</span>
-                                </div>
+                                {subsidy.deadline ? (
+                                  <div className="flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">
+                                    <Clock className="w-3 h-3" />
+                                    <span>{new Date(subsidy.deadline).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center gap-1 bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs">
+                                    <RefreshCw className="w-3 h-3" />
+                                    <span>Permanent</span>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -1646,9 +1579,6 @@ const LandingPage = () => {
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1">
                                 <h5 className="font-bold text-slate-600">{getTitle(subsidy)}</h5>
-                                <span className="px-2 py-0.5 rounded text-xs font-semibold bg-slate-200 text-slate-500">
-                                  {subsidy.eligibilityScore}% éligible
-                                </span>
                               </div>
                               <div className="flex items-center gap-4 text-sm text-slate-400">
                                 <span>{subsidy.funding_type || subsidy.type || subsidy.category || "Aide"}</span>
