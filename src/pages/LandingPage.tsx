@@ -1601,7 +1601,6 @@ const LandingPage = () => {
                                   <TrendingUp className="w-3 h-3" />
                                   {subsidy.funding_type || subsidy.type || "Aide"}
                                 </span>
-                                <span>{subsidy.agency || subsidy.source || "Source officielle"}</span>
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
