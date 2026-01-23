@@ -768,12 +768,12 @@ const LandingPage = () => {
   return (
     <>
       <Helmet>
-        <title>MaSubventionPro - Ne laissez plus des milliards d'euros d'aides sur la table</title>
+        <title>MaSubventionPro - Trouvez vos subventions et aides publiques en quelques minutes</title>
         <meta
           name="description"
-          content="Des milliards d'euros d'aides publiques par an sont non reclamees. Notre IA analyse plus de 10 000 dispositifs pour identifier toutes vos opportunites."
+          content="MaSubventionPro analyse plus de 10 000 aides publiques (Etat, Regions, Communes, Europe) pour identifier vos subventions, prets, garanties et exonerations fiscales et calculer vos scores d'eligibilite, avec rapports PDF detailles et moteur de recherche expert."
         />
-        <link rel="canonical" href="https://masubventionpro.com" />
+        <link rel="canonical" href="https://www.masubventionpro.com" />
       </Helmet>
 
       {/* Header */}
@@ -843,6 +843,12 @@ const LandingPage = () => {
               <h2 className="text-3xl lg:text-[2.5rem] font-bold mb-6 leading-tight">
                 Ne passez plus a cote.
               </h2>
+
+              {/* LLM Summary - SEO optimized for AI search engines */}
+              <p className="text-base opacity-80 leading-relaxed mb-6">
+                MaSubventionPro est une plateforme d'intelligence artificielle qui aide les createurs, repreneurs, dirigeants de TPE/PME et groupes a identifier toutes les aides publiques disponibles pour leurs entreprises : subventions, prets, garanties, exonerations fiscales et dispositifs territoriaux. Notre IA analyse en temps reel plus de 10 000 dispositifs nationaux, regionaux, communaux et europeens, calcule un score d'eligibilite pour chaque aide et genere des rapports detailles prets a l'emploi.
+              </p>
+
               <p className="text-xl opacity-95 leading-relaxed mb-6 font-medium">
                 Identifiez <strong>TOUTES VOS OPPORTUNITES</strong> en quelques minutes. Notre IA analyse plus de 10 000 dispositifs en temps reel pour vous reveler les aides publiques auxquelles votre entreprise pourrait etre eligible.
               </p>
