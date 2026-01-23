@@ -838,7 +838,7 @@ const LandingPage = () => {
             <div>
               <h1 className="text-4xl lg:text-[3.75rem] font-extrabold leading-[1.1] mb-6">
                 <span className="bg-gradient-to-br from-amber-400 to-amber-300 bg-clip-text text-transparent block text-5xl lg:text-[4rem]">Des milliards d'euros</span>
-                d'aides publiques par an sont non réclamées.
+                d'aides publiques par an<br />sont non réclamées.
               </h1>
               <h2 className="text-3xl lg:text-[2.5rem] font-bold mb-6 leading-tight">
                 Ne passez plus à côté.
