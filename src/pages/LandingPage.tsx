@@ -1467,6 +1467,29 @@ const LandingPage = () => {
                 const displayVisible = displaySubsidies.slice(0, 3)
                 const displayLocked = displaySubsidies.slice(3)
 
+                // Translate sector codes to French
+                const sectorTranslations: Record<string, string> = {
+                  'ENERGY_RENEWABLE': 'Énergies renouvelables',
+                  'WASTE_RECYCLING': 'Recyclage et déchets',
+                  'EDUCATION_TRAINING': 'Formation et éducation',
+                  'ECONOMIC_DEVELOPMENT': 'Développement économique',
+                  'DIGITAL_TECHNOLOGY': 'Numérique et technologie',
+                  'ENVIRONMENT': 'Environnement',
+                  'INNOVATION': 'Innovation',
+                  'EXPORT': 'Export et international',
+                  'AGRICULTURE': 'Agriculture',
+                  'HEALTH': 'Santé',
+                  'TOURISM': 'Tourisme',
+                  'CULTURE': 'Culture',
+                  'TRANSPORT': 'Transport et mobilité',
+                  'CONSTRUCTION': 'Construction et BTP',
+                  'INDUSTRY': 'Industrie',
+                }
+
+                const translateSector = (sector: string) => {
+                  return sectorTranslations[sector] || sector.replace(/_/g, ' ').toLowerCase().replace(/^\w/, c => c.toUpperCase())
+                }
+
                 // Group subsidies by agency/source for Option 2 summary
                 const groupedByAgency = displaySubsidies.reduce((acc: Record<string, { subsidies: any[], types: Set<string>, categories: Set<string> }>, subsidy: any) => {
                   const agency = subsidy.agency || subsidy.source || 'Autres organismes'
@@ -1476,7 +1499,7 @@ const LandingPage = () => {
                   acc[agency].subsidies.push(subsidy)
                   const type = subsidy.funding_type || subsidy.type || 'Aide'
                   acc[agency].types.add(type)
-                  if (subsidy.primary_sector) acc[agency].categories.add(subsidy.primary_sector)
+                  if (subsidy.primary_sector) acc[agency].categories.add(translateSector(subsidy.primary_sector))
                   return acc
                 }, {})
 
@@ -1566,7 +1589,7 @@ const LandingPage = () => {
                               <p className="text-sm text-slate-500">
                                 {group.categories.length > 0
                                   ? group.categories.join(', ')
-                                  : group.types.join(', ')}
+                                  : 'Financement et accompagnement'}
                               </p>
                             </div>
                             <div className="flex items-center gap-2 text-slate-400">
