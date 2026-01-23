@@ -1177,7 +1177,7 @@ const LandingPage = () => {
 
           <div className="text-center mt-12">
             <p className="text-slate-500 text-lg mb-4">
-              Paiement 100% sécurisé par Stripe (CB, Visa, Mastercard, SEPA)
+              Paiement 100% sécurisé par Stripe (SEPA, CB, Visa, Mastercard)
             </p>
           </div>
         </div>
