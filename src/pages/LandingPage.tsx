@@ -968,6 +968,12 @@ const LandingPage = () => {
               </span>
               <p className="text-slate-500 font-semibold text-sm">Commune - Europe</p>
             </div>
+            <div className="p-6 bg-slate-50 rounded-xl">
+              <span className="text-4xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
+                IA
+              </span>
+              <p className="text-slate-500 font-semibold text-sm">Assistant IA expert</p>
+            </div>
           </div>
         </div>
       </section>
