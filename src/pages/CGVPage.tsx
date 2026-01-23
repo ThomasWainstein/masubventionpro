@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, CreditCard, RefreshCw, AlertTriangle, Scale, Clock, Mail, ArrowLeft, Euro } from 'lucide-react';
+import { ShoppingCart, RefreshCw, AlertTriangle, Scale, Clock, Mail, ArrowLeft, Euro } from 'lucide-react';
 
 const CGVPage = () => {
   const lastUpdated = '2026-01-01';

@@ -4,16 +4,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import type {
   ComplianceEvent,
   ComplianceEventInput,
-  ComplianceEventType,
   MatchInputSnapshot,
   MatchOutputResult,
   ChatInputSnapshot,
   ChatOutputResult,
   HumanInteraction,
   UserFeedback,
-  HumanReviewRequest,
 } from '@/types/compliance-events';
-import type { AIFunctionName, AIModelProvider } from '@/types/ai-usage';
+import type { AIModelProvider } from '@/types/ai-usage';
 
 // Current system version - update with releases
 const SYSTEM_VERSION = '2.0.0';
