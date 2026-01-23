@@ -1001,10 +1001,9 @@ const LandingPage = () => {
           <p className="text-slate-500 text-lg mb-2">
             Notre role : vous reveler les opportunites que vous ne connaissiez pas.
           </p>
-          <div className="flex items-center justify-center gap-3 text-slate-500 mb-8">
-            <span>Propulse par</span>
-            <span className="text-2xl font-bold text-blue-800">subvention360</span>
-          </div>
+          <p className="text-slate-500 mb-8 text-center">
+            Propulse par <span className="text-2xl font-bold text-blue-800">subvention360</span>
+          </p>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="p-6 bg-slate-50 rounded-xl">
               <span className="text-4xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
