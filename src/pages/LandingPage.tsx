@@ -853,14 +853,6 @@ const LandingPage = () => {
                 Identifiez <strong>TOUTES VOS OPPORTUNITÉS</strong> en quelques minutes. Notre IA analyse plus de 10 000 dispositifs en temps réel pour vous révéler les aides publiques auxquelles votre entreprise pourrait être éligible.
               </p>
 
-              {/* Unique Value Proposition Box */}
-              <div className="bg-amber-500/15 border-2 border-amber-500/40 px-6 py-5 rounded-xl mb-6">
-                <h4 className="text-lg font-bold text-amber-400 mb-3">Pourquoi nous sommes uniques ?</h4>
-                <p className="text-base opacity-95 leading-relaxed font-medium">
-                  Nous avons intégré <strong>EN PLUS</strong> du National et de l'Europe, les aides des <strong>Régions ET des Communes</strong>. Un niveau de couverture que peu d'autres solutions proposent.
-                </p>
-              </div>
-
               <div className="flex flex-wrap gap-4">
                 <span className="bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full text-sm font-semibold border border-white/20">
                   {subsidyCount} dispositifs
@@ -975,6 +967,14 @@ const LandingPage = () => {
               <p className="text-slate-500 font-semibold text-sm">Assistant IA expert</p>
             </div>
           </div>
+
+          {/* Pourquoi nous sommes uniques - Section déplacée */}
+          <div className="mt-12 bg-gradient-to-br from-amber-50 to-amber-100/50 border-2 border-amber-300 px-8 py-8 rounded-2xl max-w-4xl mx-auto">
+            <h3 className="text-2xl font-bold text-amber-700 mb-4 text-center">Pourquoi sommes-nous uniques ?</h3>
+            <p className="text-lg text-slate-700 leading-relaxed text-center">
+              Nous avons intégré <strong className="text-amber-700">EN PLUS</strong> du National et de l'Europe, les aides des <strong className="text-amber-700">Régions ET des Communes</strong>. Un niveau de couverture que peu d'autres solutions proposent.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -1063,17 +1063,16 @@ const LandingPage = () => {
               <h3 className="text-2xl font-bold text-slate-900">Découverte</h3>
               <p className="text-slate-500 mt-1">Idéal pour un premier diagnostic</p>
               <div className="my-6">
-                <span className="text-6xl font-extrabold text-blue-800">49 EUR</span>
+                <span className="text-6xl font-extrabold text-blue-800">49€</span>
+                <span className="text-lg text-slate-500 ml-1">HT</span>
                 <div className="text-lg text-slate-500">30 jours</div>
               </div>
               <ul className="space-y-0">
                 {[
-                  "Simulation et identification des aides",
-                  "Rapport PDF détaillé",
-                  "Scores d'éligibilité personnalisés",
-                  "Montants historiques réels",
-                  "Assistant IA expert",
-                  "Support",
+                  "Identification toutes aides éligibles",
+                  "Assistant IA expert (30 questions)",
+                  "Accès moteur recherche 10 000+ dispositifs",
+                  "Rapport PDF détaillé téléchargeable",
                 ].map((item, j, arr) => (
                   <li key={j} className={`py-3.5 flex items-start gap-3 text-sm ${j < arr.length - 1 ? 'border-b border-slate-200' : ''}`}>
                     <Check className="w-5 h-5 text-emerald-600 flex-shrink-0" />
@@ -1101,20 +1100,19 @@ const LandingPage = () => {
               <h3 className="text-2xl font-bold text-slate-900 mt-4">Business</h3>
               <p className="text-slate-500 mt-1">Pour un suivi optimal toute l'année</p>
               <div className="my-6">
-                <span className="text-6xl font-extrabold text-blue-800">149 EUR</span>
-                <div className="text-lg text-slate-500">par an</div>
+                <span className="text-6xl font-extrabold text-blue-800">189€</span>
+                <span className="text-lg text-slate-500 ml-1">HT/an</span>
+                <div className="text-sm text-slate-400">15,75€/mois</div>
+                <div className="text-sm text-blue-600 mt-1">+ 99€ par société supplémentaire</div>
               </div>
               <ul className="space-y-0">
                 {[
-                  "Simulation et identification des aides",
-                  "Rapport PDF détaillé",
-                  "Scores d'éligibilité personnalisés",
-                  "Montants historiques réels",
-                  "Assistant IA expert",
-                  "Support",
-                  "Moteur de recherche (10 000+ aides)",
-                  "Alertes email personnalisées",
-                  "Historique et suivi",
+                  "Identification toutes aides éligibles",
+                  "Assistant IA expert (360 questions)",
+                  "Accès moteur recherche 10 000+ dispositifs",
+                  "Rapport PDF détaillé téléchargeable",
+                  "Actualisation automatique des aides éligibles",
+                  "Alertes nouveaux dispositifs par email",
                 ].map((item, j, arr) => (
                   <li key={j} className={`py-3.5 flex items-start gap-3 text-sm ${j < arr.length - 1 ? 'border-b border-slate-200' : ''}`}>
                     <Check className="w-5 h-5 text-emerald-600 flex-shrink-0" />
@@ -1122,7 +1120,10 @@ const LandingPage = () => {
                   </li>
                 ))}
               </ul>
-              <div className="bg-emerald-50 border-2 border-emerald-200 p-4 rounded-xl mt-6 text-center">
+              <div className="bg-blue-50 border-2 border-blue-200 p-3 rounded-xl mt-4 text-center">
+                <p className="text-blue-700 text-sm font-medium">Upgrade depuis Découverte : payez 140€ dans les 30 jours</p>
+              </div>
+              <div className="bg-emerald-50 border-2 border-emerald-200 p-4 rounded-xl mt-3 text-center">
                 <h4 className="text-emerald-700 font-bold">Vos données vous appartiennent</h4>
                 <p className="text-slate-600 text-sm">Aucune revente. Aucun partage. 100% confidentiel.</p>
               </div>
@@ -1139,22 +1140,23 @@ const LandingPage = () => {
               <h3 className="text-2xl font-bold text-slate-900">Premium Groupe</h3>
               <p className="text-slate-500 mt-1">Pour holdings et groupes multi-sociétés</p>
               <div className="my-6">
-                <span className="text-6xl font-extrabold text-blue-800">299 EUR</span>
-                <div className="text-lg text-slate-500">par an</div>
-                <div className="text-sm text-slate-500 mt-1">+ 29 EUR par pack de 10 sociétés supplémentaires</div>
+                <span className="text-6xl font-extrabold text-blue-800">549€</span>
+                <span className="text-lg text-slate-500 ml-1">HT/an</span>
+                <div className="text-sm text-slate-400">pour 5 sociétés</div>
+                <div className="text-sm text-blue-600 mt-1">+ 99€ par pack de 5 sociétés supplémentaires</div>
               </div>
               <ul className="space-y-0">
                 {[
-                  "Simulation et identification des aides",
-                  "Rapport PDF détaillé",
-                  "Scores d'éligibilité personnalisés",
-                  "Montants historiques réels",
-                  "Assistant IA expert",
-                  "Support",
-                  "Moteur de recherche (10 000+ aides)",
-                  "Alertes email personnalisées",
-                  "Historique et suivi",
-                  "Multi-sociétés (10 incluses)",
+                  "Identification toutes aides éligibles",
+                  "Assistant IA expert (360 questions)",
+                  "Accès moteur recherche 10 000+ dispositifs",
+                  "Rapport PDF détaillé téléchargeable",
+                  "Multi-entités (5 sociétés incluses)",
+                  "Actualisation automatique des aides éligibles",
+                  "Alertes nouveaux dispositifs par email",
+                  "Dashboard consolidé groupe",
+                  "2h accompagnement utilisation",
+                  "Importation entités (Excel ou CSV)",
                 ].map((item, j, arr) => (
                   <li key={j} className={`py-3.5 flex items-start gap-3 text-sm ${j < arr.length - 1 ? 'border-b border-slate-200' : ''}`}>
                     <Check className="w-5 h-5 text-emerald-600 flex-shrink-0" />
@@ -1162,7 +1164,11 @@ const LandingPage = () => {
                   </li>
                 ))}
               </ul>
-              <div className="bg-emerald-50 border-2 border-emerald-200 p-4 rounded-xl mt-6 text-center">
+              <div className="bg-blue-50 border-2 border-blue-200 p-3 rounded-xl mt-4 text-center text-sm">
+                <p className="text-blue-700 font-medium">Upgrade depuis Découverte : crédit 49€ → payez 500€</p>
+                <p className="text-blue-700 font-medium">Upgrade depuis Business : crédit 189€ → payez 360€</p>
+              </div>
+              <div className="bg-emerald-50 border-2 border-emerald-200 p-4 rounded-xl mt-3 text-center">
                 <h4 className="text-emerald-700 font-bold">Vos données vous appartiennent</h4>
                 <p className="text-slate-600 text-sm">Aucune revente. Aucun partage. 100% confidentiel.</p>
               </div>
@@ -1712,7 +1718,7 @@ const LandingPage = () => {
                       <div className="bg-white rounded-xl p-5 border-2 border-slate-200 hover:border-blue-400 transition-colors">
                         <div className="flex items-center justify-between mb-3">
                           <h5 className="font-bold text-slate-900">Découverte</h5>
-                          <span className="text-2xl font-extrabold text-blue-800">49 EUR</span>
+                          <span className="text-2xl font-extrabold text-blue-800">49€ <span className="text-sm font-normal text-slate-500">HT</span></span>
                         </div>
                         <ul className="space-y-2 text-sm text-slate-600 mb-4">
                           <li className="flex items-center gap-2">
@@ -1721,11 +1727,11 @@ const LandingPage = () => {
                           </li>
                           <li className="flex items-center gap-2">
                             <Check className="w-4 h-4 text-emerald-600" />
-                            Tous les détails des aides
+                            Assistant IA (30 questions)
                           </li>
                           <li className="flex items-center gap-2">
                             <Check className="w-4 h-4 text-emerald-600" />
-                            Rapport PDF complet
+                            Rapport PDF téléchargeable
                           </li>
                         </ul>
                         <button
@@ -1743,20 +1749,20 @@ const LandingPage = () => {
                         </div>
                         <div className="flex items-center justify-between mb-3">
                           <h5 className="font-bold text-slate-900">Business</h5>
-                          <span className="text-2xl font-extrabold text-blue-800">149 EUR<span className="text-sm font-normal text-slate-500">/an</span></span>
+                          <span className="text-2xl font-extrabold text-blue-800">189€ <span className="text-sm font-normal text-slate-500">HT/an</span></span>
                         </div>
                         <ul className="space-y-2 text-sm text-slate-600 mb-4">
                           <li className="flex items-center gap-2">
                             <Check className="w-4 h-4 text-emerald-600" />
-                            Accès illimité 1 an
+                            Assistant IA (360 questions)
                           </li>
                           <li className="flex items-center gap-2">
                             <Check className="w-4 h-4 text-emerald-600" />
-                            Alertes nouvelles aides
+                            Alertes nouveaux dispositifs
                           </li>
                           <li className="flex items-center gap-2">
                             <Check className="w-4 h-4 text-emerald-600" />
-                            Moteur de recherche complet
+                            Actualisation automatique
                           </li>
                         </ul>
                         <button
