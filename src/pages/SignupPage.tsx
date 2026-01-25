@@ -73,8 +73,8 @@ const SignupPage = () => {
             Inscription reussie !
           </h1>
           <p className="text-slate-600 mb-6">
-            Un email de confirmation vous a ete envoye a <strong>{email}</strong>.
-            Veuillez cliquer sur le lien pour activer votre compte.
+            Un email avec un code de verification vous a ete envoye a <strong>{email}</strong>.
+            Entrez ce code lors de votre connexion pour activer votre compte.
           </p>
           <Link to="/">
             <Button variant="outline" className="w-full">

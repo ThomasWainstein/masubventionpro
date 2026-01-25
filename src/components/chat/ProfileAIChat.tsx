@@ -143,12 +143,12 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
           Assistant IA disponible
         </h3>
         <p className="text-slate-600 mb-4">
-          Completez votre profil entreprise pour acceder a l'assistant IA et
-          recevoir des recommandations personnalisees.
+          Complétez votre profil entreprise pour accéder à l'assistant IA et
+          recevoir des recommandations personnalisées.
         </p>
         <Link to="/app/profile/setup">
           <Button>
-            Completer mon profil
+            Compléter mon profil
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </Link>
@@ -224,7 +224,7 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
                 <div className="max-h-64 overflow-y-auto">
                   {conversations.length === 0 ? (
                     <div className="px-3 py-4 text-center text-sm text-slate-500">
-                      Aucune conversation precedente
+                      Aucune conversation précédente
                     </div>
                   ) : (
                     conversations.map((conv) => (
@@ -284,17 +284,17 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
                 </h3>
               </div>
               <p className="text-purple-100">
-                Je suis votre assistant IA specialise dans les subventions. Je
-                peux vous aider a :
+                Je suis votre assistant IA spécialisé dans les subventions. Je
+                peux vous aider à :
               </p>
               <ul className="mt-3 space-y-2 text-sm">
                 <li className="flex items-center gap-2">
                   <Target className="h-4 w-4 text-purple-200" />
-                  Trouver les aides adaptees a votre profil
+                  Trouver les aides adaptées à votre profil
                 </li>
                 <li className="flex items-center gap-2">
                   <Euro className="h-4 w-4 text-purple-200" />
-                  Estimer vos chances de succes
+                  Estimer vos chances de succès
                 </li>
                 <li className="flex items-center gap-2">
                   <TrendingUp className="h-4 w-4 text-purple-200" />
@@ -306,7 +306,7 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
             {/* Suggested Prompts */}
             <div>
               <p className="text-sm text-slate-500 mb-3">
-                Questions suggerees :
+                Questions suggérées :
               </p>
               <SuggestedPrompts
                 onSelectPrompt={handleSendMessage}
@@ -355,7 +355,7 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
             <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
               <h4 className="font-semibold text-emerald-800 mb-3 flex items-center gap-2">
                 <Target className="h-4 w-4" />
-                Aides recommandees pour vous
+                Aides recommandées pour vous
               </h4>
               <div className="space-y-2">
                 {intelligence.profileMatches.matches.slice(0, 5).map((match) => (
@@ -400,12 +400,12 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
                 <div className="mt-3 pt-3 border-t border-emerald-200 flex flex-wrap gap-x-4 gap-y-1 text-xs text-emerald-700">
                   <span>
                     {intelligence.profileMatches.stats.totalMatches} aides
-                    eligibles
+                    éligibles
                   </span>
                   {intelligence.profileMatches.stats.highProbabilityCount > 0 && (
                     <span>
                       {intelligence.profileMatches.stats.highProbabilityCount}{' '}
-                      forte probabilite
+                      forte probabilité
                     </span>
                   )}
                   {intelligence.profileMatches.stats.totalPotential > 0 && (
@@ -422,7 +422,7 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
               {/* Benchmark */}
               {intelligence.profileMatches.benchmark && (
                 <div className="mt-2 text-xs text-emerald-600">
-                  Taux de succes moyen du secteur:{' '}
+                  Taux de succès moyen du secteur:{' '}
                   {intelligence.profileMatches.benchmark.baseSuccessRate}%
                 </div>
               )}
@@ -434,7 +434,7 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
             <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
-              Aides cumulables recommandees
+              Aides cumulables recommandées
             </h4>
             <div className="space-y-2">
               {intelligence.stacking.raw.slice(0, 3).map((subsidy) => (
@@ -456,7 +456,7 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
                   </div>
                   {subsidy.companies_stacked > 0 && (
                     <p className="text-xs text-blue-600 mt-1">
-                      {subsidy.companies_stacked} entreprises ont cumule ces aides
+                      {subsidy.companies_stacked} entreprises ont cumulé ces aides
                     </p>
                   )}
                 </Link>
@@ -468,7 +468,7 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
         {/* Detected Context Badge */}
         {intelligence?.detectedContext?.newRegion && (
           <div className="inline-flex items-center gap-1 px-2 py-1 bg-amber-50 border border-amber-200 rounded text-xs text-amber-700">
-            <span>Region detectee:</span>
+            <span>Région détectée:</span>
             <span className="font-medium">
               {intelligence.detectedContext.detectedCity
                 ? `${intelligence.detectedContext.detectedCity} (${intelligence.detectedContext.newRegion})`
@@ -514,7 +514,7 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
           placeholder="Posez une question sur les subventions..."
         />
         <p className="text-xs text-slate-400 mt-2 text-center">
-          L'IA peut faire des erreurs. Verifiez les informations importantes.
+          L'IA peut faire des erreurs. Vérifiez les informations importantes.
         </p>
       </div>
 

@@ -136,8 +136,8 @@ export interface SubscriptionInfo {
 
 // French regions
 export const FRENCH_REGIONS = [
-  'Auvergne-Rhone-Alpes',
-  'Bourgogne-Franche-Comte',
+  'Auvergne-Rhône-Alpes',
+  'Bourgogne-Franche-Comté',
   'Bretagne',
   'Centre-Val de Loire',
   'Corse',
@@ -145,24 +145,24 @@ export const FRENCH_REGIONS = [
   'Guadeloupe',
   'Guyane',
   'Hauts-de-France',
-  'Ile-de-France',
-  'La Reunion',
+  'Île-de-France',
+  'La Réunion',
   'Martinique',
   'Mayotte',
   'Normandie',
   'Nouvelle-Aquitaine',
   'Occitanie',
   'Pays de la Loire',
-  "Provence-Alpes-Cote d'Azur",
+  "Provence-Alpes-Côte d'Azur",
   'National',
 ] as const;
 
 // Employee count ranges
 export const EMPLOYEE_RANGES = [
-  { value: '1-10', label: '1-10 salaries' },
-  { value: '11-50', label: '11-50 salaries' },
-  { value: '51-250', label: '51-250 salaries' },
-  { value: '250+', label: 'Plus de 250 salaries' },
+  { value: '1-10', label: '1-10 salariés' },
+  { value: '11-50', label: '11-50 salariés' },
+  { value: '51-250', label: '51-250 salariés' },
+  { value: '250+', label: 'Plus de 250 salariés' },
 ] as const;
 
 // Legal forms
@@ -182,7 +182,7 @@ export const LEGAL_FORMS = [
 // Funding types
 export const FUNDING_TYPES = [
   { value: 'subvention', label: 'Subvention' },
-  { value: 'pret', label: 'Pret' },
+  { value: 'pret', label: 'Prêt' },
   { value: 'garantie', label: 'Garantie' },
   { value: 'avance', label: 'Avance remboursable' },
   { value: 'accompagnement', label: 'Accompagnement' },
@@ -193,12 +193,12 @@ export const FUNDING_TYPES = [
 export const PROJECT_TYPES = [
   { value: 'innovation', label: 'Innovation / R&D' },
   { value: 'export', label: 'Export / International' },
-  { value: 'transition-eco', label: 'Transition ecologique' },
-  { value: 'numerique', label: 'Transformation numerique' },
+  { value: 'transition-eco', label: 'Transition écologique' },
+  { value: 'numerique', label: 'Transformation numérique' },
   { value: 'emploi', label: 'Emploi / Formation' },
-  { value: 'creation', label: 'Creation / Reprise' },
+  { value: 'creation', label: 'Création / Reprise' },
   { value: 'investissement', label: 'Investissement' },
-  { value: 'tresorerie', label: 'Tresorerie' },
+  { value: 'tresorerie', label: 'Trésorerie' },
 ] as const;
 
 // Business sectors
@@ -208,22 +208,22 @@ export const BUSINESS_SECTORS = [
   { value: 'construction', label: 'Construction / BTP' },
   { value: 'commerce', label: 'Commerce / Distribution' },
   { value: 'transport', label: 'Transport / Logistique' },
-  { value: 'tourisme', label: 'Tourisme / Hotellerie / Restauration' },
-  { value: 'sante', label: 'Sante / Medical' },
-  { value: 'tech', label: 'Tech / Numerique / IT' },
+  { value: 'tourisme', label: 'Tourisme / Hôtellerie / Restauration' },
+  { value: 'sante', label: 'Santé / Médical' },
+  { value: 'tech', label: 'Tech / Numérique / IT' },
   { value: 'services', label: 'Services aux entreprises' },
   { value: 'finance', label: 'Finance / Assurance' },
   { value: 'immobilier', label: 'Immobilier' },
-  { value: 'culture', label: 'Culture / Media / Communication' },
-  { value: 'education', label: 'Education / Formation' },
-  { value: 'environnement', label: 'Environnement / Energie' },
+  { value: 'culture', label: 'Culture / Médias / Communication' },
+  { value: 'education', label: 'Éducation / Formation' },
+  { value: 'environnement', label: 'Environnement / Énergie' },
   { value: 'artisanat', label: 'Artisanat' },
   { value: 'autre', label: 'Autre' },
 ] as const;
 
 // Document categories
 export const DOCUMENT_CATEGORIES = [
-  { value: 'identity', label: 'Document d\'identite' },
+  { value: 'identity', label: 'Document d\'identité' },
   { value: 'financial', label: 'Document financier' },
   { value: 'legal', label: 'Document juridique' },
   { value: 'business', label: 'Document commercial' },

@@ -16,13 +16,6 @@ import {
   CreditCard,
 } from "lucide-react"
 
-// Price IDs - Created in Stripe (live mode)
-const PRICE_IDS = {
-  decouverte: "price_1SriofGHk83RfX3M9kJpY68K",  // 49€/year
-  business: "price_1SriohGHk83RfX3MaB9J9h9I",    // 149€/year
-  premium: "price_1SrioiGHk83RfX3MPSRH0T6W",     // 299€/year
-}
-
 interface OnboardingData {
   email: string
   password: string
@@ -43,15 +36,16 @@ const pricingPlans = [
   {
     id: "decouverte" as const,
     name: "Decouverte",
-    subtitle: "Pour commencer",
+    subtitle: "Pour tester",
     price: 49,
-    period: "",
+    period: " HT",
+    periodDetail: "30 jours",
     features: [
-      "50 recherches",
+      "1 societe",
+      "Acces complet 30 jours",
       "Base complete des aides",
       "Filtres par region/secteur",
-      "Export PDF basique",
-      "Support email",
+      "Export PDF",
     ],
     featured: false,
   },
@@ -59,10 +53,13 @@ const pricingPlans = [
     id: "business" as const,
     name: "Business",
     subtitle: "Le choix des PME",
-    price: 149,
-    period: "/an",
+    price: 189,
+    period: " HT/an",
+    periodDetail: "15,75€/mois",
+    addon: "+ 99€ par societe supplementaire",
     features: [
-      "200 recherches/mois",
+      "1 societe incluse",
+      "Recherches illimitees",
       "Matching IA avance",
       "Rapports personnalises",
       "Alertes nouveaux dispositifs",
@@ -73,12 +70,14 @@ const pricingPlans = [
   },
   {
     id: "premium" as const,
-    name: "Premium",
+    name: "Premium Groupe",
     subtitle: "Pour les groupes & cabinets",
-    price: 299,
-    period: "/an",
+    price: 549,
+    period: " HT/an",
+    periodDetail: "45,75€/mois",
+    addon: "+ 99€ par pack de 5 societes",
     features: [
-      "Multi-sites (10 societes incluses)",
+      "5 societes incluses",
       "Recherches illimitees",
       "Assistant IA contextuel",
       "Rapports white-label",
@@ -188,23 +187,15 @@ const OnboardingWizard = () => {
         throw new Error("Erreur lors de la creation du compte")
       }
 
-      // 2. Create Stripe checkout session via Edge Function
+      // 2. Create Stripe checkout session via MSP Edge Function
       const { data: checkoutData, error: checkoutError } = await supabase.functions.invoke(
-        "create-checkout-session",
+        "msp-create-checkout",
         {
           body: {
-            source: "masubventionpro", // Required at top level for Edge Function detection
-            priceId: PRICE_IDS[data.selectedPlan!],
+            planType: data.selectedPlan,
             userId: authData.user.id,
             email: data.email,
-            metadata: {
-              firstName: data.firstName,
-              lastName: data.lastName,
-              companyName: data.companyName,
-              plan: data.selectedPlan,
-            },
-            successUrl: `${window.location.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancelUrl: `${window.location.origin}/signup`,
+            addonCompanies: 0, // Can be increased for extra companies
           },
         }
       )
@@ -405,11 +396,15 @@ const OnboardingWizard = () => {
                         <span className="text-2xl font-extrabold text-blue-800">
                           {plan.price}€
                         </span>
-                        {plan.period && (
-                          <span className="text-slate-500 text-sm">{plan.period}</span>
+                        <span className="text-slate-500 text-sm">{plan.period}</span>
+                        {plan.periodDetail && (
+                          <p className="text-xs text-slate-400">{plan.periodDetail}</p>
                         )}
                       </div>
                     </div>
+                    {plan.addon && (
+                      <p className="mt-1 text-xs text-blue-600">{plan.addon}</p>
+                    )}
                     <div className="mt-3 flex flex-wrap gap-2">
                       {plan.features.slice(0, 3).map((feature, i) => (
                         <span

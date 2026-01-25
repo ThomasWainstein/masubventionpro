@@ -87,7 +87,7 @@ export function AccountDeletionDialog({ open, onOpenChange }: AccountDeletionDia
             Supprimer mon compte
           </DialogTitle>
           <DialogDescription>
-            Cette action est irreversible. Toutes vos donnees seront definitivement supprimees.
+            Cette action est irréversible. Toutes vos données seront définitivement supprimées.
           </DialogDescription>
         </DialogHeader>
 
@@ -96,7 +96,7 @@ export function AccountDeletionDialog({ open, onOpenChange }: AccountDeletionDia
           {!isDeleting && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-3">
               <p className="text-sm font-medium text-red-800 mb-2">
-                Les donnees suivantes seront supprimees:
+                Les données suivantes seront supprimées:
               </p>
               <ul className="space-y-1 text-sm text-red-700">
                 <li className="flex items-center gap-2">
@@ -105,7 +105,7 @@ export function AccountDeletionDialog({ open, onOpenChange }: AccountDeletionDia
                 </li>
                 <li className="flex items-center gap-2">
                   <FileText className="h-3.5 w-3.5" />
-                  Tous vos documents uploades
+                  Tous vos documents uploadés
                 </li>
                 <li className="flex items-center gap-2">
                   <MessageSquare className="h-3.5 w-3.5" />
@@ -113,11 +113,11 @@ export function AccountDeletionDialog({ open, onOpenChange }: AccountDeletionDia
                 </li>
                 <li className="flex items-center gap-2">
                   <Shield className="h-3.5 w-3.5" />
-                  Vos aides sauvegardees
+                  Vos aides sauvegardées
                 </li>
                 <li className="flex items-center gap-2">
                   <Database className="h-3.5 w-3.5" />
-                  Toutes les donnees associees
+                  Toutes les données associées
                 </li>
               </ul>
             </div>
@@ -181,7 +181,7 @@ export function AccountDeletionDialog({ open, onOpenChange }: AccountDeletionDia
                   className="mt-1 rounded border-slate-300 text-red-600 focus:ring-red-500"
                 />
                 <span className="text-sm text-slate-600">
-                  Je comprends que cette action est irreversible et que toutes mes donnees seront definitivement supprimees.
+                  Je comprends que cette action est irréversible et que toutes mes données seront définitivement supprimées.
                 </span>
               </label>
             </>
@@ -218,7 +218,7 @@ export function AccountDeletionDialog({ open, onOpenChange }: AccountDeletionDia
             ) : (
               <>
                 <Trash2 className="h-4 w-4" />
-                Supprimer definitivement
+                Supprimer définitivement
               </>
             )}
           </Button>

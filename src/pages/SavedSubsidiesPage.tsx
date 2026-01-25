@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useSavedSubsidies } from '@/hooks/useSavedSubsidies';
 import { useRecommendedSubsidies } from '@/hooks/useRecommendedSubsidies';
@@ -33,14 +33,15 @@ import {
   Sparkles,
   Star,
   ArrowRight,
+  ArrowLeft,
 } from 'lucide-react';
 
 const STATUS_OPTIONS = [
-  { value: 'saved', label: 'Sauvegardee', color: 'bg-slate-100 text-slate-700' },
-  { value: 'interested', label: 'Interessee', color: 'bg-blue-100 text-blue-700' },
-  { value: 'applied', label: 'Candidature envoyee', color: 'bg-amber-100 text-amber-700' },
+  { value: 'saved', label: 'Sauvegardée', color: 'bg-slate-100 text-slate-700' },
+  { value: 'interested', label: 'Intéressée', color: 'bg-blue-100 text-blue-700' },
+  { value: 'applied', label: 'Candidature envoyée', color: 'bg-amber-100 text-amber-700' },
   { value: 'received', label: 'Obtenue', color: 'bg-emerald-100 text-emerald-700' },
-  { value: 'rejected', label: 'Refusee', color: 'bg-red-100 text-red-700' },
+  { value: 'rejected', label: 'Refusée', color: 'bg-red-100 text-red-700' },
 ];
 
 // Calculate days until deadline
@@ -60,7 +61,7 @@ function getDeadlineStatus(deadline: string | null): {
   const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   if (daysLeft < 0) {
-    return { daysLeft, urgency: 'expired', label: 'Expiree' };
+    return { daysLeft, urgency: 'expired', label: 'Expirée' };
   } else if (daysLeft === 0) {
     return { daysLeft, urgency: 'urgent', label: "Aujourd'hui" };
   } else if (daysLeft <= 3) {
@@ -74,6 +75,7 @@ function getDeadlineStatus(deadline: string | null): {
 }
 
 export function SavedSubsidiesPage() {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { savedSubsidies, loading, unsaveSubsidy, updateStatus, updateNotes, isSaved, toggleSave } = useSavedSubsidies();
   const { profile, hasProfile } = useProfile();
@@ -91,6 +93,18 @@ export function SavedSubsidiesPage() {
   const [statusFilter, setStatusFilter] = useState<string | null>(
     searchParams.get('status')
   );
+
+  // Create a map of subsidy ID -> AI match data for quick lookup
+  const aiScoresMap = useMemo(() => {
+    const map = new Map<string, { matchScore?: number; matchReasons?: string[] }>();
+    for (const rec of recommendations) {
+      map.set(rec.id, {
+        matchScore: rec.matchScore,
+        matchReasons: rec.matchReasons,
+      });
+    }
+    return map;
+  }, [recommendations]);
 
   // Sync filter with URL params
   useEffect(() => {
@@ -188,12 +202,22 @@ export function SavedSubsidiesPage() {
         <title>Mes subventions - MaSubventionPro</title>
       </Helmet>
 
+      {/* Back button */}
+      <Button
+        variant="ghost"
+        onClick={() => navigate('/app')}
+        className="-ml-2 text-slate-600"
+      >
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Retour au tableau de bord
+      </Button>
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Mes subventions</h1>
           <p className="text-slate-600 mt-1">
-            Gerez les aides que vous avez sauvegardees
+            Gérez les aides que vous avez sauvegardées
           </p>
         </div>
         <Link to="/app/search">
@@ -291,61 +315,7 @@ export function SavedSubsidiesPage() {
         );
       })()}
 
-      {/* AI Recommendations Section */}
-      {hasProfile && recommendations.length > 0 && (
-        <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl border border-purple-200 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                <Star className="h-5 w-5 text-amber-500" />
-                Recommandees pour vous
-              </h2>
-              {isAIScored && (
-                <p className="text-xs text-purple-600 flex items-center gap-1 mt-1">
-                  <Sparkles className="h-3 w-3" />
-                  Score IA V5 - basé sur votre profil entreprise
-                </p>
-              )}
-            </div>
-            <Link to="/app/search" className="text-blue-600 hover:underline text-sm flex items-center gap-1">
-              Voir tout
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-
-          {loadingRecommendations ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
-              <span className="ml-2 text-slate-600">Calcul des recommandations...</span>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {recommendations.slice(0, 5).map((subsidy) => (
-                <SubsidyCard
-                  key={subsidy.id}
-                  subsidy={subsidy}
-                  isSaved={isSaved(subsidy.id)}
-                  onToggleSave={toggleSave}
-                  matchScore={subsidy.matchScore}
-                  matchReasons={subsidy.matchReasons}
-                />
-              ))}
-              {recommendations.length > 5 && (
-                <div className="text-center pt-2">
-                  <Link to="/app/search">
-                    <Button variant="outline" size="sm">
-                      Voir {recommendations.length - 5} autres recommandations
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* List */}
+      {/* Saved Subsidies List - Now shown FIRST */}
       {loading ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
@@ -355,11 +325,11 @@ export function SavedSubsidiesPage() {
           <div className="flex items-center justify-center w-16 h-16 bg-slate-100 rounded-full mx-auto mb-4">
             <Bookmark className="h-8 w-8 text-slate-400" />
           </div>
-          <h3 className="text-lg font-semibold text-slate-900">Aucune aide sauvegardee</h3>
+          <h3 className="text-lg font-semibold text-slate-900">Aucune aide sauvegardée</h3>
           <p className="text-slate-600 mt-2 max-w-md mx-auto">
             {hasProfile
-              ? 'Sauvegardez des aides depuis les recommandations ci-dessus ou recherchez-en de nouvelles'
-              : 'Commencez par rechercher des aides et sauvegardez celles qui vous interessent'}
+              ? 'Sauvegardez des aides depuis les recommandations ci-dessous ou recherchez-en de nouvelles'
+              : 'Commencez par rechercher des aides et sauvegardez celles qui vous intéressent'}
           </p>
           <Link to="/app/search">
             <Button className="mt-4">
@@ -387,6 +357,7 @@ export function SavedSubsidiesPage() {
 
             const title = getSubsidyTitle(subsidy);
             const statusOption = getStatusOption(saved.status);
+            const aiData = aiScoresMap.get(subsidy.id);
 
             return (
               <div
@@ -396,14 +367,36 @@ export function SavedSubsidiesPage() {
                 <div className="flex items-start justify-between gap-4">
                   {/* Info */}
                   <div className="flex-1 min-w-0">
-                    <Link
-                      to={`/app/subsidy/${subsidy.id}`}
-                      className="block group"
-                    >
-                      <h3 className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2">
-                        {title}
-                      </h3>
-                    </Link>
+                    <div className="flex items-start gap-3">
+                      <Link
+                        to={`/app/subsidy/${subsidy.id}`}
+                        className="block group flex-1"
+                      >
+                        <h3 className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2">
+                          {title}
+                        </h3>
+                      </Link>
+                      {/* AI Match Score Badge */}
+                      {aiData?.matchScore && (
+                        <div className="flex-shrink-0 flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-700 rounded-lg text-sm font-medium">
+                          <Sparkles className="h-3.5 w-3.5" />
+                          {aiData.matchScore}%
+                        </div>
+                      )}
+                    </div>
+                    {/* AI Match Reasons */}
+                    {aiData?.matchReasons && aiData.matchReasons.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mt-2">
+                        {aiData.matchReasons.slice(0, 3).map((reason, idx) => (
+                          <span
+                            key={idx}
+                            className="px-2 py-0.5 bg-purple-50 text-purple-600 rounded text-xs"
+                          >
+                            {reason}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                     {subsidy.agency && (
                       <div className="flex items-center gap-1.5 mt-1 text-sm text-slate-500">
                         <Building className="h-3.5 w-3.5" />
@@ -416,7 +409,7 @@ export function SavedSubsidiesPage() {
                       {subsidy.amount_max && (
                         <div className="flex items-center gap-1 text-emerald-700">
                           <Euro className="h-3.5 w-3.5" />
-                          <span>Jusqu'a {formatAmount(subsidy.amount_max)}</span>
+                          <span>Jusqu'à {formatAmount(subsidy.amount_max)}</span>
                         </div>
                       )}
                       {subsidy.deadline && (() => {
@@ -497,7 +490,7 @@ export function SavedSubsidiesPage() {
                 <div className="mt-4 pt-4 border-t border-slate-100 flex items-center gap-4">
                   <Link to={`/app/subsidy/${subsidy.id}`}>
                     <Button variant="outline" size="sm">
-                      Voir les details
+                      Voir les détails
                     </Button>
                   </Link>
                   {subsidy.application_url && (
@@ -535,7 +528,7 @@ export function SavedSubsidiesPage() {
                       Notes personnelles
                     </label>
                     <Textarea
-                      placeholder="Ajoutez des notes sur cette aide (ex: documents requis, contacts, etapes...)'"
+                      placeholder="Ajoutez des notes sur cette aide (ex: documents requis, contacts, étapes...)'"
                       value={editingNotes[saved.id] ?? saved.notes ?? ''}
                       onChange={(e) => handleNotesChange(saved.id, e.target.value)}
                       className="min-h-[80px]"
@@ -567,6 +560,53 @@ export function SavedSubsidiesPage() {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* AI Recommendations Section - Shown AFTER saved subsidies */}
+      {hasProfile && recommendations.length > 0 && (
+        <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl border border-purple-200 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                <Star className="h-5 w-5 text-amber-500" />
+                Découvrir d'autres aides
+              </h2>
+              {isAIScored && (
+                <p className="text-xs text-purple-600 flex items-center gap-1 mt-1">
+                  <Sparkles className="h-3 w-3" />
+                  Score IA V5 - basé sur votre profil entreprise
+                </p>
+              )}
+            </div>
+            <Link to="/app/search" className="text-blue-600 hover:underline text-sm flex items-center gap-1">
+              Voir tout
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          {loadingRecommendations ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
+              <span className="ml-2 text-slate-600">Calcul des recommandations...</span>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {recommendations
+                .filter((rec) => !savedSubsidies.some((s) => s.subsidy_id === rec.id))
+                .slice(0, 5)
+                .map((subsidy) => (
+                  <SubsidyCard
+                    key={subsidy.id}
+                    subsidy={subsidy}
+                    isSaved={isSaved(subsidy.id)}
+                    onToggleSave={toggleSave}
+                    matchScore={subsidy.matchScore}
+                    matchReasons={subsidy.matchReasons}
+                  />
+                ))}
+            </div>
+          )}
         </div>
       )}
     </div>

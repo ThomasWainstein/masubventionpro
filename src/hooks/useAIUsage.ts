@@ -204,7 +204,7 @@ export function useAIUsage(): UseAIUsageReturn {
       const summary = await fetchUsageSummary();
       setStatus(calculateStatus(summary));
     } catch (err: any) {
-      setError(err.message || 'Erreur lors du chargement des donnees d\'utilisation');
+      setError(err.message || 'Erreur lors du chargement des données d\'utilisation');
     } finally {
       setLoading(false);
     }

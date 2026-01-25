@@ -45,17 +45,17 @@ export function SuggestedPrompts({
       id: 'analyze-chances',
       label: 'Analyser mes chances',
       prompt:
-        'Analyse mes chances de succes pour les subventions qui correspondent a mon profil.',
+        'Analyse mes chances de succès pour les subventions qui correspondent a mon profil.',
       icon: Target,
-      description: 'Score de succes base sur les donnees historiques',
+      description: 'Score de succès basé sur les données historiques',
     },
     {
       id: 'stackable',
       label: 'Aides cumulables',
       prompt:
-        'Quelles aides peuvent etre cumulees pour maximiser mes financements ?',
+        'Quelles aides peuvent être cumulées pour maximiser mes financements ?',
       icon: Layers,
-      description: 'Strategie de cumul optimale',
+      description: 'Stratégie de cumul optimale',
     },
     {
       id: 'deadlines',

@@ -5,6 +5,7 @@ import LandingPage from './pages/LandingPage'
 import OnboardingWizard from './pages/OnboardingWizard'
 import SuccessPage from './pages/SuccessPage'
 import LoginPage from './pages/LoginPage'
+import EmailConfirmationPage from './pages/EmailConfirmationPage'
 import NotFound from './pages/NotFound'
 import SubsidyDisplayDemo from './pages/SubsidyDisplayDemo'
 
@@ -41,6 +42,7 @@ function App() {
       <Route path="/inscription" element={<OnboardingWizard />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/connexion" element={<LoginPage />} />
+      <Route path="/confirm-email" element={<EmailConfirmationPage />} />
       <Route path="/success" element={<SuccessPage />} />
       <Route path="/demo/display" element={<SubsidyDisplayDemo />} />
 

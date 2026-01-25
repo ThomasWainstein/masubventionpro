@@ -18,15 +18,15 @@ interface ActivityFeedProps {
 function getActivityStyle(status: SavedSubsidy['status']) {
   switch (status) {
     case 'saved':
-      return { icon: Bookmark, color: 'bg-blue-100 text-blue-600', label: 'Sauvegardee' };
+      return { icon: Bookmark, color: 'bg-blue-100 text-blue-600', label: 'Sauvegardée' };
     case 'interested':
-      return { icon: CheckCircle, color: 'bg-indigo-100 text-indigo-600', label: 'Interessee' };
+      return { icon: CheckCircle, color: 'bg-indigo-100 text-indigo-600', label: 'Intéressée' };
     case 'applied':
-      return { icon: Send, color: 'bg-amber-100 text-amber-600', label: 'Candidature envoyee' };
+      return { icon: Send, color: 'bg-amber-100 text-amber-600', label: 'Candidature envoyée' };
     case 'received':
       return { icon: Trophy, color: 'bg-emerald-100 text-emerald-600', label: 'Obtenue' };
     case 'rejected':
-      return { icon: XCircle, color: 'bg-red-100 text-red-600', label: 'Refusee' };
+      return { icon: XCircle, color: 'bg-red-100 text-red-600', label: 'Refusée' };
     default:
       return { icon: Clock, color: 'bg-slate-100 text-slate-600', label: 'En attente' };
   }
@@ -59,9 +59,9 @@ export function ActivityFeed({ savedSubsidies, maxItems = 5 }: ActivityFeedProps
     return (
       <div className="text-center py-6">
         <Clock className="h-8 w-8 text-slate-300 mx-auto mb-2" />
-        <p className="text-sm text-slate-500">Aucune activite recente</p>
+        <p className="text-sm text-slate-500">Aucune activité récente</p>
         <p className="text-xs text-slate-400 mt-1">
-          Sauvegardez des aides pour voir votre activite ici
+          Sauvegardez des aides pour voir votre activité ici
         </p>
       </div>
     );

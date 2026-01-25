@@ -65,7 +65,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   };
 
   const createProfile = async (data: Partial<MaSubventionProProfile>) => {
-    if (!user) throw new Error('Non authentifie');
+    if (!user) throw new Error('Non authentifié');
 
     try {
       setError(null);
@@ -75,14 +75,24 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
         .insert({
           user_id: user.id,
           company_name: data.company_name || user.user_metadata?.company_name || 'Mon entreprise',
+          siret: data.siret,
+          siren: data.siren,
+          naf_code: data.naf_code,
+          naf_label: data.naf_label,
           sector: data.sector,
           sub_sector: data.sub_sector,
           region: data.region,
           department: data.department,
+          city: data.city,
+          postal_code: data.postal_code,
+          address: data.address,
           employees: data.employees,
           annual_turnover: data.annual_turnover,
           year_created: data.year_created,
           legal_form: data.legal_form,
+          company_category: data.company_category,
+          website_url: data.website_url,
+          description: data.description,
           certifications: data.certifications || [],
           project_types: data.project_types || [],
         })
@@ -94,13 +104,13 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       setProfile(newProfile);
     } catch (err: any) {
       console.error('Error creating profile:', err);
-      setError(err.message || 'Erreur lors de la creation du profil');
+      setError(err.message || 'Erreur lors de la création du profil');
       throw err;
     }
   };
 
   const updateProfile = async (data: Partial<MaSubventionProProfile>) => {
-    if (!user || !profile) throw new Error('Pas de profil a mettre a jour');
+    if (!user || !profile) throw new Error('Pas de profil à mettre à jour');
 
     try {
       setError(null);
@@ -120,7 +130,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       setProfile(updatedProfile);
     } catch (err: any) {
       console.error('Error updating profile:', err);
-      setError(err.message || 'Erreur lors de la mise a jour du profil');
+      setError(err.message || 'Erreur lors de la mise à jour du profil');
       throw err;
     }
   };

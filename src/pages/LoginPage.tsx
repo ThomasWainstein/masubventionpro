@@ -29,7 +29,9 @@ const LoginPage = () => {
         if (signInError.message.includes("Invalid login credentials")) {
           setError("Email ou mot de passe incorrect")
         } else if (signInError.message.includes("Email not confirmed")) {
-          setError("Veuillez confirmer votre email avant de vous connecter")
+          // Redirect to email confirmation page
+          navigate(`/confirm-email?email=${encodeURIComponent(email)}`)
+          return
         } else {
           setError(signInError.message)
         }

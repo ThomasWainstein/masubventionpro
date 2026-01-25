@@ -60,8 +60,8 @@ export function PIIWarningDialog({ open, matches, onChoice }: PIIWarningDialogPr
           </div>
 
           <p className="text-xs text-slate-500">
-            Pour votre securite, nous vous recommandons de masquer ces informations avant l'envoi.
-            Les donnees masquees seront remplacees par des asterisques.
+            Pour votre sécurité, nous vous recommandons de masquer ces informations avant l'envoi.
+            Les données masquées seront remplacées par des asterisques.
           </p>
         </div>
 

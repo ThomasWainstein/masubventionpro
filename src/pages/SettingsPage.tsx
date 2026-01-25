@@ -16,6 +16,7 @@ import {
   AlertCircle,
   ExternalLink,
   Trash2,
+  ArrowLeft,
 } from 'lucide-react';
 import { AccountDeletionDialog } from '@/components/settings/AccountDeletionDialog';
 
@@ -33,7 +34,7 @@ export function SettingsPage() {
 
   const userPlan = user?.user_metadata?.selected_plan || 'decouverte';
   const planInfo = {
-    decouverte: { name: 'Decouverte', price: '49€', period: '' },
+    decouverte: { name: 'Découverte', price: '49€', period: '' },
     business: { name: 'Business', price: '149€', period: '/an' },
     premium: { name: 'Premium', price: '299€', period: '/an' },
   };
@@ -45,7 +46,7 @@ export function SettingsPage() {
     setPasswordSuccess(false);
 
     if (newPassword.length < 8) {
-      setPasswordError('Le mot de passe doit contenir au moins 8 caracteres');
+      setPasswordError('Le mot de passe doit contenir au moins 8 caractères');
       return;
     }
 
@@ -88,13 +89,21 @@ export function SettingsPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-8">
       <Helmet>
-        <title>Parametres - MaSubventionPro</title>
+        <title>Paramètres - MaSubventionPro</title>
       </Helmet>
 
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Parametres</h1>
-        <p className="text-slate-600 mt-1">Gerez votre compte et vos preferences</p>
+        <Button
+          variant="ghost"
+          onClick={() => navigate('/app')}
+          className="mb-4 -ml-2 text-slate-600"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Retour au tableau de bord
+        </Button>
+        <h1 className="text-2xl font-bold text-slate-900">Paramètres</h1>
+        <p className="text-slate-600 mt-1">Gérez votre compte et vos préférences</p>
       </div>
 
       {/* Account Info */}
@@ -131,14 +140,14 @@ export function SettingsPage() {
             <div className="flex items-center justify-center w-10 h-10 bg-slate-100 rounded-lg">
               <Lock className="h-5 w-5 text-slate-600" />
             </div>
-            <h2 className="text-lg font-semibold text-slate-900">Securite</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Sécurité</h2>
           </div>
         </div>
         <div className="p-6">
           {passwordSuccess && (
             <div className="mb-4 bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-lg flex items-center gap-2">
               <Check className="h-5 w-5" />
-              Mot de passe modifie avec succes
+              Mot de passe modifié avec succès
             </div>
           )}
 
@@ -161,7 +170,7 @@ export function SettingsPage() {
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Minimum 8 caracteres"
+                  placeholder="Minimum 8 caractères"
                   className="mt-1"
                   required
                 />
@@ -235,7 +244,7 @@ export function SettingsPage() {
               rel="noopener noreferrer"
               className="text-blue-600 hover:underline text-sm flex items-center gap-1"
             >
-              Gerer mon abonnement
+              Gérer mon abonnement
               <ExternalLink className="h-3.5 w-3.5" />
             </a>
           </div>
@@ -246,7 +255,7 @@ export function SettingsPage() {
       <div className="bg-white rounded-xl border border-slate-200 p-6">
         <h2 className="text-lg font-semibold text-slate-900 mb-4">Session</h2>
         <Button variant="outline" onClick={handleSignOut} className="text-red-600 border-red-200 hover:bg-red-50">
-          Se deconnecter
+          Se déconnecter
         </Button>
       </div>
 
@@ -254,7 +263,7 @@ export function SettingsPage() {
       <div className="bg-red-50 rounded-xl border border-red-200 p-6">
         <h2 className="text-lg font-semibold text-red-800 mb-2">Zone de danger</h2>
         <p className="text-red-700 text-sm mb-4">
-          La suppression de votre compte est irreversible. Toutes vos donnees seront definitivement supprimees.
+          La suppression de votre compte est irréversible. Toutes vos données seront définitivement supprimées.
         </p>
         <Button
           variant="outline"

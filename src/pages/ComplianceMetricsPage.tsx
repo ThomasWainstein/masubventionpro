@@ -420,11 +420,11 @@ export default function ComplianceMetricsPage() {
             <div className="flex items-start gap-3">
               <Shield className="w-5 h-5 text-blue-600 mt-0.5" />
               <div>
-                <h3 className="font-medium text-blue-900">Conformite EU AI Act</h3>
+                <h3 className="font-medium text-blue-900">Conformité EU AI Act</h3>
                 <p className="text-sm text-blue-700 mt-1">
-                  Ce tableau de bord repond aux exigences des Articles 12 (Journalisation) et 19 (Logs) du Reglement
-                  EU 2024/1689. Les donnees sont conservees pendant 6 mois minimum et exportables sur demande des
-                  autorites de controle.
+                  Ce tableau de bord répond aux exigences des Articles 12 (Journalisation) et 19 (Logs) du Règlement
+                  EU 2024/1689. Les données sont conservées pendant 6 mois minimum et exportables sur demande des
+                  autorités de contrôle.
                 </p>
               </div>
             </div>

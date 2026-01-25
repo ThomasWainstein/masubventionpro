@@ -49,7 +49,7 @@ const navItems = [
 
 const bottomNavItems = [
   {
-    title: 'Parametres',
+    title: 'Paramètres',
     href: '/app/settings',
     icon: Settings,
   },

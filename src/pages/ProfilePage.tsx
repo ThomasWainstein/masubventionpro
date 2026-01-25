@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useProfile } from '@/contexts/ProfileContext';
 import { Button } from '@/components/ui/button';
@@ -16,6 +16,7 @@ import {
   Building,
   Hash,
   Globe,
+  ArrowLeft,
 } from 'lucide-react';
 import { BUSINESS_SECTORS } from '@/types';
 import { formatSIRET } from '@/lib/validation/siret';
@@ -26,6 +27,7 @@ import { WebsiteIntelligenceDisplay } from '@/components/profile/WebsiteIntellig
 import type { WebsiteIntelligenceData } from '@/types';
 
 export function ProfilePage() {
+  const navigate = useNavigate();
   const { profile, loading, hasProfile } = useProfile();
 
   if (loading) {
@@ -48,10 +50,10 @@ export function ProfilePage() {
             <Building2 className="h-8 w-8 text-slate-400" />
           </div>
           <h2 className="text-xl font-semibold text-slate-900 mb-2">
-            Aucun profil configure
+            Aucun profil configuré
           </h2>
           <p className="text-slate-600 mb-6">
-            Configurez votre profil entreprise pour recevoir des recommandations personnalisees
+            Configurez votre profil entreprise pour recevoir des recommandations personnalisées
           </p>
           <Link to="/app/profile/edit">
             <Button>Configurer mon profil</Button>
@@ -70,6 +72,16 @@ export function ProfilePage() {
       <Helmet>
         <title>Mon profil - MaSubventionPro</title>
       </Helmet>
+
+      {/* Back button */}
+      <Button
+        variant="ghost"
+        onClick={() => navigate('/app')}
+        className="-ml-2 text-slate-600"
+      >
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Retour au tableau de bord
+      </Button>
 
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -109,7 +121,7 @@ export function ProfilePage() {
               ) : (
                 <AlertCircle className="h-5 w-5 text-amber-500" />
               )}
-              <span className="font-medium text-slate-900">Completude du profil</span>
+              <span className="font-medium text-slate-900">Complétude du profil</span>
             </div>
             <span className="text-sm font-semibold text-slate-700">{completeness}%</span>
           </div>
@@ -180,7 +192,7 @@ export function ProfilePage() {
               {profile.siret ? (
                 <MaskedField value={formatSIRET(profile.siret)} type="siret" className="font-medium" />
               ) : (
-                <p className="text-slate-400 font-normal">Non renseigne</p>
+                <p className="text-slate-400 font-normal">Non renseigné</p>
               )}
             </div>
           </div>
@@ -188,7 +200,7 @@ export function ProfilePage() {
           {/* Sector */}
           <InfoItem
             icon={Briefcase}
-            label="Secteur d'activite"
+            label="Secteur d'activité"
             value={profile.naf_label || formatSector(profile.sector) || profile.sector}
           />
 
@@ -204,7 +216,7 @@ export function ProfilePage() {
           {/* Region */}
           <InfoItem
             icon={MapPin}
-            label="Region"
+            label="Région"
             value={profile.region}
           />
 
@@ -234,7 +246,7 @@ export function ProfilePage() {
           {/* Year Created */}
           <InfoItem
             icon={Calendar}
-            label="Annee de creation"
+            label="Année de création"
             value={profile.year_created?.toString()}
           />
 
@@ -242,7 +254,7 @@ export function ProfilePage() {
           {profile.company_category && (
             <InfoItem
               icon={Building}
-              label="Categorie"
+              label="Catégorie"
               value={profile.company_category}
             />
           )}
@@ -287,7 +299,7 @@ export function ProfilePage() {
       {profile.project_types && profile.project_types.length > 0 && (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
-            <h2 className="font-semibold text-slate-900">Types de projets recherches</h2>
+            <h2 className="font-semibold text-slate-900">Types de projets recherchés</h2>
           </div>
           <div className="p-6">
             <div className="flex flex-wrap gap-2">
@@ -362,7 +374,7 @@ function InfoItem({ icon: Icon, label, value, isLink }: InfoItemProps) {
             <p className="text-slate-900 font-medium">{value}</p>
           )
         ) : (
-          <p className="text-slate-400 font-normal">Non renseigne</p>
+          <p className="text-slate-400 font-normal">Non renseigné</p>
         )}
       </div>
     </div>
@@ -373,10 +385,10 @@ const PROFILE_FIELDS = [
   { key: 'company_name', label: 'Nom de l\'entreprise' },
   { key: 'siret', label: 'SIRET' },
   { key: 'sector', label: 'Secteur d\'activite' },
-  { key: 'region', label: 'Region' },
-  { key: 'employees', label: 'Nombre de salaries' },
+  { key: 'region', label: 'Région' },
+  { key: 'employees', label: 'Nombre de salariés' },
   { key: 'legal_form', label: 'Forme juridique' },
-  { key: 'year_created', label: 'Annee de creation' },
+  { key: 'year_created', label: 'Année de création' },
   { key: 'naf_code', label: 'Code NAF' },
   { key: 'website_url', label: 'Site web' },
   { key: 'description', label: 'Description' },
@@ -410,10 +422,10 @@ function formatEmployees(employees: string | null | undefined): string | null {
   if (!employees) return null;
 
   const mapping: Record<string, string> = {
-    '1-10': '1 a 10 salaries',
-    '11-50': '11 a 50 salaries',
-    '51-250': '51 a 250 salaries',
-    '250+': 'Plus de 250 salaries',
+    '1-10': '1 à 10 salariés',
+    '11-50': '11 à 50 salariés',
+    '51-250': '51 à 250 salariés',
+    '250+': 'Plus de 250 salariés',
   };
 
   return mapping[employees] || employees;
@@ -433,12 +445,12 @@ function formatProjectType(type: string): string {
   const mapping: Record<string, string> = {
     innovation: 'Innovation / R&D',
     export: 'Export / International',
-    'transition-eco': 'Transition ecologique',
-    numerique: 'Transformation numerique',
+    'transition-eco': 'Transition écologique',
+    numerique: 'Transformation numérique',
     emploi: 'Emploi / Formation',
-    creation: 'Creation / Reprise',
+    creation: 'Création / Reprise',
     investissement: 'Investissement',
-    tresorerie: 'Tresorerie',
+    tresorerie: 'Trésorerie',
   };
 
   return mapping[type] || type;

@@ -60,10 +60,10 @@ export function ProfileEditPage() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-slate-900">
-              {hasProfile ? 'Modifier mon profil' : 'Creer mon profil'}
+              {hasProfile ? 'Modifier mon profil' : 'Créer mon profil'}
             </h1>
             <p className="text-slate-600">
-              Informations sur votre entreprise pour des recommandations personnalisees
+              Informations sur votre entreprise pour des recommandations personnalisées
             </p>
           </div>
         </div>
@@ -73,7 +73,7 @@ export function ProfileEditPage() {
       {showSuccess && (
         <div className="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-lg flex items-center gap-2">
           <Check className="h-5 w-5" />
-          Profil enregistre avec succes
+          Profil enregistré avec succès
         </div>
       )}
 
@@ -82,7 +82,7 @@ export function ProfileEditPage() {
         <ProfileForm
           initialData={profile || {}}
           onSubmit={handleSubmit}
-          submitLabel={hasProfile ? 'Enregistrer les modifications' : 'Creer mon profil'}
+          submitLabel={hasProfile ? 'Enregistrer les modifications' : 'Créer mon profil'}
           isLoading={isSubmitting}
         />
       </div>

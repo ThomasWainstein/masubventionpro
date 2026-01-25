@@ -29,23 +29,6 @@ interface ProfileFormProps {
   isLoading?: boolean;
 }
 
-/**
- * Map INSEE employee range codes to our range values
- */
-function mapEmployeeRange(employeeRangeText: string): string {
-  const text = employeeRangeText.toLowerCase();
-
-  if (text.includes('pas de') || text.includes('0')) return '';
-  if (text.includes('1-2') || text.includes('1 a 2')) return '1-10';
-  if (text.includes('3-5') || text.includes('6-9')) return '1-10';
-  if (text.includes('10-19')) return '11-50';
-  if (text.includes('20-49')) return '11-50';
-  if (text.includes('50-99')) return '51-250';
-  if (text.includes('100-199') || text.includes('200-249')) return '51-250';
-  if (text.includes('250') || text.includes('500') || text.includes('1000')) return '250+';
-
-  return '';
-}
 
 /**
  * Extract year from date string (YYYY-MM-DD or YYYY)
@@ -102,6 +85,7 @@ export function ProfileForm({
 
   const handleCompanySelect = useCallback((company: CompanySearchResult) => {
     // Auto-fill form fields from company data
+    // Values are already mapped in companySearch.ts to match our form values
     setFormData((prev) => ({
       ...prev,
       company_name: company.name || prev.company_name,
@@ -109,13 +93,13 @@ export function ProfileForm({
       siren: company.siren || prev.siren,
       naf_code: company.nafCode || prev.naf_code,
       naf_label: company.nafLabel || prev.naf_label,
-      sector: company.nafLabel || prev.sector,
+      sector: company.sector || prev.sector,
       region: company.region || prev.region,
       department: company.department || prev.department,
       city: company.city || prev.city,
       postal_code: company.postalCode || prev.postal_code,
       address: company.address || prev.address,
-      employees: mapEmployeeRange(company.employeeRange) || prev.employees,
+      employees: company.employeeRange || prev.employees,
       legal_form: company.legalForm || prev.legal_form,
       company_category: company.companyCategory || prev.company_category,
       year_created: company.creationDate
@@ -188,7 +172,7 @@ export function ProfileForm({
           <h3 className="font-medium text-slate-900">Rechercher votre entreprise</h3>
         </div>
         <p className="text-sm text-slate-600 mb-3">
-          Recherchez par nom d'entreprise, SIREN ou SIRET pour pre-remplir automatiquement les informations
+          Recherchez par nom d'entreprise, SIREN ou SIRET pour pré-remplir automatiquement les informations
         </p>
         <CompanySearch
           onCompanySelect={handleCompanySelect}
@@ -199,7 +183,7 @@ export function ProfileForm({
         {companyEnriched && formData.siret && (
           <div className="mt-3 flex items-center gap-2 text-sm text-emerald-700">
             <CheckCircle className="h-4 w-4" />
-            <span>Entreprise identifiee - SIRET: {formData.siret}</span>
+            <span>Entreprise identifiée - SIRET: {formData.siret}</span>
           </div>
         )}
       </div>
@@ -230,7 +214,7 @@ export function ProfileForm({
           </div>
           {formData.naf_label && (
             <div>
-              <Label className="text-sm font-medium text-slate-500">Activite (NAF)</Label>
+              <Label className="text-sm font-medium text-slate-500">Activité (NAF)</Label>
               <p className="mt-1 text-slate-900 bg-slate-50 px-3 py-2 rounded-md text-sm truncate">
                 {formData.naf_label}
               </p>
@@ -242,14 +226,14 @@ export function ProfileForm({
       {/* Region */}
       <div>
         <Label htmlFor="region" className="text-sm font-medium">
-          Region
-        </Label>
+          Région
+</Label>
         <Select
           value={formData.region}
           onValueChange={handleSelectChange('region')}
         >
           <SelectTrigger className="mt-1">
-            <SelectValue placeholder="Selectionnez une region" />
+            <SelectValue placeholder="Sélectionnez une région" />
           </SelectTrigger>
           <SelectContent>
             {FRENCH_REGIONS.map((region) => (
@@ -286,14 +270,14 @@ export function ProfileForm({
       {/* Sector */}
       <div>
         <Label htmlFor="sector" className="text-sm font-medium">
-          Secteur d'activite
+          Secteur d'activité
         </Label>
         <Select
           value={formData.sector}
           onValueChange={handleSelectChange('sector')}
         >
           <SelectTrigger className="mt-1">
-            <SelectValue placeholder="Selectionnez un secteur" />
+            <SelectValue placeholder="Sélectionnez un secteur" />
           </SelectTrigger>
           <SelectContent>
             {BUSINESS_SECTORS.map((sector) => (
@@ -329,12 +313,12 @@ export function ProfileForm({
           id="description"
           value={formData.description}
           onChange={handleFieldChange('description')}
-          placeholder="Decrivez votre activite, vos produits ou services..."
+          placeholder="Décrivez votre activité, vos produits ou services..."
           className="mt-1 min-h-[100px]"
           rows={4}
         />
         <p className="text-xs text-slate-500 mt-1">
-          Une bonne description aide a trouver des subventions plus pertinentes
+          Une bonne description aide à trouver des subventions plus pertinentes
         </p>
       </div>
 
@@ -349,7 +333,7 @@ export function ProfileForm({
             onValueChange={handleSelectChange('employees')}
           >
             <SelectTrigger className="mt-1">
-              <SelectValue placeholder="Nombre de salaries" />
+              <SelectValue placeholder="Nombre de salariés" />
             </SelectTrigger>
             <SelectContent>
               {EMPLOYEE_RANGES.map((range) => (
@@ -371,7 +355,7 @@ export function ProfileForm({
             onValueChange={handleSelectChange('legal_form')}
           >
             <SelectTrigger className="mt-1">
-              <SelectValue placeholder="Selectionnez" />
+              <SelectValue placeholder="Sélectionnez" />
             </SelectTrigger>
             <SelectContent>
               {LEGAL_FORMS.map((form) => (
@@ -403,7 +387,7 @@ export function ProfileForm({
         {/* Year Created */}
         <div>
           <Label htmlFor="year_created" className="text-sm font-medium">
-            Annee de creation
+            Année de création
           </Label>
           <Input
             id="year_created"
@@ -421,7 +405,7 @@ export function ProfileForm({
       {/* Company Category (if enriched) */}
       {formData.company_category && (
         <div>
-          <Label className="text-sm font-medium text-slate-500">Categorie d'entreprise</Label>
+          <Label className="text-sm font-medium text-slate-500">Catégorie d'entreprise</Label>
           <p className="mt-1 text-slate-900 bg-slate-50 px-3 py-2 rounded-md text-sm">
             {formData.company_category}
           </p>
@@ -430,9 +414,9 @@ export function ProfileForm({
 
       {/* Project Types */}
       <div>
-        <Label className="text-sm font-medium">Types de projets recherches</Label>
+        <Label className="text-sm font-medium">Types de projets recherchés</Label>
         <p className="text-sm text-slate-500 mb-2">
-          Selectionnez les domaines qui vous interessent
+          Sélectionnez les domaines qui vous intéressent
         </p>
         <div className="flex flex-wrap gap-2">
           {PROJECT_TYPES.map((type) => (

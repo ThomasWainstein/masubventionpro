@@ -72,7 +72,7 @@ export function DocumentUpload() {
 
     // Validate file type
     if (!ALLOWED_TYPES.includes(file.type)) {
-      setUploadError('Type de fichier non supporte. Formats acceptes: PDF, images, Word');
+      setUploadError('Type de fichier non supporté. Formats acceptés: PDF, images, Word');
       return;
     }
 
@@ -88,7 +88,7 @@ export function DocumentUpload() {
   };
 
   const handleDelete = async (documentId: string) => {
-    if (!confirm('Etes-vous sur de vouloir supprimer ce document ?')) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer ce document ?')) {
       return;
     }
 
@@ -120,14 +120,14 @@ export function DocumentUpload() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <Label htmlFor="category" className="text-sm font-medium">
-              Categorie du document
+              Catégorie du document
             </Label>
             <Select
               value={selectedCategory}
               onValueChange={(value) => setSelectedCategory(value as ProfileDocument['category'])}
             >
               <SelectTrigger className="mt-1">
-                <SelectValue placeholder="Selectionnez une categorie" />
+                <SelectValue placeholder="Sélectionnez une catégorie" />
               </SelectTrigger>
               <SelectContent>
                 {DOCUMENT_CATEGORIES.map((cat) => (
@@ -159,7 +159,7 @@ export function DocumentUpload() {
             {uploading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Telechargement...
+                Téléchargement...
               </>
             ) : (
               <>
@@ -191,9 +191,9 @@ export function DocumentUpload() {
         {documents.length === 0 ? (
           <div className="text-center py-8 bg-slate-50 rounded-xl border border-dashed border-slate-300">
             <FileText className="h-10 w-10 text-slate-300 mx-auto mb-3" />
-            <p className="text-slate-500">Aucun document telecharge</p>
+            <p className="text-slate-500">Aucun document téléchargé</p>
             <p className="text-sm text-slate-400 mt-1">
-              Ajoutez des documents pour completer votre dossier
+              Ajoutez des documents pour compléter votre dossier
             </p>
           </div>
         ) : (

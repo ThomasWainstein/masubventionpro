@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { supabase } from '@/lib/supabase';
 import { Subsidy, getSubsidyTitle, getSubsidyDescription } from '@/types';
+import { useSavedSubsidies } from '@/hooks/useSavedSubsidies';
 import { Button } from '@/components/ui/button';
 import {
   ArrowLeft,
@@ -28,7 +29,10 @@ export function SubsidyDetailPage() {
   const [subsidy, setSubsidy] = useState<Subsidy | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isSaved, setIsSaved] = useState(false);
+
+  // Use the saved subsidies hook for database persistence
+  const { isSaved: checkIsSaved, toggleSave, loading: savingLoading } = useSavedSubsidies();
+  const isSaved = id ? checkIsSaved(id) : false;
 
   useEffect(() => {
     const fetchSubsidy = async () => {
@@ -55,9 +59,14 @@ export function SubsidyDetailPage() {
     fetchSubsidy();
   }, [id]);
 
-  const toggleSave = () => {
-    setIsSaved(!isSaved);
-    // TODO: Actually save to database
+  // Handle save button click
+  const handleToggleSave = async () => {
+    if (!id) return;
+    try {
+      await toggleSave(id);
+    } catch (err) {
+      console.error('Error toggling save:', err);
+    }
   };
 
   // Format amount
@@ -101,10 +110,10 @@ export function SubsidyDetailPage() {
         </Button>
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
           <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-red-800">Aide non trouvee</h2>
-          <p className="text-red-700 mt-2">{error || 'Cette aide n\'existe pas ou a ete supprimee.'}</p>
+          <h2 className="text-xl font-semibold text-red-800">Aide non trouvée</h2>
+          <p className="text-red-700 mt-2">{error || 'Cette aide n\'existe pas ou a été supprimée.'}</p>
           <Link to="/app/search">
-            <Button className="mt-4">Retour a la recherche</Button>
+            <Button className="mt-4">Retour à la recherche</Button>
           </Link>
         </div>
       </div>
@@ -127,7 +136,7 @@ export function SubsidyDetailPage() {
         className="mb-4 -ml-2 text-slate-600"
       >
         <ArrowLeft className="mr-2 h-4 w-4" />
-        Retour aux resultats
+        Retour aux résultats
       </Button>
 
       {/* Main Content */}
@@ -146,13 +155,14 @@ export function SubsidyDetailPage() {
             </div>
             <Button
               variant="outline"
-              onClick={toggleSave}
+              onClick={handleToggleSave}
+              disabled={savingLoading}
               className={isSaved ? 'text-blue-600 border-blue-600' : ''}
             >
               {isSaved ? (
                 <>
                   <BookmarkCheck className="mr-2 h-4 w-4" />
-                  Sauvegardee
+                  Sauvegardée
                 </>
               ) : (
                 <>
@@ -173,8 +183,8 @@ export function SubsidyDetailPage() {
                   {subsidy.amount_min && subsidy.amount_max
                     ? `${formatAmount(subsidy.amount_min)} - ${formatAmount(subsidy.amount_max)}`
                     : subsidy.amount_max
-                    ? `Jusqu'a ${formatAmount(subsidy.amount_max)}`
-                    : `A partir de ${formatAmount(subsidy.amount_min)}`}
+                    ? `Jusqu'à ${formatAmount(subsidy.amount_max)}`
+                    : `À partir de ${formatAmount(subsidy.amount_min)}`}
                 </span>
               </div>
             )}
@@ -219,13 +229,13 @@ export function SubsidyDetailPage() {
 
         {/* Additional Info */}
         <div className="p-6 md:p-8 bg-slate-50 border-t border-slate-100">
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">Informations complementaires</h2>
+          <h2 className="text-lg font-semibold text-slate-900 mb-4">Informations complémentaires</h2>
           <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {subsidy.start_date && (
               <div>
                 <dt className="text-sm text-slate-500 flex items-center gap-1">
                   <Clock className="h-4 w-4" />
-                  Date de debut
+                  Date de début
                 </dt>
                 <dd className="text-slate-900 font-medium mt-1">{formatDate(subsidy.start_date)}</dd>
               </div>
@@ -238,7 +248,7 @@ export function SubsidyDetailPage() {
             )}
             {subsidy.categories && subsidy.categories.length > 0 && (
               <div className="md:col-span-2">
-                <dt className="text-sm text-slate-500">Categories</dt>
+                <dt className="text-sm text-slate-500">Catégories</dt>
                 <dd className="flex flex-wrap gap-2 mt-2">
                   {subsidy.categories.map((cat, i) => (
                     <span

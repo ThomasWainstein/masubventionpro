@@ -88,9 +88,9 @@ export function DashboardPage() {
     if (!hasProfile) {
       return {
         icon: Building2,
-        title: 'Completez votre profil',
-        message: 'Pour recevoir des recommandations d\'aides personnalisees et pertinentes, completez les informations de votre entreprise.',
-        actionText: 'Completer mon profil',
+        title: 'Complétez votre profil',
+        message: 'Pour recevoir des recommandations d\'aides personnalisées et pertinentes, complétez les informations de votre entreprise.',
+        actionText: 'Compléter mon profil',
         actionLink: '/app/profile/setup',
       };
     }
@@ -104,8 +104,8 @@ export function DashboardPage() {
       return {
         icon: Clock,
         title: `Deadline dans ${daysUntil} jour${daysUntil > 1 ? 's' : ''}`,
-        message: `Votre aide "${subsidyTitle.substring(0, 50)}${subsidyTitle.length > 50 ? '...' : ''}" arrive a echeance bientot. N'oubliez pas de soumettre votre candidature.`,
-        actionText: 'Voir les details',
+        message: `Votre aide "${subsidyTitle.substring(0, 50)}${subsidyTitle.length > 50 ? '...' : ''}" arrive à échéance bientôt. N'oubliez pas de soumettre votre candidature.`,
+        actionText: 'Voir les détails',
         actionLink: `/app/subsidy/${nextDeadline.subsidy_id}`,
       };
     }
@@ -115,7 +115,7 @@ export function DashboardPage() {
       return {
         icon: Search,
         title: 'Explorez les aides disponibles',
-        message: 'Commencez par rechercher des aides adaptees a votre entreprise et sauvegardez celles qui vous interessent.',
+        message: 'Commencez par rechercher des aides adaptées à votre entreprise et sauvegardez celles qui vous intéressent.',
         actionText: 'Rechercher des aides',
         actionLink: '/app/search',
       };
@@ -125,8 +125,8 @@ export function DashboardPage() {
     if (stats.applied === 0 && stats.saved > 0) {
       return {
         icon: Send,
-        title: 'Passez a l\'action',
-        message: `Vous avez ${stats.saved} aide${stats.saved > 1 ? 's' : ''} sauvegardee${stats.saved > 1 ? 's' : ''}. Mettez a jour leur statut quand vous soumettez vos candidatures.`,
+        title: 'Passez à l\'action',
+        message: `Vous avez ${stats.saved} aide${stats.saved > 1 ? 's' : ''} sauvegardée${stats.saved > 1 ? 's' : ''}. Mettez à jour leur statut quand vous soumettez vos candidatures.`,
         actionText: 'Voir mes aides',
         actionLink: '/app/saved',
       };
@@ -137,7 +137,7 @@ export function DashboardPage() {
       return {
         icon: TrendingUp,
         title: 'Candidatures en cours',
-        message: `Vous avez ${stats.applied} candidature${stats.applied > 1 ? 's' : ''} en cours. Pensez a suivre leur avancement et mettre a jour leur statut.`,
+        message: `Vous avez ${stats.applied} candidature${stats.applied > 1 ? 's' : ''} en cours. Pensez à suivre leur avancement et mettre à jour leur statut.`,
         actionText: 'Suivre mes candidatures',
         actionLink: '/app/saved?status=applied',
       };
@@ -147,8 +147,8 @@ export function DashboardPage() {
     if (stats.received > 0) {
       return {
         icon: Trophy,
-        title: 'Felicitations pour vos succes !',
-        message: `Vous avez obtenu ${stats.received} aide${stats.received > 1 ? 's' : ''}${stats.fundingWon > 0 ? ` pour un total de ${formatCurrency(stats.fundingWon)}` : ''}. Continuez a explorer de nouvelles opportunites.`,
+        title: 'Félicitations pour vos succès !',
+        message: `Vous avez obtenu ${stats.received} aide${stats.received > 1 ? 's' : ''}${stats.fundingWon > 0 ? ` pour un total de ${formatCurrency(stats.fundingWon)}` : ''}. Continuez à explorer de nouvelles opportunités.`,
         actionText: 'Trouver plus d\'aides',
         actionLink: '/app/search',
       };
@@ -158,7 +158,7 @@ export function DashboardPage() {
     return {
       icon: TrendingUp,
       title: 'Conseil du jour',
-      message: 'Completez votre profil avec le maximum d\'informations pour recevoir des recommandations d\'aides plus pertinentes.',
+      message: 'Complétez votre profil avec le maximum d\'informations pour recevoir des recommandations d\'aides plus pertinentes.',
       actionText: 'Voir mon profil',
       actionLink: '/app/profile',
     };
@@ -167,7 +167,7 @@ export function DashboardPage() {
   const dynamicTip = getDynamicTip();
 
   // Calculate profile completion percentage (same logic as ProfilePage)
-  const calculateProfileCompletion = () => {
+  const calculateProfileComplétion = () => {
     if (!profile) return 0;
 
     const fields = [
@@ -193,7 +193,7 @@ export function DashboardPage() {
     return Math.round((filled.length / fields.length) * 100);
   };
 
-  const profileCompletion = calculateProfileCompletion();
+  const profileComplétion = calculateProfileComplétion();
 
   if (profileLoading) {
     return (
@@ -217,7 +217,7 @@ export function DashboardPage() {
         <p className="text-slate-600 mt-1">
           {hasProfile
             ? `Bienvenue sur votre espace ${profile?.company_name || 'MaSubventionPro'}`
-            : 'Completez votre profil pour recevoir des recommandations personnalisees'}
+            : 'Complétez votre profil pour recevoir des recommandations personnalisées'}
         </p>
       </div>
 
@@ -234,7 +234,7 @@ export function DashboardPage() {
               {newCount} nouvelle{newCount > 1 ? 's' : ''} aide{newCount > 1 ? 's' : ''} disponible{newCount > 1 ? 's' : ''}
             </h3>
             <p className="text-emerald-700 text-sm mt-1">
-              De nouvelles subventions ont ete ajoutees depuis votre derniere visite.
+              De nouvelles subventions ont été ajoutées depuis votre dernière visite.
             </p>
             <Link to="/app/search">
               <Button className="mt-3 bg-emerald-600 hover:bg-emerald-700" size="sm">
@@ -246,21 +246,21 @@ export function DashboardPage() {
         </div>
       )}
 
-      {/* Profile Completion Alert */}
+      {/* Profile Complétion Alert */}
       {!hasProfile && (
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-4">
           <div className="flex-shrink-0">
             <AlertCircle className="h-6 w-6 text-amber-600" />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-amber-800">Completez votre profil</h3>
+            <h3 className="font-semibold text-amber-800">Complétez votre profil</h3>
             <p className="text-amber-700 text-sm mt-1">
-              Pour recevoir des recommandations d'aides personnalisees, completez les informations
+              Pour recevoir des recommandations d'aides personnalisées, complétez les informations
               de votre entreprise.
             </p>
             <Link to="/app/profile/setup">
               <Button className="mt-3" size="sm">
-                Completer mon profil
+                Compléter mon profil
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
@@ -280,7 +280,7 @@ export function DashboardPage() {
               <Bookmark className="h-5 w-5 text-blue-600" />
             </div>
             <div>
-              <p className="text-xs text-slate-500">Sauvegardees</p>
+              <p className="text-xs text-slate-500">Sauvegardées</p>
               <p className="text-2xl font-bold text-slate-900">{stats.saved}</p>
             </div>
           </div>
@@ -343,7 +343,7 @@ export function DashboardPage() {
             <div>
               <p className="text-sm text-slate-600">Mon entreprise</p>
               <p className="text-lg font-semibold text-slate-900">
-                {hasProfile ? profile?.company_name : 'Non configure'}
+                {hasProfile ? profile?.company_name : 'Non configuré'}
               </p>
             </div>
           </div>
@@ -353,23 +353,23 @@ export function DashboardPage() {
             </Button>
           </Link>
         </div>
-        {hasProfile && profileCompletion < 100 && (
+        {hasProfile && profileComplétion < 100 && (
           <div className="pt-3 border-t border-slate-100">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-slate-500">Completion du profil</span>
-              <span className={`text-xs font-semibold ${profileCompletion >= 80 ? 'text-emerald-600' : profileCompletion >= 50 ? 'text-amber-600' : 'text-slate-600'}`}>
-                {profileCompletion}%
+              <span className="text-xs text-slate-500">Complétion du profil</span>
+              <span className={`text-xs font-semibold ${profileComplétion >= 80 ? 'text-emerald-600' : profileComplétion >= 50 ? 'text-amber-600' : 'text-slate-600'}`}>
+                {profileComplétion}%
               </span>
             </div>
             <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
               <div
-                className={`h-full rounded-full transition-all ${profileCompletion >= 80 ? 'bg-emerald-500' : profileCompletion >= 50 ? 'bg-amber-500' : 'bg-blue-500'}`}
-                style={{ width: `${profileCompletion}%` }}
+                className={`h-full rounded-full transition-all ${profileComplétion >= 80 ? 'bg-emerald-500' : profileComplétion >= 50 ? 'bg-amber-500' : 'bg-blue-500'}`}
+                style={{ width: `${profileComplétion}%` }}
               />
             </div>
-            {profileCompletion < 80 && (
+            {profileComplétion < 80 && (
               <p className="text-xs text-slate-500 mt-2">
-                Completez votre profil pour de meilleures recommandations
+                Complétez votre profil pour de meilleures recommandations
               </p>
             )}
           </div>
@@ -420,7 +420,7 @@ export function DashboardPage() {
           <div className="flex items-center gap-2 mb-4">
             <CalendarClock className="h-5 w-5 text-orange-600" />
             <h2 className="font-semibold text-orange-800">
-              Deadlines a venir ({upcomingDeadlines.length})
+              Deadlines à venir ({upcomingDeadlines.length})
             </h2>
           </div>
           <div className="space-y-3">
@@ -465,7 +465,7 @@ export function DashboardPage() {
           <div className="px-5 py-4 border-b border-slate-100">
             <h2 className="font-semibold text-slate-900 flex items-center gap-2">
               <Clock className="h-5 w-5 text-slate-400" />
-              Activite recente
+              Activité récente
             </h2>
           </div>
           <div className="p-3">
@@ -485,12 +485,12 @@ export function DashboardPage() {
           <div>
             <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
               <Star className="h-5 w-5 text-amber-500" />
-              {hasProfile ? 'Recommandees pour vous' : 'Aides recentes'}
+              {hasProfile ? 'Recommandées pour vous' : 'Aides récentes'}
             </h2>
             {hasProfile && isAIScored && (
               <p className="text-xs text-purple-600 flex items-center gap-1 mt-1">
                 <Sparkles className="h-3 w-3" />
-                Score par IA - basé sur les laureats similaires
+                Score par IA - basé sur les lauréats similaires
               </p>
             )}
           </div>
@@ -533,8 +533,8 @@ export function DashboardPage() {
             </div>
             <p className="text-slate-600">
               {hasProfile
-                ? 'Aucune aide correspondant a votre profil pour le moment'
-                : 'Completez votre profil pour recevoir des recommandations personnalisees'}
+                ? 'Aucune aide correspondant à votre profil pour le moment'
+                : 'Complétez votre profil pour recevoir des recommandations personnalisées'}
             </p>
             <Link to={hasProfile ? '/app/search' : '/app/profile/setup'}>
               <Button className="mt-4">
@@ -546,7 +546,7 @@ export function DashboardPage() {
                 ) : (
                   <>
                     <Building2 className="mr-2 h-4 w-4" />
-                    Completer mon profil
+                    Compléter mon profil
                   </>
                 )}
               </Button>

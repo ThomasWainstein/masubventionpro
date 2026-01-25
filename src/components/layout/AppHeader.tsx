@@ -8,6 +8,7 @@ import {
   Settings,
   Menu,
   ChevronDown,
+  Home,
 } from 'lucide-react';
 
 interface AppHeaderProps {
@@ -38,7 +39,7 @@ export function AppHeader({ onMenuClick, isSidebarCollapsed }: AppHeaderProps) {
       }`}
     >
       <div className="flex h-full items-center justify-between px-4">
-        {/* Left side - Mobile menu button */}
+        {/* Left side - Mobile menu button & Home link */}
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
@@ -48,6 +49,13 @@ export function AppHeader({ onMenuClick, isSidebarCollapsed }: AppHeaderProps) {
           >
             <Menu className="h-5 w-5" />
           </Button>
+          <Link
+            to="/"
+            className="hidden sm:flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors text-sm"
+          >
+            <Home className="h-4 w-4" />
+            <span>Accueil</span>
+          </Link>
         </div>
 
         {/* Right side - User menu */}
@@ -79,6 +87,14 @@ export function AppHeader({ onMenuClick, isSidebarCollapsed }: AppHeaderProps) {
                   <p className="text-sm text-slate-500 truncate">{user?.email}</p>
                 </div>
                 <Link
+                  to="/"
+                  onClick={() => setShowUserMenu(false)}
+                  className="flex items-center gap-3 px-4 py-2 text-slate-700 hover:bg-slate-50"
+                >
+                  <Home className="h-4 w-4" />
+                  Accueil
+                </Link>
+                <Link
                   to="/app/profile/edit"
                   onClick={() => setShowUserMenu(false)}
                   className="flex items-center gap-3 px-4 py-2 text-slate-700 hover:bg-slate-50"
@@ -92,7 +108,7 @@ export function AppHeader({ onMenuClick, isSidebarCollapsed }: AppHeaderProps) {
                   className="flex items-center gap-3 px-4 py-2 text-slate-700 hover:bg-slate-50"
                 >
                   <Settings className="h-4 w-4" />
-                  Parametres
+                  Paramètres
                 </Link>
                 <div className="border-t border-slate-100 mt-2 pt-2">
                   <button
@@ -100,7 +116,7 @@ export function AppHeader({ onMenuClick, isSidebarCollapsed }: AppHeaderProps) {
                     className="flex w-full items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50"
                   >
                     <LogOut className="h-4 w-4" />
-                    Deconnexion
+                    Déconnexion
                   </button>
                 </div>
               </div>

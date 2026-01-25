@@ -37,7 +37,7 @@ export function useAccountDeletion(): UseAccountDeletionReturn {
     { id: 'ai_logs', label: 'Suppression historique IA', status: 'pending' },
     { id: 'conversations', label: 'Suppression des conversations', status: 'pending' },
     { id: 'documents', label: 'Suppression des documents', status: 'pending' },
-    { id: 'saved', label: 'Suppression des aides sauvegardees', status: 'pending' },
+    { id: 'saved', label: 'Suppression des aides sauvegardées', status: 'pending' },
     { id: 'profile', label: 'Suppression du profil', status: 'pending' },
     { id: 'local', label: 'Nettoyage local', status: 'pending' },
     { id: 'auth', label: 'Suppression du compte', status: 'pending' },
@@ -51,7 +51,7 @@ export function useAccountDeletion(): UseAccountDeletionReturn {
 
   const deleteAccount = useCallback(async (): Promise<boolean> => {
     if (!user) {
-      setError('Utilisateur non connecte');
+      setError('Utilisateur non connecté');
       return false;
     }
 

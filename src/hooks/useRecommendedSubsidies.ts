@@ -206,10 +206,10 @@ async function fetchAIRecommendations(
         const reasons: string[] = [];
         if (match.sector_fit >= 70) reasons.push('Secteur excellent');
         else if (match.sector_fit >= 50) reasons.push('Secteur compatible');
-        if (match.project_fit >= 70) reasons.push('Projet ideal');
-        else if (match.project_fit >= 50) reasons.push('Projet adapte');
-        if (match.eligibility_score >= 70) reasons.push('Eligibilite forte');
-        if (match.confidence === 'high') reasons.push('Confiance elevee');
+        if (match.project_fit >= 70) reasons.push('Projet idéal');
+        else if (match.project_fit >= 50) reasons.push('Projet adapté');
+        if (match.eligibility_score >= 70) reasons.push('Éligibilité forte');
+        if (match.confidence === 'high') reasons.push('Confiance élevée');
 
         return {
           ...subsidy,
@@ -320,7 +320,7 @@ export function calculateMatchScore(
     } else if (sectorInCategories && sectorInContent) {
       // Need both category match AND content keywords for confidence
       score += 25;
-      reasons.push(`Categorie: ${profile.sector}`);
+      reasons.push(`Catégorie: ${profile.sector}`);
       sectorMatched = true;
     } else if (sectorInContent) {
       // Content match only - lower confidence
@@ -344,7 +344,7 @@ export function calculateMatchScore(
 
     if (nafMatchCount >= 2) {
       score += 25;
-      reasons.push('Activite NAF correspondante');
+      reasons.push('Activité NAF correspondante');
       sectorMatched = true;
     } else if (nafMatchCount === 1 && primarySector.length > 2) {
       score += 15;
@@ -411,7 +411,7 @@ export function calculateMatchScore(
       if (subsidyTitle.includes('export') || subsidyTitle.includes('international') ||
           categories.some(c => c.includes('export'))) {
         score += 5;
-        reasons.push('Activite export');
+        reasons.push('Activité export');
       }
     }
   }
@@ -429,7 +429,7 @@ export function calculateMatchScore(
     } else if (daysUntilDeadline > 14 && daysUntilDeadline <= 30) {
       // Coming soon but still time
       score += 7;
-      reasons.push('A candidater bientot');
+      reasons.push('À candidater bientôt');
     } else if (daysUntilDeadline > 180) {
       // Far away
       score += 5;

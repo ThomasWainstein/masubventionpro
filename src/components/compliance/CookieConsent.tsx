@@ -56,10 +56,10 @@ export function CookieConsent() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900 mb-1">
-                    Nous respectons votre vie privee
+                    Nous respectons votre vie privée
                   </h3>
                   <p className="text-sm text-slate-600">
-                    Nous utilisons des cookies pour ameliorer votre experience. Vous pouvez accepter
+                    Nous utilisons des cookies pour améliorer votre expérience. Vous pouvez accepter
                     tous les cookies, les refuser (sauf les cookies essentiels), ou personnaliser vos
                     preferences.{' '}
                     <Link to="/cookies" className="text-blue-600 hover:underline">
@@ -109,8 +109,8 @@ export function CookieConsent() {
                   <Shield className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
-                  <h2 className="font-semibold text-slate-900">Parametres des cookies</h2>
-                  <p className="text-sm text-slate-500">Gerez vos preferences</p>
+                  <h2 className="font-semibold text-slate-900">Paramètres des cookies</h2>
+                  <p className="text-sm text-slate-500">Gérez vos preferences</p>
                 </div>
               </div>
               <button
@@ -132,8 +132,8 @@ export function CookieConsent() {
                   </span>
                 </div>
                 <p className="text-sm text-slate-600">
-                  Ces cookies sont necessaires au fonctionnement du site. Ils permettent
-                  l'authentification, la securite et la memorisation de vos preferences de consentement.
+                  Ces cookies sont nécessaires au fonctionnement du site. Ils permettent
+                  l'authentification, la sécurité et la mémorisation de vos preferences de consentement.
                 </p>
               </div>
 
@@ -155,8 +155,8 @@ export function CookieConsent() {
                   </button>
                 </div>
                 <p className="text-sm text-slate-600">
-                  Ces cookies nous permettent de mesurer l'audience du site et d'ameliorer nos services.
-                  Aucune donnee personnelle n'est partagee avec des tiers.
+                  Ces cookies nous permettent de mesurer l'audience du site et d'améliorer nos services.
+                  Aucune donnée personnelle n'est partagée avec des tiers.
                 </p>
               </div>
 
@@ -178,7 +178,7 @@ export function CookieConsent() {
                   </button>
                 </div>
                 <p className="text-sm text-slate-600">
-                  Ces cookies permettent d'afficher des publicites pertinentes et de mesurer l'efficacite
+                  Ces cookies permettent d'afficher des publicités pertinentes et de mesurer l'efficacité
                   de nos campagnes.
                 </p>
               </div>
@@ -201,7 +201,7 @@ export function CookieConsent() {
                   </button>
                 </div>
                 <p className="text-sm text-slate-600">
-                  Ces cookies memorisent vos preferences (langue, theme) pour ameliorer votre experience
+                  Ces cookies mémorisent vos preferences (langue, thème) pour améliorer votre expérience
                   sur nos futures visites.
                 </p>
               </div>
@@ -257,7 +257,7 @@ export function CookiePreferencesButton() {
       onClick={openPreferences}
       className="text-sm text-slate-500 hover:text-slate-700 hover:underline"
     >
-      Gerer les cookies
+      Gérer les cookies
     </button>
   );
 }
