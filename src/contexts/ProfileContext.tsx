@@ -41,11 +41,13 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       if (fetchError) {
         if (fetchError.code === 'PGRST116') {
           // No profile found - this is expected for new users
+          console.log('[ProfileContext] No profile found for user (PGRST116)');
           setProfile(null);
         } else {
           throw fetchError;
         }
       } else {
+        console.log('[ProfileContext] Profile loaded:', { id: data?.id, company_name: data?.company_name });
         setProfile(data);
       }
     } catch (err: any) {
@@ -95,6 +97,12 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
           description: data.description,
           certifications: data.certifications || [],
           project_types: data.project_types || [],
+          // New fields
+          convention_collective: data.convention_collective,
+          dirigeants: data.dirigeants,
+          nombre_etablissements: data.nombre_etablissements,
+          nombre_etablissements_ouverts: data.nombre_etablissements_ouverts,
+          capital_social: data.capital_social,
         })
         .select()
         .single();

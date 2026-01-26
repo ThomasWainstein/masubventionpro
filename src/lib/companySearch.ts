@@ -6,6 +6,13 @@
 
 import { detectInputType } from './validation/siret';
 
+export interface CompanyDirector {
+  nom: string;
+  prenoms: string;
+  qualite: string;  // Role: Président, Directeur Général, etc.
+  type: 'personne physique' | 'personne morale';
+}
+
 export interface CompanySearchResult {
   siren: string;
   siret: string;
@@ -23,6 +30,19 @@ export interface CompanySearchResult {
   creationDate: string;
   isActive: boolean;
   companyCategory: string;
+  // New fields
+  conventionCollective: string[];  // IDCC codes (e.g., ["7024"])
+  dirigeants: CompanyDirector[];   // Company directors/managers
+  nombreEtablissements: number;    // Total number of establishments
+  nombreEtablissementsOuverts: number;  // Number of active establishments
+  capitalSocial?: number | null;   // Capital social in euros (fetched from Annuaire)
+}
+
+interface APIDirector {
+  nom?: string;
+  prenoms?: string;
+  qualite?: string;
+  type_dirigeant?: string;
 }
 
 interface APIResult {
@@ -34,8 +54,12 @@ interface APIResult {
   libelle_activite_principale?: string;
   categorie_entreprise?: string;
   tranche_effectif_salarie?: string;
+  caractere_employeur?: string;  // "O" = has employees, "N" = no employees
   date_creation?: string;
   etat_administratif?: string;
+  nombre_etablissements?: number;
+  nombre_etablissements_ouverts?: number;
+  dirigeants?: APIDirector[];
   siege?: {
     siret?: string;
     adresse?: string;
@@ -43,6 +67,11 @@ interface APIResult {
     libelle_commune?: string;
     region?: string;
     departement?: string;
+    caractere_employeur?: string;  // "O" = has employees, "N" = no employees
+    liste_idcc?: string[];
+  };
+  complements?: {
+    liste_idcc?: string[];
   };
   matching_etablissements?: Array<{
     siret?: string;
@@ -266,7 +295,16 @@ function transformResult(result: APIResult): CompanySearchResult {
   const employeeCode = rawEmployeeCode !== undefined && rawEmployeeCode !== null
     ? String(rawEmployeeCode).padStart(2, '0')  // Ensure 2-digit format
     : 'NN';
-  const employeeValue = EMPLOYEE_CODE_TO_VALUE[employeeCode] || '';
+  let employeeValue = EMPLOYEE_CODE_TO_VALUE[employeeCode] || '';
+
+  // If employee range is unknown but company is an employer (caractere_employeur = "O"),
+  // default to "1-10" since they have at least 1 employee
+  if (!employeeValue) {
+    const isEmployer = siege.caractere_employeur === 'O' || result.caractere_employeur === 'O';
+    if (isEmployer) {
+      employeeValue = '1-10';
+    }
+  }
 
   // Map legal form code to our form values (SAS, SARL, etc.)
   const legalFormCode = result.nature_juridique || '';
@@ -275,6 +313,17 @@ function transformResult(result: APIResult): CompanySearchResult {
   // Map NAF code to sector value
   const nafCode = result.activite_principale || '';
   const sectorValue = getSectorFromNafCode(nafCode);
+
+  // Get convention collective (IDCC) from siege or complements
+  const conventionCollective = siege.liste_idcc || result.complements?.liste_idcc || [];
+
+  // Map directors/managers
+  const dirigeants: CompanySearchResult['dirigeants'] = (result.dirigeants || []).map(d => ({
+    nom: d.nom || '',
+    prenoms: d.prenoms || '',
+    qualite: d.qualite || '',
+    type: (d.type_dirigeant === 'personne morale' ? 'personne morale' : 'personne physique') as 'personne physique' | 'personne morale',
+  }));
 
   return {
     siren: result.siren,
@@ -290,6 +339,10 @@ function transformResult(result: APIResult): CompanySearchResult {
     region: derivedRegion,
     department: siege.departement || postalCode.substring(0, 2) || '',
     employeeRange: employeeValue,
+    conventionCollective,
+    dirigeants,
+    nombreEtablissements: result.nombre_etablissements || 0,
+    nombreEtablissementsOuverts: result.nombre_etablissements_ouverts || 0,
     creationDate: result.date_creation || '',
     isActive: result.etat_administratif === 'A',
     companyCategory: result.categorie_entreprise || '',
@@ -387,4 +440,54 @@ export async function getCompanyBySiret(siret: string): Promise<CompanySearchRes
 
   const siren = cleanedSiret.substring(0, 9);
   return getCompanyBySiren(siren);
+}
+
+/**
+ * Fetch capital social for a company by SIREN
+ * This calls a Supabase Edge Function that scrapes the Annuaire des Entreprises page
+ * since the capital social data is not available in the free API
+ *
+ * @param siren - The 9-digit SIREN number
+ * @returns The capital social in euros, or null if not found
+ */
+export async function fetchCapitalSocial(siren: string): Promise<number | null> {
+  const cleanedSiren = siren.replace(/\s/g, '');
+
+  if (!/^\d{9}$/.test(cleanedSiren)) {
+    console.warn('[fetchCapitalSocial] Invalid SIREN format:', siren);
+    return null;
+  }
+
+  try {
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    if (!supabaseUrl) {
+      console.warn('[fetchCapitalSocial] Missing SUPABASE_URL');
+      return null;
+    }
+
+    const response = await fetch(`${supabaseUrl}/functions/v1/fetch-company-capital`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ siren: cleanedSiren }),
+    });
+
+    if (!response.ok) {
+      console.warn('[fetchCapitalSocial] Edge function returned:', response.status);
+      return null;
+    }
+
+    const data = await response.json();
+
+    if (data.success && data.capitalSocial) {
+      console.log(`[fetchCapitalSocial] Found capital social: ${data.capitalSocial}€`);
+      return data.capitalSocial;
+    }
+
+    return null;
+  } catch (error) {
+    console.warn('[fetchCapitalSocial] Failed to fetch capital social:', error);
+    return null;
+  }
 }

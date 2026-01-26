@@ -17,6 +17,10 @@ import {
   Hash,
   Globe,
   ArrowLeft,
+  ScrollText,
+  UserCircle,
+  Store,
+  Euro,
 } from 'lucide-react';
 import { BUSINESS_SECTORS } from '@/types';
 import { formatSIRET } from '@/lib/validation/siret';
@@ -277,8 +281,62 @@ export function ProfilePage() {
               isLink
             />
           )}
+
+          {/* Convention Collective */}
+          {profile.convention_collective && profile.convention_collective.length > 0 && (
+            <InfoItem
+              icon={ScrollText}
+              label="Convention collective"
+              value={`IDCC ${profile.convention_collective.join(', ')}`}
+            />
+          )}
+
+          {/* Nombre d'établissements */}
+          {profile.nombre_etablissements !== null && profile.nombre_etablissements > 0 && (
+            <InfoItem
+              icon={Store}
+              label="Établissements"
+              value={`${profile.nombre_etablissements_ouverts || 0} actif(s) sur ${profile.nombre_etablissements}`}
+            />
+          )}
+
+          {/* Capital social */}
+          {profile.capital_social !== null && profile.capital_social > 0 && (
+            <InfoItem
+              icon={Euro}
+              label="Capital social"
+              value={formatCapitalSocial(profile.capital_social)}
+            />
+          )}
         </div>
       </div>
+
+      {/* Dirigeants */}
+      {profile.dirigeants && profile.dirigeants.length > 0 && (
+        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-slate-100">
+            <h2 className="font-semibold text-slate-900 flex items-center gap-2">
+              <UserCircle className="h-5 w-5 text-slate-400" />
+              Dirigeants
+            </h2>
+          </div>
+          <div className="p-6">
+            <div className="space-y-3">
+              {profile.dirigeants.map((dirigeant, index) => (
+                <div key={index} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                  <UserCircle className="h-8 w-8 text-slate-400" />
+                  <div>
+                    <p className="font-medium text-slate-900">
+                      {dirigeant.prenoms} {dirigeant.nom}
+                    </p>
+                    <p className="text-sm text-slate-500">{dirigeant.qualite}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Description */}
       {profile.description && (
@@ -439,6 +497,16 @@ function formatTurnover(turnover: number): string {
     return `${(turnover / 1000).toFixed(0)}K EUR`;
   }
   return `${turnover} EUR`;
+}
+
+function formatCapitalSocial(capital: number): string {
+  // Format with French locale (spaces as thousands separator)
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(capital);
 }
 
 function formatProjectType(type: string): string {

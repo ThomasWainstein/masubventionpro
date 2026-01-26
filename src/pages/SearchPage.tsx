@@ -328,7 +328,7 @@ export function SearchPage() {
           value={selectedSector}
           options={[
             { value: '', label: 'Tous les secteurs' },
-            ...BUSINESS_SECTORS.map(s => ({ value: s.value, label: s.label })),
+            ...[...BUSINESS_SECTORS].sort((a, b) => a.label.localeCompare(b.label, 'fr')).map(s => ({ value: s.value, label: s.label })),
           ]}
           onChange={setSelectedSector}
         />

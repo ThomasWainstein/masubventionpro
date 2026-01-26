@@ -35,6 +35,13 @@ export interface WebsiteIntelligenceData {
   };
 }
 
+export interface ProfileDirigeant {
+  nom: string;
+  prenoms: string;
+  qualite: string;
+  type: 'personne physique' | 'personne morale';
+}
+
 export interface MaSubventionProProfile {
   id: string;
   user_id: string;
@@ -60,6 +67,12 @@ export interface MaSubventionProProfile {
   description: string | null;
   certifications: string[];
   project_types: string[];
+  // New fields from enhanced company search
+  convention_collective: string[] | null;  // IDCC codes
+  dirigeants: ProfileDirigeant[] | null;   // Company directors/managers
+  nombre_etablissements: number | null;    // Total number of establishments
+  nombre_etablissements_ouverts: number | null;  // Number of active establishments
+  capital_social: number | null;           // Capital social in euros (from INPI/RNE)
   created_at: string;
   updated_at: string;
 }

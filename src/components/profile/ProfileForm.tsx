@@ -20,7 +20,7 @@ import {
 } from '@/types';
 import { Textarea } from '@/components/ui/textarea';
 import { CompanySearch } from './CompanySearch';
-import { CompanySearchResult } from '@/lib/companySearch';
+import { CompanySearchResult, fetchCapitalSocial } from '@/lib/companySearch';
 
 interface ProfileFormProps {
   initialData?: Partial<MaSubventionProProfile>;
@@ -66,6 +66,12 @@ export function ProfileForm({
     website_url: initialData.website_url || '',
     description: initialData.description || '',
     project_types: initialData.project_types || [],
+    // New fields
+    convention_collective: initialData.convention_collective || [] as string[],
+    dirigeants: initialData.dirigeants || [] as MaSubventionProProfile['dirigeants'],
+    nombre_etablissements: initialData.nombre_etablissements || null as number | null,
+    nombre_etablissements_ouverts: initialData.nombre_etablissements_ouverts || null as number | null,
+    capital_social: initialData.capital_social || null as number | null,
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -105,9 +111,23 @@ export function ProfileForm({
       year_created: company.creationDate
         ? (extractYear(company.creationDate)?.toString() || prev.year_created)
         : prev.year_created,
+      // New fields
+      convention_collective: company.conventionCollective || prev.convention_collective,
+      dirigeants: company.dirigeants || prev.dirigeants,
+      nombre_etablissements: company.nombreEtablissements || prev.nombre_etablissements,
+      nombre_etablissements_ouverts: company.nombreEtablissementsOuverts || prev.nombre_etablissements_ouverts,
     }));
 
     setCompanyEnriched(true);
+
+    // Fetch capital social in the background (not available in the free API)
+    if (company.siren) {
+      fetchCapitalSocial(company.siren).then((capitalSocial) => {
+        if (capitalSocial) {
+          setFormData((prev) => ({ ...prev, capital_social: capitalSocial }));
+        }
+      });
+    }
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -142,6 +162,12 @@ export function ProfileForm({
         website_url: formData.website_url || null,
         description: formData.description || null,
         project_types: formData.project_types,
+        // New fields
+        convention_collective: formData.convention_collective?.length ? formData.convention_collective : null,
+        dirigeants: formData.dirigeants?.length ? formData.dirigeants : null,
+        nombre_etablissements: formData.nombre_etablissements,
+        nombre_etablissements_ouverts: formData.nombre_etablissements_ouverts,
+        capital_social: formData.capital_social,
       });
     } catch (err: any) {
       setError(err.message || 'Une erreur est survenue');
