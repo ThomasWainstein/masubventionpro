@@ -800,9 +800,15 @@ const LandingPage = () => {
             </Link>
             <Link
               to="/login"
-              className="px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-800/30 transition-all"
+              className="px-6 py-3 text-blue-800 border-2 border-blue-800 rounded-lg font-semibold hover:bg-blue-50 transition-all"
             >
               Connexion
+            </Link>
+            <Link
+              to="/signup"
+              className="px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-800/30 transition-all"
+            >
+              S'inscrire
             </Link>
           </nav>
 
@@ -824,9 +830,15 @@ const LandingPage = () => {
             <Link to="/notre-histoire" className="block text-slate-900 font-medium">Notre histoire</Link>
             <Link
               to="/login"
-              className="block w-full text-center px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold"
+              className="block w-full text-center px-6 py-3 text-blue-800 border-2 border-blue-800 rounded-lg font-semibold"
             >
               Connexion
+            </Link>
+            <Link
+              to="/signup"
+              className="block w-full text-center px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold"
+            >
+              S'inscrire
             </Link>
           </div>
         )}
