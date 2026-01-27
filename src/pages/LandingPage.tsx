@@ -1288,7 +1288,7 @@ const LandingPage = () => {
               </p>
               <p className="font-semibold">
                 contact@masubventionpro.com<br />
-                dpo@masubventionpro.com
+                support@masubventionpro.com
               </p>
             </div>
 
@@ -1368,10 +1368,10 @@ const LandingPage = () => {
                 <h3 className="text-xl font-bold text-slate-900">
                   {showResults ? "Vos aides identifiées" :
                    isAnalyzing ? "Analyse en cours" :
-                   !profileType ? "Création de profil" :
-                   profileType === 'entreprise' ? "Création de profil - Entreprise" :
-                   profileType === 'association' ? "Création de profil - Association" :
-                   "Création de profil - Entreprise en création"}
+                   !profileType ? "Simulation" :
+                   profileType === 'entreprise' ? "Simulation - Entreprise" :
+                   profileType === 'association' ? "Simulation - Association" :
+                   "Simulation - Entreprise en création"}
                 </h3>
               </div>
               <button

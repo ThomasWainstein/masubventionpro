@@ -15,12 +15,10 @@ const SUBSIDY_COLUMNS = `
   funding_type,
   categories,
   primary_sector,
+  keywords,
   application_url,
   source_url,
-  is_active,
-  aid_benef,
-  aid_conditions,
-  decoded_profils
+  is_active
 `;
 
 export interface SearchFilters {
@@ -115,18 +113,17 @@ export function useSubsidySearch(): UseSubsidySearchReturn {
     }
 
     // Entity type filter (association vs entreprise)
-    // Uses text search on aid_benef field to find association-eligible subsidies
+    // Uses text search on description field to find association-eligible subsidies
     if (filters.entityType === 'association') {
-      // Search for association-related keywords in aid_benef and description
+      // Search for association-related keywords in description
       query = query.or(
-        'aid_benef.ilike.%association%,' +
-        'aid_benef.ilike.%associatif%,' +
-        'aid_benef.ilike.%loi 1901%,' +
-        'aid_benef.ilike.%fondation%,' +
-        'aid_benef.ilike.%coopérative%,' +
-        'aid_benef.ilike.%économie sociale%,' +
         'description.ilike.%association%,' +
-        'description->>fr.ilike.%association%'
+        'description.ilike.%associatif%,' +
+        'description.ilike.%loi 1901%,' +
+        'description.ilike.%fondation%,' +
+        'description.ilike.%coopérative%,' +
+        'description.ilike.%économie sociale%,' +
+        'title.ilike.%association%'
       );
     }
 

@@ -9,6 +9,8 @@ AI-powered functions using Mistral AI (GDPR-compliant French provider).
 | `v5-hybrid-calculate-matches` | AI subsidy matching based on profile |
 | `enhanced-profile-conversation-stream` | Streaming chat assistant |
 | `analyze-company-website` | Website intelligence extraction |
+| `msp-send-email` | Transactional emails via Resend |
+| `send-export-email` | Transmit subsidies via email with PDF attachment |
 
 ## Prerequisites
 
@@ -29,6 +31,7 @@ supabase link --project-ref YOUR_PROJECT_REF
 
 ```bash
 supabase secrets set MISTRAL_API_KEY=your_mistral_api_key_here
+supabase secrets set RESEND_API_KEY=your_resend_api_key_here
 ```
 
 ### 3. Deploy functions
@@ -113,6 +116,78 @@ curl -X POST 'https://YOUR_PROJECT.supabase.co/functions/v1/analyze-company-webs
     "website_url": "https://example.com"
   }'
 ```
+
+### msp-send-email
+
+Send transactional emails via Resend (noreply@masubventionpro.com).
+
+**Welcome email:**
+```bash
+curl -X POST 'https://YOUR_PROJECT.supabase.co/functions/v1/msp-send-email' \
+  -H "Authorization: Bearer YOUR_ANON_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "welcome",
+    "to": "user@example.com",
+    "userName": "John"
+  }'
+```
+
+**Subsidy match notification:**
+```bash
+curl -X POST 'https://YOUR_PROJECT.supabase.co/functions/v1/msp-send-email' \
+  -H "Authorization: Bearer YOUR_ANON_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "subsidy_match",
+    "to": "user@example.com",
+    "userName": "John",
+    "subsidyCount": 5
+  }'
+```
+
+**Custom email:**
+```bash
+curl -X POST 'https://YOUR_PROJECT.supabase.co/functions/v1/msp-send-email' \
+  -H "Authorization: Bearer YOUR_ANON_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "custom",
+    "to": "user@example.com",
+    "subject": "Your custom subject",
+    "html": "<h1>Hello</h1><p>Your message here</p>"
+  }'
+```
+
+### send-export-email
+
+Transmit subsidies to a recipient via email with PDF attachment (noreply@masubventionpro.com).
+
+```bash
+curl -X POST 'https://YOUR_PROJECT.supabase.co/functions/v1/send-export-email' \
+  -H "Authorization: Bearer YOUR_ANON_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "recipientEmail": "recipient@example.com",
+    "recipientName": "Jean Dupont",
+    "ccEmails": ["copy@example.com"],
+    "subject": "3 aides identifiees pour votre entreprise",
+    "body": "Bonjour,\n\nVoici les aides que j'\''ai identifiees...",
+    "pdfBase64": "<base64-encoded-pdf>",
+    "pdfFilename": "rapport_aides.pdf",
+    "source": "masubventionpro"
+  }'
+```
+
+**Parameters:**
+- `recipientEmail` (required): Recipient email address
+- `recipientName` (optional): Recipient name for greeting
+- `ccEmails` (optional): Array of CC email addresses
+- `subject` (required): Email subject line
+- `body` (required): Email body (supports markdown **bold** and *italic*)
+- `pdfBase64` (optional): Base64-encoded PDF attachment
+- `pdfFilename` (optional): Filename for PDF attachment
+- `source` (optional): `masubventionpro` or `subvention360` for branding
 
 ## Compliance
 

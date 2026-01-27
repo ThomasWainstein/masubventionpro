@@ -58,8 +58,8 @@ const PrivacyPage = () => {
             <p className="text-slate-600">102 Quai Louis Bleriot, 75016 Paris, France</p>
             <p className="text-slate-600 mt-2">
               <strong>Délégué à la Protection des Données (DPO) :</strong>{' '}
-              <a href="mailto:dpo@masubventionpro.com" className="text-blue-600 hover:underline">
-                dpo@masubventionpro.com
+              <a href="mailto:contact@masubventionpro.com" className="text-blue-600 hover:underline">
+                contact@masubventionpro.com
               </a>
             </p>
           </div>
@@ -274,7 +274,7 @@ const PrivacyPage = () => {
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
             <p className="text-blue-800 text-sm">
               <strong>Pour exercer vos droits :</strong> Envoyez un email à{' '}
-              <a href="mailto:dpo@masubventionpro.com" className="underline">dpo@masubventionpro.com</a>{' '}
+              <a href="mailto:contact@masubventionpro.com" className="underline">contact@masubventionpro.com</a>{' '}
               avec une copie de votre pièce d'identité. Nous répondrons dans un délai de 30 jours.
             </p>
           </div>
@@ -319,8 +319,8 @@ const PrivacyPage = () => {
           <div className="space-y-2 text-sm">
             <p className="text-slate-700">
               <strong>DPO :</strong>{' '}
-              <a href="mailto:dpo@masubventionpro.com" className="text-blue-600 hover:underline">
-                dpo@masubventionpro.com
+              <a href="mailto:contact@masubventionpro.com" className="text-blue-600 hover:underline">
+                contact@masubventionpro.com
               </a>
             </p>
             <p className="text-slate-700">

@@ -471,7 +471,7 @@ export default function NotreHistoirePage() {
                 </p>
                 <p className="font-semibold">
                   contact@masubventionpro.com<br />
-                  dpo@masubventionpro.com
+                  support@masubventionpro.com
                 </p>
               </div>
 

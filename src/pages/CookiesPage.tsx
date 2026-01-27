@@ -219,8 +219,8 @@ const CookiesPage = () => {
           <h2 className="text-xl font-semibold text-slate-900 mb-4">Nous contacter</h2>
           <p className="text-slate-600">
             Si vous avez des questions sur notre utilisation des cookies, veuillez nous contacter à{' '}
-            <a href="mailto:dpo@masubventionpro.com" className="text-blue-600 hover:underline">
-              dpo@masubventionpro.com
+            <a href="mailto:contact@masubventionpro.com" className="text-blue-600 hover:underline">
+              contact@masubventionpro.com
             </a>
           </p>
         </div>

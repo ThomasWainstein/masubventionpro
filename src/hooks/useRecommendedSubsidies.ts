@@ -44,10 +44,7 @@ const SUBSIDY_COLUMNS = `
   keywords,
   application_url,
   source_url,
-  is_active,
-  aid_benef,
-  aid_conditions,
-  decoded_profils
+  is_active
 `;
 
 interface UseRecommendedSubsidiesOptions {
@@ -337,7 +334,7 @@ const COMPANY_ONLY_KEYWORDS = [
 
 /**
  * Extract eligible entity types from subsidy data
- * Analyzes aid_benef, decoded_profils, and aid_conditions to determine eligibility
+ * Analyzes title and description to determine eligibility
  */
 function extractEligibleEntityTypes(subsidy: Subsidy): {
   entityTypes: string[];
@@ -350,37 +347,9 @@ function extractEligibleEntityTypes(subsidy: Subsidy): {
 
   // Combine all relevant text fields for analysis
   const textToAnalyze = [
-    subsidy.aid_benef || '',
-    subsidy.aid_conditions || '',
     getSubsidyTitle(subsidy),
     getSubsidyDescription(subsidy),
   ].join(' ').toLowerCase();
-
-  // Check decoded_profils for explicit entity types
-  if (subsidy.decoded_profils && subsidy.decoded_profils.length > 0) {
-    for (const profil of subsidy.decoded_profils) {
-      const profilText = (profil.label || profil.code || '').toLowerCase();
-
-      // Check for association-related profiles
-      if (ASSOCIATION_KEYWORDS.some(kw => profilText.includes(kw))) {
-        entityTypes.add('association');
-        associationEligible = true;
-      }
-
-      // Check for company-related profiles
-      if (profilText.includes('entreprise') || profilText.includes('pme') ||
-          profilText.includes('tpe') || profilText.includes('eti') ||
-          profilText.includes('startup') || profilText.includes('société')) {
-        entityTypes.add('entreprise');
-      }
-
-      // Check for collectivités
-      if (profilText.includes('collectivité') || profilText.includes('commune') ||
-          profilText.includes('mairie') || profilText.includes('département')) {
-        entityTypes.add('collectivite');
-      }
-    }
-  }
 
   // Analyze text fields for entity type mentions
   for (const entityType of ENTITY_TYPES) {

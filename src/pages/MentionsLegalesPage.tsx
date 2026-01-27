@@ -20,7 +20,7 @@ const MentionsLegalesPage = () => {
     manager: 'Thomas Wainstein',
     managerTitle: 'Gérant',
     email: 'contact@masubventionpro.com',
-    dpoEmail: 'dpo@masubventionpro.com',
+    dpoEmail: 'contact@masubventionpro.com',
     website: 'https://masubventionpro.com',
   };
 

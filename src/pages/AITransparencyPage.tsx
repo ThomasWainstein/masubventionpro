@@ -530,8 +530,8 @@ const AITransparencyPage = () => {
             </p>
             <p className="text-slate-700">
               <strong>Protection des données (DPO) :</strong>{' '}
-              <a href="mailto:dpo@masubventionpro.com" className="text-blue-600 hover:underline">
-                dpo@masubventionpro.com
+              <a href="mailto:contact@masubventionpro.com" className="text-blue-600 hover:underline">
+                contact@masubventionpro.com
               </a>
             </p>
             <p className="text-slate-700">
