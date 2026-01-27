@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Subsidy, getSubsidyTitle, getSubsidyDescription } from '@/types';
 import {
   Calendar,
@@ -9,6 +9,7 @@ import {
   BookmarkCheck,
   ExternalLink,
   Sparkles,
+  Check,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -18,6 +19,10 @@ interface SubsidyCardProps {
   onToggleSave?: (subsidyId: string) => void;
   matchScore?: number;
   matchReasons?: string[];
+  // Selection mode props
+  isSelectionMode?: boolean;
+  isSelected?: boolean;
+  onSelect?: (subsidyId: string) => void;
 }
 
 export function SubsidyCard({
@@ -26,9 +31,21 @@ export function SubsidyCard({
   onToggleSave,
   matchScore,
   matchReasons,
+  isSelectionMode = false,
+  isSelected = false,
+  onSelect,
 }: SubsidyCardProps) {
+  const navigate = useNavigate();
   const title = getSubsidyTitle(subsidy);
   const description = getSubsidyDescription(subsidy);
+
+  const handleCardClick = () => {
+    if (isSelectionMode && onSelect) {
+      onSelect(subsidy.id);
+    } else {
+      navigate(`/app/subsidy/${subsidy.id}`);
+    }
+  };
 
   // Calculate days until deadline
   const getDaysUntilDeadline = () => {
@@ -81,18 +98,34 @@ export function SubsidyCard({
   };
 
   return (
-    <div className={`bg-white rounded-xl border border-slate-200 p-5 hover:shadow-md transition-shadow ${isExpired ? 'opacity-60' : ''}`}>
+    <div
+      onClick={handleCardClick}
+      className={`bg-white rounded-xl border p-5 hover:shadow-md transition-all cursor-pointer ${
+        isExpired ? 'opacity-60' : ''
+      } ${
+        isSelected
+          ? 'border-blue-400 bg-blue-50/50 ring-2 ring-blue-200'
+          : 'border-slate-200 hover:border-slate-300'
+      }`}
+    >
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
-        <div className="flex-1 min-w-0">
-          <Link
-            to={`/app/subsidy/${subsidy.id}`}
-            className="block group"
+        {/* Selection Checkbox */}
+        {isSelectionMode && (
+          <div
+            className={`flex-shrink-0 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
+              isSelected
+                ? 'bg-blue-600 border-blue-600'
+                : 'bg-white border-slate-300'
+            }`}
           >
-            <h3 className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2">
-              {title}
-            </h3>
-          </Link>
+            {isSelected && <Check className="h-4 w-4 text-white" />}
+          </div>
+        )}
+        <div className="flex-1 min-w-0">
+          <h3 className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2">
+            {title}
+          </h3>
           {subsidy.agency && (
             <div className="flex items-center gap-1.5 mt-1 text-sm text-slate-500">
               <Building className="h-3.5 w-3.5" />
@@ -101,12 +134,15 @@ export function SubsidyCard({
           )}
         </div>
 
-        {/* Save Button */}
-        {onToggleSave && (
+        {/* Save Button - hidden in selection mode */}
+        {!isSelectionMode && onToggleSave && (
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => onToggleSave(subsidy.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleSave(subsidy.id);
+            }}
             className={isSaved ? 'text-blue-600' : 'text-slate-400 hover:text-blue-600'}
           >
             {isSaved ? (
@@ -196,25 +232,21 @@ export function SubsidyCard({
         )}
       </div>
 
-      {/* Actions */}
-      <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
-        <Link to={`/app/subsidy/${subsidy.id}`}>
-          <Button variant="outline" size="sm">
-            Voir les details
-          </Button>
-        </Link>
-        {subsidy.application_url && (
+      {/* Actions - hidden in selection mode */}
+      {!isSelectionMode && subsidy.application_url && (
+        <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-end">
           <a
             href={subsidy.application_url}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
             className="text-sm text-blue-600 hover:underline flex items-center gap-1"
           >
             Postuler
             <ExternalLink className="h-3.5 w-3.5" />
           </a>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

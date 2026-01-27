@@ -34,7 +34,12 @@ import {
   Star,
   ArrowRight,
   ArrowLeft,
+  Send,
+  Check,
 } from 'lucide-react';
+import { SelectionToolbar } from '@/components/export/SelectionToolbar';
+import { EmailComposerModal } from '@/components/export/EmailComposerModal';
+import { exportSubsidiesToPDF } from '@/lib/pdfExport';
 
 const STATUS_OPTIONS = [
   { value: 'saved', label: 'Sauvegardée', color: 'bg-slate-100 text-slate-700' },
@@ -85,7 +90,7 @@ export function SavedSubsidiesPage() {
     recommendations,
     loading: loadingRecommendations,
     isAIScored,
-  } = useRecommendedSubsidies(hasProfile ? profile : null, { limit: 10, useAIScoring: true });
+  } = useRecommendedSubsidies(hasProfile ? profile : null, { limit: 25, useAIScoring: true });
 
   const [expandedNotes, setExpandedNotes] = useState<Set<string>>(new Set());
   const [editingNotes, setEditingNotes] = useState<Record<string, string>>({});
@@ -93,6 +98,11 @@ export function SavedSubsidiesPage() {
   const [statusFilter, setStatusFilter] = useState<string | null>(
     searchParams.get('status')
   );
+
+  // Selection mode state
+  const [isSelectionMode, setIsSelectionMode] = useState(false);
+  const [selectedSubsidies, setSelectedSubsidies] = useState<Set<string>>(new Set());
+  const [showEmailModal, setShowEmailModal] = useState(false);
 
   // Create a map of subsidy ID -> AI match data for quick lookup
   const aiScoresMap = useMemo(() => {
@@ -196,6 +206,75 @@ export function SavedSubsidiesPage() {
     return STATUS_OPTIONS.find((o) => o.value === status) || STATUS_OPTIONS[0];
   };
 
+  // Selection handlers
+  const handleEnterSelectionMode = () => {
+    setIsSelectionMode(true);
+    setSelectedSubsidies(new Set());
+  };
+
+  const handleExitSelectionMode = () => {
+    setIsSelectionMode(false);
+    setSelectedSubsidies(new Set());
+  };
+
+  const handleToggleSelection = (subsidyId: string) => {
+    setSelectedSubsidies((prev) => {
+      const next = new Set(prev);
+      if (next.has(subsidyId)) {
+        next.delete(subsidyId);
+      } else {
+        next.add(subsidyId);
+      }
+      return next;
+    });
+  };
+
+  const handleSelectAll = () => {
+    const allIds = filteredSubsidies.map((s) => s.subsidy_id);
+    setSelectedSubsidies(new Set(allIds));
+  };
+
+  const handleDeselectAll = () => {
+    setSelectedSubsidies(new Set());
+  };
+
+  const handleExportPDF = () => {
+    // Get selected subsidies data
+    const selectedData = filteredSubsidies
+      .filter((s) => selectedSubsidies.has(s.subsidy_id))
+      .map((s) => s.subsidy!)
+      .filter(Boolean);
+
+    if (selectedData.length === 0) return;
+
+    // Export PDF with profile context
+    exportSubsidiesToPDF(selectedData, {
+      download: true,
+      profile: hasProfile ? profile : null,
+    });
+  };
+
+  const handleSendEmail = () => {
+    // Get selected subsidies data
+    const selectedData = filteredSubsidies
+      .filter((s) => selectedSubsidies.has(s.subsidy_id))
+      .map((s) => s.subsidy!)
+      .filter(Boolean);
+
+    if (selectedData.length === 0) return;
+
+    // Open email composer modal
+    setShowEmailModal(true);
+  };
+
+  // Get selected subsidies for email modal
+  const selectedSubsidiesData = useMemo(() => {
+    return filteredSubsidies
+      .filter((s) => selectedSubsidies.has(s.subsidy_id))
+      .map((s) => s.subsidy!)
+      .filter(Boolean);
+  }, [filteredSubsidies, selectedSubsidies]);
+
   return (
     <div className="space-y-6">
       <Helmet>
@@ -220,12 +299,25 @@ export function SavedSubsidiesPage() {
             Gérez les aides que vous avez sauvegardées
           </p>
         </div>
-        <Link to="/app/search">
-          <Button>
-            <Search className="mr-2 h-4 w-4" />
-            Rechercher des aides
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          {savedSubsidies.length > 0 && !isSelectionMode && (
+            <Button variant="outline" onClick={handleEnterSelectionMode}>
+              <Send className="mr-2 h-4 w-4" />
+              Transmettre
+            </Button>
+          )}
+          {isSelectionMode && (
+            <Button variant="ghost" onClick={handleExitSelectionMode}>
+              Annuler
+            </Button>
+          )}
+          <Link to="/app/search">
+            <Button>
+              <Search className="mr-2 h-4 w-4" />
+              Rechercher des aides
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Stats / Filter */}
@@ -359,23 +451,50 @@ export function SavedSubsidiesPage() {
             const statusOption = getStatusOption(saved.status);
             const aiData = aiScoresMap.get(subsidy.id);
 
+            const isSelected = selectedSubsidies.has(saved.subsidy_id);
+
             return (
               <div
                 key={saved.id}
-                className="bg-white rounded-xl border border-slate-200 p-5"
+                onClick={isSelectionMode ? () => handleToggleSelection(saved.subsidy_id) : undefined}
+                className={`bg-white rounded-xl border p-5 transition-all ${
+                  isSelectionMode ? 'cursor-pointer hover:shadow-md' : ''
+                } ${
+                  isSelected
+                    ? 'border-blue-400 bg-blue-50/50 ring-2 ring-blue-200'
+                    : 'border-slate-200'
+                }`}
               >
                 <div className="flex items-start justify-between gap-4">
+                  {/* Selection Checkbox */}
+                  {isSelectionMode && (
+                    <div
+                      className={`flex-shrink-0 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
+                        isSelected
+                          ? 'bg-blue-600 border-blue-600'
+                          : 'bg-white border-slate-300'
+                      }`}
+                    >
+                      {isSelected && <Check className="h-4 w-4 text-white" />}
+                    </div>
+                  )}
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start gap-3">
-                      <Link
-                        to={`/app/subsidy/${subsidy.id}`}
-                        className="block group flex-1"
-                      >
-                        <h3 className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2">
+                      {isSelectionMode ? (
+                        <h3 className="font-semibold text-slate-900 line-clamp-2 flex-1">
                           {title}
                         </h3>
-                      </Link>
+                      ) : (
+                        <Link
+                          to={`/app/subsidy/${subsidy.id}`}
+                          className="block group flex-1"
+                        >
+                          <h3 className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2">
+                            {title}
+                          </h3>
+                        </Link>
+                      )}
                       {/* AI Match Score Badge */}
                       {aiData?.matchScore && (
                         <div className="flex-shrink-0 flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-700 rounded-lg text-sm font-medium">
@@ -453,76 +572,80 @@ export function SavedSubsidiesPage() {
                     </div>
                   </div>
 
-                  {/* Actions */}
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    {/* Status Select */}
-                    <Select
-                      value={saved.status}
-                      onValueChange={(value) =>
-                        handleStatusChange(saved.id, value as SavedSubsidy['status'])
-                      }
-                    >
-                      <SelectTrigger className={`w-[180px] ${statusOption.color}`}>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {STATUS_OPTIONS.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                  {/* Actions - hidden in selection mode */}
+                  {!isSelectionMode && (
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {/* Status Select */}
+                      <Select
+                        value={saved.status}
+                        onValueChange={(value) =>
+                          handleStatusChange(saved.id, value as SavedSubsidy['status'])
+                        }
+                      >
+                        <SelectTrigger className={`w-[180px] ${statusOption.color}`}>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {STATUS_OPTIONS.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
 
-                    {/* Remove */}
+                      {/* Remove */}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleRemove(saved.subsidy_id)}
+                        className="text-slate-400 hover:text-red-600"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Actions Row - hidden in selection mode */}
+                {!isSelectionMode && (
+                  <div className="mt-4 pt-4 border-t border-slate-100 flex items-center gap-4">
+                    <Link to={`/app/subsidy/${subsidy.id}`}>
+                      <Button variant="outline" size="sm">
+                        Voir les détails
+                      </Button>
+                    </Link>
+                    {subsidy.application_url && (
+                      <a
+                        href={subsidy.application_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-blue-600 hover:underline flex items-center gap-1"
+                      >
+                        Postuler
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
+                    )}
                     <Button
                       variant="ghost"
-                      size="icon"
-                      onClick={() => handleRemove(saved.subsidy_id)}
-                      className="text-slate-400 hover:text-red-600"
+                      size="sm"
+                      onClick={() => toggleNotes(saved.id)}
+                      className="ml-auto text-slate-500"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <MessageSquare className="h-4 w-4 mr-1" />
+                      Notes
+                      {saved.notes && <span className="ml-1 text-blue-600">*</span>}
+                      {expandedNotes.has(saved.id) ? (
+                        <ChevronUp className="h-4 w-4 ml-1" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4 ml-1" />
+                      )}
                     </Button>
                   </div>
-                </div>
+                )}
 
-                {/* Actions Row */}
-                <div className="mt-4 pt-4 border-t border-slate-100 flex items-center gap-4">
-                  <Link to={`/app/subsidy/${subsidy.id}`}>
-                    <Button variant="outline" size="sm">
-                      Voir les détails
-                    </Button>
-                  </Link>
-                  {subsidy.application_url && (
-                    <a
-                      href={subsidy.application_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-blue-600 hover:underline flex items-center gap-1"
-                    >
-                      Postuler
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </a>
-                  )}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => toggleNotes(saved.id)}
-                    className="ml-auto text-slate-500"
-                  >
-                    <MessageSquare className="h-4 w-4 mr-1" />
-                    Notes
-                    {saved.notes && <span className="ml-1 text-blue-600">*</span>}
-                    {expandedNotes.has(saved.id) ? (
-                      <ChevronUp className="h-4 w-4 ml-1" />
-                    ) : (
-                      <ChevronDown className="h-4 w-4 ml-1" />
-                    )}
-                  </Button>
-                </div>
-
-                {/* Notes Section */}
-                {expandedNotes.has(saved.id) && (
+                {/* Notes Section - hidden in selection mode */}
+                {!isSelectionMode && expandedNotes.has(saved.id) && (
                   <div className="mt-4 pt-4 border-t border-slate-100">
                     <label className="block text-sm font-medium text-slate-700 mb-2">
                       Notes personnelles
@@ -575,7 +698,7 @@ export function SavedSubsidiesPage() {
               {isAIScored && (
                 <p className="text-xs text-purple-600 flex items-center gap-1 mt-1">
                   <Sparkles className="h-3 w-3" />
-                  Score IA V5 - basé sur votre profil entreprise
+                  Score IA - basé sur votre profil entreprise
                 </p>
               )}
             </div>
@@ -594,7 +717,7 @@ export function SavedSubsidiesPage() {
             <div className="space-y-3">
               {recommendations
                 .filter((rec) => !savedSubsidies.some((s) => s.subsidy_id === rec.id))
-                .slice(0, 5)
+                .slice(0, 12)
                 .map((subsidy) => (
                   <SubsidyCard
                     key={subsidy.id}
@@ -609,6 +732,31 @@ export function SavedSubsidiesPage() {
           )}
         </div>
       )}
+
+      {/* Selection Toolbar */}
+      {isSelectionMode && (
+        <SelectionToolbar
+          selectedCount={selectedSubsidies.size}
+          totalCount={filteredSubsidies.length}
+          onSelectAll={handleSelectAll}
+          onDeselectAll={handleDeselectAll}
+          onExportPDF={handleExportPDF}
+          onSendEmail={handleSendEmail}
+          onCancel={handleExitSelectionMode}
+        />
+      )}
+
+      {/* Email Composer Modal */}
+      <EmailComposerModal
+        open={showEmailModal}
+        onClose={() => {
+          setShowEmailModal(false);
+          // Exit selection mode after sending
+          handleExitSelectionMode();
+        }}
+        subsidies={selectedSubsidiesData}
+        profile={hasProfile ? profile : null}
+      />
     </div>
   );
 }
