@@ -1,5 +1,30 @@
 import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { Subsidy, getSubsidyTitle, getSubsidyDescription, MaSubventionProProfile } from '@/types';
+
+// Extend jsPDF type for autoTable
+declare module 'jspdf' {
+  interface jsPDF {
+    lastAutoTable: {
+      finalY: number;
+    };
+  }
+}
+
+// Color palette
+const COLORS = {
+  primary: [30, 64, 175] as [number, number, number],        // Blue
+  primaryLight: [239, 246, 255] as [number, number, number], // Light blue
+  success: [5, 150, 105] as [number, number, number],        // Emerald
+  successLight: [236, 253, 245] as [number, number, number], // Light emerald
+  warning: [180, 83, 9] as [number, number, number],         // Amber
+  warningLight: [255, 251, 235] as [number, number, number], // Light amber
+  gray: [100, 116, 139] as [number, number, number],         // Slate
+  grayLight: [248, 250, 252] as [number, number, number],    // Light slate
+  border: [226, 232, 240] as [number, number, number],       // Border color
+  text: [15, 23, 42] as [number, number, number],            // Dark text
+  textMuted: [100, 116, 139] as [number, number, number],    // Muted text
+};
 
 // Format amount for PDF
 function formatAmount(amount: number | null): string {
@@ -21,21 +46,110 @@ function formatDate(date: string | null): string {
   });
 }
 
-// Clean text for PDF (remove special characters that cause issues)
+// Format short date
+function formatShortDate(date: string | null): string {
+  if (!date) return '-';
+  return new Date(date).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'short',
+  });
+}
+
+// Clean text for PDF (remove special characters and markdown formatting)
 function cleanText(text: string): string {
   return text
+    // Remove special unicode characters
     .replace(/[\u2018\u2019]/g, "'")
     .replace(/[\u201C\u201D]/g, '"')
     .replace(/\u2026/g, '...')
     .replace(/\u2013/g, '-')
     .replace(/\u2014/g, '--')
-    .replace(/\u00A0/g, ' ');
+    .replace(/\u00A0/g, ' ')
+    // Convert markdown bold **text** to plain text
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    // Convert markdown italic *text* to plain text
+    .replace(/\*([^*]+)\*/g, '$1')
+    // Remove markdown links [text](url) - keep text only
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    // Remove standalone URLs (https://...)
+    .replace(/https?:\/\/[^\s]+/g, '')
+    // Clean up messy formatting with pipes
+    .replace(/\|\s*\|/g, '')
+    .replace(/\|\s*/g, ' ')
+    // Remove "Liens liés à l'étape :" type patterns
+    .replace(/Liens li[ée]s [àa] l['']?[ée]tape\s*:\s*/gi, '')
+    // Clean up multiple spaces
+    .replace(/\s{2,}/g, ' ')
+    // Clean up multiple dashes
+    .replace(/--+/g, '-')
+    // Trim
+    .trim();
+}
+
+// Clean description text more aggressively for PDF display
+function cleanDescription(text: string): string {
+  let cleaned = cleanText(text);
+
+  // Remove common noise patterns from subsidy descriptions
+  cleaned = cleaned
+    // Remove "Contact public pour les questions..." patterns
+    .replace(/Contact public pour les questions[^.]*\./gi, '')
+    // Remove "Etapes pour activer le dispositif" and following content until next section
+    .replace(/[EÉ]tapes pour activer le dispositif\s*:?[^.]*\./gi, '')
+    // Remove "Lien externe de présentation" patterns
+    .replace(/Lien externe de pr[ée]sentation[^.]*\.?/gi, '')
+    // Clean up leftover artifacts
+    .replace(/\s*:\s*$/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+
+  return cleaned;
 }
 
 // Split long text into lines
 function splitTextToLines(doc: jsPDF, text: string, maxWidth: number): string[] {
   const cleanedText = cleanText(text);
   return doc.splitTextToSize(cleanedText, maxWidth);
+}
+
+// Split description text into lines (with extra cleaning)
+function splitDescriptionToLines(doc: jsPDF, text: string, maxWidth: number): string[] {
+  const cleanedText = cleanDescription(text);
+  return doc.splitTextToSize(cleanedText, maxWidth);
+}
+
+// Calculate days until deadline
+function getDaysUntilDeadline(deadline: string | null): number | null {
+  if (!deadline) return null;
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const deadlineDate = new Date(deadline);
+  return Math.ceil((deadlineDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+// Load image from URL and convert to base64 for PDF embedding
+async function loadImageAsBase64(url: string): Promise<string | null> {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) return null;
+
+    const blob = await response.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    return null;
+  }
+}
+
+// Get image format from base64 data URL
+function getImageFormat(dataUrl: string): 'PNG' | 'JPEG' | 'WEBP' {
+  if (dataUrl.includes('image/png')) return 'PNG';
+  if (dataUrl.includes('image/webp')) return 'WEBP';
+  return 'JPEG';
 }
 
 export function exportSubsidyToPDF(subsidy: Subsidy): void {
@@ -142,7 +256,7 @@ export function exportSubsidyToPDF(subsidy: Subsidy): void {
 
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
-    const descLines = splitTextToLines(doc, description, contentWidth);
+    const descLines = splitDescriptionToLines(doc, description, contentWidth);
 
     // Check if we need a new page
     const lineHeight = 5;
@@ -268,11 +382,17 @@ export interface ExportSubsidiesResult {
  * Export multiple subsidies to a single PDF document
  * Returns the PDF as a Blob for email attachment or downloads directly
  */
-export function exportSubsidiesToPDF(
+export async function exportSubsidiesToPDF(
   subsidies: Subsidy[],
   options: ExportSubsidiesOptions = {}
-): ExportSubsidiesResult {
+): Promise<ExportSubsidiesResult> {
   const { download = true, profile } = options;
+
+  // Pre-load all images in parallel
+  const [companyLogo, ...subsidyLogos] = await Promise.all([
+    profile?.logo_url ? loadImageAsBase64(profile.logo_url) : Promise.resolve(null),
+    ...subsidies.map((s) => s.logo_url ? loadImageAsBase64(s.logo_url) : Promise.resolve(null)),
+  ]);
 
   const doc = new jsPDF({
     orientation: 'portrait',
@@ -286,150 +406,237 @@ export function exportSubsidiesToPDF(
   const contentWidth = pageWidth - margin * 2;
   let yPosition = margin;
 
-  // Helper to check if we need a new page
-  const checkPageBreak = (neededHeight: number) => {
-    if (yPosition + neededHeight > pageHeight - margin) {
-      doc.addPage();
-      yPosition = margin;
-      return true;
-    }
-    return false;
+  // Helper to add page footer
+  const addFooter = (pageNum: number, totalPages: number) => {
+    doc.setFontSize(8);
+    doc.setTextColor(...COLORS.textMuted);
+    doc.text(
+      `Page ${pageNum} sur ${totalPages}`,
+      pageWidth / 2,
+      pageHeight - 10,
+      { align: 'center' }
+    );
+    doc.text(
+      'MaSubventionPro',
+      pageWidth - margin,
+      pageHeight - 10,
+      { align: 'right' }
+    );
   };
 
   // ===================
   // COVER PAGE
   // ===================
 
-  // Title
-  doc.setFontSize(24);
+  // Header bar
+  doc.setFillColor(...COLORS.primary);
+  doc.rect(0, 0, pageWidth, 8, 'F');
+
+  yPosition = 25;
+
+  // Company logo (if available)
+  if (companyLogo) {
+    try {
+      const logoSize = 25;
+      doc.addImage(companyLogo, getImageFormat(companyLogo), margin, yPosition, logoSize, logoSize);
+      yPosition += logoSize + 10;
+    } catch {
+      // Silently fail if image can't be added
+      yPosition = 40;
+    }
+  } else {
+    yPosition = 40;
+  }
+
+  // Main title
+  doc.setFontSize(28);
   doc.setFont('helvetica', 'bold');
-  doc.setTextColor(30, 64, 175); // Blue color
-  const mainTitle = profile?.company_name
-    ? `Aides Identifiees pour ${cleanText(profile.company_name)}`
-    : 'Aides Identifiees';
-  const titleLines = splitTextToLines(doc, mainTitle, contentWidth);
-  doc.text(titleLines, margin, yPosition + 20);
-  yPosition += titleLines.length * 10 + 30;
+  doc.setTextColor(...COLORS.text);
+  doc.text('Rapport des Aides', margin, yPosition);
+  yPosition += 10;
+
+  // Subtitle with company name
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(...COLORS.gray);
+  const subtitle = profile?.company_name
+    ? `Identifiees pour ${cleanText(profile.company_name)}`
+    : 'Identifiees pour votre entreprise';
+  doc.text(subtitle, margin, yPosition);
+  yPosition += 20;
 
   // Generation date
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(100, 100, 100);
+  doc.setFontSize(10);
+  doc.setTextColor(...COLORS.textMuted);
   doc.text(`Genere le ${new Date().toLocaleDateString('fr-FR', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
   })}`, margin, yPosition);
-  yPosition += 15;
+  yPosition += 25;
 
-  // Key stats box
+  // ===== SUMMARY BOX =====
   const totalFunding = calculateTotalFunding(subsidies);
   const urgentCount = countUrgentDeadlines(subsidies);
 
-  doc.setFillColor(248, 250, 252); // Light gray background
-  doc.roundedRect(margin, yPosition, contentWidth, 50, 3, 3, 'F');
+  // Main stats box with border
+  doc.setDrawColor(...COLORS.primary);
+  doc.setLineWidth(1);
+  doc.setFillColor(...COLORS.primaryLight);
+  doc.roundedRect(margin, yPosition, contentWidth, 45, 4, 4, 'FD');
 
-  yPosition += 12;
-  doc.setFontSize(12);
+  // "POTENTIEL IDENTIFIE" header inside box
+  doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
-  doc.setTextColor(0, 0, 0);
-  doc.text('Resume', margin + 10, yPosition);
+  doc.setTextColor(...COLORS.primary);
+  doc.text('POTENTIEL IDENTIFIE', margin + 10, yPosition + 12);
 
-  yPosition += 10;
+  // Large funding amount
+  doc.setFontSize(24);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(...COLORS.text);
+  const fundingDisplay = totalFunding.max > 0
+    ? `Jusqu'a ${formatAmount(totalFunding.max)}`
+    : 'Non chiffre';
+  doc.text(fundingDisplay, margin + 10, yPosition + 28);
+
+  // Subsidy count
   doc.setFontSize(11);
   doc.setFont('helvetica', 'normal');
-  doc.text(`Nombre d'aides: ${subsidies.length}`, margin + 10, yPosition);
+  doc.setTextColor(...COLORS.gray);
+  doc.text(`${subsidies.length} aide${subsidies.length > 1 ? 's' : ''} identifiee${subsidies.length > 1 ? 's' : ''}`, margin + 10, yPosition + 38);
 
-  yPosition += 7;
-  if (totalFunding.max > 0) {
-    const fundingText = totalFunding.min > 0 && totalFunding.min !== totalFunding.max
-      ? `Potentiel total: ${formatAmount(totalFunding.min)} - ${formatAmount(totalFunding.max)}`
-      : `Potentiel total: jusqu'a ${formatAmount(totalFunding.max)}`;
-    doc.text(fundingText, margin + 10, yPosition);
-    yPosition += 7;
-  }
+  yPosition += 55;
 
+  // Urgent deadlines warning (if any)
   if (urgentCount > 0) {
-    doc.setTextColor(180, 83, 9); // Amber color for urgent
-    doc.text(`${urgentCount} aide${urgentCount > 1 ? 's' : ''} avec deadline < 30 jours`, margin + 10, yPosition);
-    doc.setTextColor(0, 0, 0);
-  }
-
-  yPosition += 20;
-
-  // Company info (if profile provided)
-  if (profile) {
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Entreprise', margin, yPosition);
-    yPosition += 7;
+    doc.setFillColor(...COLORS.warningLight);
+    doc.setDrawColor(...COLORS.warning);
+    doc.roundedRect(margin, yPosition, contentWidth, 18, 3, 3, 'FD');
 
     doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...COLORS.warning);
+    doc.text(
+      `${urgentCount} aide${urgentCount > 1 ? 's ont' : ' a'} une date limite proche (< 30 jours)`,
+      margin + 10,
+      yPosition + 11
+    );
+    yPosition += 25;
+  }
 
+  // Company info section (if profile provided)
+  if (profile) {
+    yPosition += 10;
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...COLORS.text);
+    doc.text('Votre entreprise', margin, yPosition);
+    yPosition += 8;
+
+    // Company details table
+    const companyData: (string | number)[][] = [];
+    if (profile.company_name) {
+      companyData.push(['Raison sociale', cleanText(profile.company_name)]);
+    }
     if (profile.sector) {
-      doc.text(`Secteur: ${cleanText(profile.sector)}`, margin, yPosition);
-      yPosition += 5;
+      companyData.push(['Secteur', cleanText(profile.sector)]);
     }
     if (profile.region) {
-      doc.text(`Region: ${cleanText(profile.region)}`, margin, yPosition);
-      yPosition += 5;
+      companyData.push(['Region', cleanText(profile.region)]);
     }
     if (profile.employees) {
-      doc.text(`Effectif: ${cleanText(profile.employees)}`, margin, yPosition);
-      yPosition += 5;
+      companyData.push(['Effectif', cleanText(profile.employees)]);
     }
-    yPosition += 10;
+
+    if (companyData.length > 0) {
+      autoTable(doc, {
+        startY: yPosition,
+        head: [],
+        body: companyData,
+        theme: 'plain',
+        styles: {
+          fontSize: 10,
+          cellPadding: 3,
+        },
+        columnStyles: {
+          0: { fontStyle: 'bold', cellWidth: 40, textColor: COLORS.gray },
+          1: { textColor: COLORS.text },
+        },
+        margin: { left: margin, right: margin },
+      });
+      yPosition = doc.lastAutoTable.finalY + 10;
+    }
   }
 
   // ===================
-  // SUMMARY TABLE
+  // SUMMARY TABLE PAGE
   // ===================
   doc.addPage();
   yPosition = margin;
 
-  doc.setFontSize(16);
+  // Section title
+  doc.setFontSize(18);
   doc.setFont('helvetica', 'bold');
-  doc.setTextColor(0, 0, 0);
-  doc.text('Liste des aides', margin, yPosition);
-  yPosition += 10;
+  doc.setTextColor(...COLORS.text);
+  doc.text('Liste des aides identifiees', margin, yPosition);
+  yPosition += 12;
 
-  // Table header
-  doc.setFillColor(241, 245, 249);
-  doc.rect(margin, yPosition, contentWidth, 8, 'F');
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Aide', margin + 2, yPosition + 5.5);
-  doc.text('Montant', margin + 100, yPosition + 5.5);
-  doc.text('Deadline', margin + 140, yPosition + 5.5);
-  yPosition += 10;
+  // Prepare table data
+  const tableData = subsidies.map((subsidy, index) => {
+    const title = cleanText(getSubsidyTitle(subsidy));
+    const displayTitle = title.length > 50 ? title.substring(0, 47) + '...' : title;
+    const amount = subsidy.amount_max ? formatAmount(subsidy.amount_max) : '-';
+    const deadline = formatShortDate(subsidy.deadline);
+    const daysLeft = getDaysUntilDeadline(subsidy.deadline);
 
-  // Table rows
-  doc.setFont('helvetica', 'normal');
-  subsidies.forEach((subsidy, index) => {
-    checkPageBreak(12);
+    return [
+      (index + 1).toString(),
+      displayTitle,
+      amount,
+      daysLeft !== null && daysLeft >= 0 && daysLeft <= 30
+        ? `${deadline} (${daysLeft}j)`
+        : deadline,
+    ];
+  });
 
-    // Alternate row colors
-    if (index % 2 === 0) {
-      doc.setFillColor(248, 250, 252);
-      doc.rect(margin, yPosition - 2, contentWidth, 10, 'F');
-    }
-
-    const title = cleanText(getSubsidyTitle(subsidy)).substring(0, 55);
-    const displayTitle = title.length >= 55 ? title + '...' : title;
-    doc.text(displayTitle, margin + 2, yPosition + 4);
-
-    const amount = subsidy.amount_max
-      ? `Jusqu'a ${formatAmount(subsidy.amount_max)}`
-      : '-';
-    doc.text(amount, margin + 100, yPosition + 4);
-
-    const deadline = subsidy.deadline
-      ? new Date(subsidy.deadline).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
-      : '-';
-    doc.text(deadline, margin + 140, yPosition + 4);
-
-    yPosition += 10;
+  // Summary table with autoTable
+  autoTable(doc, {
+    startY: yPosition,
+    head: [['#', 'Aide', 'Montant max', 'Date limite']],
+    body: tableData,
+    theme: 'striped',
+    headStyles: {
+      fillColor: COLORS.primary,
+      textColor: [255, 255, 255],
+      fontStyle: 'bold',
+      fontSize: 9,
+    },
+    styles: {
+      fontSize: 9,
+      cellPadding: 4,
+      overflow: 'linebreak',
+    },
+    columnStyles: {
+      0: { cellWidth: 10, halign: 'center' },
+      1: { cellWidth: 90 },
+      2: { cellWidth: 35, halign: 'right' },
+      3: { cellWidth: 35, halign: 'center' },
+    },
+    alternateRowStyles: {
+      fillColor: COLORS.grayLight,
+    },
+    margin: { left: margin, right: margin },
+    didParseCell: function(data) {
+      // Highlight urgent deadlines in amber
+      if (data.section === 'body' && data.column.index === 3) {
+        const cellText = data.cell.raw as string;
+        if (cellText && cellText.includes('j)')) {
+          data.cell.styles.textColor = COLORS.warning;
+          data.cell.styles.fontStyle = 'bold';
+        }
+      }
+    },
   });
 
   // ===================
@@ -439,145 +646,222 @@ export function exportSubsidiesToPDF(
     doc.addPage();
     yPosition = margin;
 
-    // Subsidy number badge
-    doc.setFillColor(30, 64, 175);
-    doc.circle(margin + 5, yPosition + 3, 5, 'F');
-    doc.setFontSize(10);
+    const subsidyLogo = subsidyLogos[index];
+    let titleStartX = margin;
+
+    // Subsidy logo (if available)
+    if (subsidyLogo) {
+      try {
+        const logoSize = 18;
+        doc.addImage(subsidyLogo, getImageFormat(subsidyLogo), margin, yPosition, logoSize, logoSize);
+        titleStartX = margin + logoSize + 5;
+      } catch {
+        // Silently fail if image can't be added
+      }
+    }
+
+    // Header with number badge (position adjusted if logo present)
+    const badgeX = subsidyLogo ? titleStartX : margin + 6;
+    doc.setFillColor(...COLORS.primary);
+    doc.circle(badgeX, yPosition + 6, 6, 'F');
+    doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(255, 255, 255);
-    doc.text(`${index + 1}`, margin + 3.5, yPosition + 5);
+    const numText = (index + 1).toString();
+    doc.text(numText, badgeX - (numText.length * 1.5), yPosition + 8.5);
 
-    // Title
-    doc.setTextColor(0, 0, 0);
+    // Title (position adjusted based on logo and badge)
+    const titleX = subsidyLogo ? badgeX + 12 : margin + 18;
+    const titleMaxWidth = contentWidth - (titleX - margin);
+    doc.setTextColor(...COLORS.text);
     doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
     const title = cleanText(getSubsidyTitle(subsidy));
-    const titleLines = splitTextToLines(doc, title, contentWidth - 15);
-    doc.text(titleLines, margin + 15, yPosition + 5);
-    yPosition += titleLines.length * 6 + 10;
+    const titleLines = splitTextToLines(doc, title, titleMaxWidth);
+    doc.text(titleLines, titleX, yPosition + 5);
+    const titleHeight = Math.max(titleLines.length * 6, 12);
+    yPosition += Math.max(titleHeight, subsidyLogo ? 20 : 12) + 8;
 
     // Agency
     if (subsidy.agency) {
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
-      doc.setTextColor(100, 100, 100);
+      doc.setTextColor(...COLORS.textMuted);
       doc.text(cleanText(subsidy.agency), margin, yPosition);
-      yPosition += 8;
+      yPosition += 10;
     }
 
-    // Separator
-    doc.setDrawColor(226, 232, 240);
-    doc.line(margin, yPosition, pageWidth - margin, yPosition);
-    yPosition += 8;
+    // Key info table
+    const infoData: (string | number)[][] = [];
 
-    // Key info grid
-    doc.setFontSize(10);
-    doc.setTextColor(0, 0, 0);
-
-    // Amount
     if (subsidy.amount_min || subsidy.amount_max) {
-      doc.setFont('helvetica', 'bold');
-      doc.text('Montant:', margin, yPosition);
-      doc.setFont('helvetica', 'normal');
       const amountText = subsidy.amount_min && subsidy.amount_max
         ? `${formatAmount(subsidy.amount_min)} - ${formatAmount(subsidy.amount_max)}`
         : subsidy.amount_max
         ? `Jusqu'a ${formatAmount(subsidy.amount_max)}`
         : `A partir de ${formatAmount(subsidy.amount_min)}`;
-      doc.text(amountText, margin + 25, yPosition);
-      yPosition += 6;
+      infoData.push(['Montant', amountText]);
     }
 
-    // Deadline
     if (subsidy.deadline) {
-      doc.setFont('helvetica', 'bold');
-      doc.text('Date limite:', margin, yPosition);
-      doc.setFont('helvetica', 'normal');
-      doc.text(formatDate(subsidy.deadline), margin + 28, yPosition);
-
-      // Urgency indicator
-      const now = new Date();
-      const deadline = new Date(subsidy.deadline);
-      const diffDays = Math.ceil((deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-      if (diffDays >= 0 && diffDays <= 30) {
-        doc.setTextColor(180, 83, 9);
-        doc.text(`(${diffDays}j restants)`, margin + 70, yPosition);
-        doc.setTextColor(0, 0, 0);
+      const daysLeft = getDaysUntilDeadline(subsidy.deadline);
+      let deadlineText = formatDate(subsidy.deadline);
+      if (daysLeft !== null && daysLeft >= 0 && daysLeft <= 30) {
+        deadlineText += ` (${daysLeft} jours restants)`;
       }
-      yPosition += 6;
+      infoData.push(['Date limite', deadlineText]);
     }
 
-    // Region
     if (subsidy.region && subsidy.region.length > 0) {
-      doc.setFont('helvetica', 'bold');
-      doc.text('Region:', margin, yPosition);
-      doc.setFont('helvetica', 'normal');
-      doc.text(subsidy.region.join(', '), margin + 20, yPosition);
-      yPosition += 6;
+      infoData.push(['Region', subsidy.region.join(', ')]);
     }
 
-    // Funding type
     if (subsidy.funding_type) {
-      doc.setFont('helvetica', 'bold');
-      doc.text('Type:', margin, yPosition);
-      doc.setFont('helvetica', 'normal');
-      doc.text(cleanText(subsidy.funding_type), margin + 15, yPosition);
-      yPosition += 6;
+      infoData.push(['Type', cleanText(subsidy.funding_type)]);
     }
 
-    yPosition += 5;
+    if (subsidy.primary_sector) {
+      infoData.push(['Secteur', cleanText(subsidy.primary_sector)]);
+    }
 
-    // Description
+    if (infoData.length > 0) {
+      autoTable(doc, {
+        startY: yPosition,
+        head: [],
+        body: infoData,
+        theme: 'plain',
+        styles: {
+          fontSize: 10,
+          cellPadding: 3,
+        },
+        columnStyles: {
+          0: { fontStyle: 'bold', cellWidth: 35, textColor: COLORS.gray },
+          1: { textColor: COLORS.text },
+        },
+        margin: { left: margin, right: margin },
+        didParseCell: function(data) {
+          // Highlight urgent deadlines
+          if (data.section === 'body' && data.column.index === 1) {
+            const firstCol = data.row.cells[0]?.raw;
+            const cellText = data.cell.raw as string;
+            if (firstCol === 'Date limite' && cellText.includes('jours restants')) {
+              data.cell.styles.textColor = COLORS.warning;
+              data.cell.styles.fontStyle = 'bold';
+            }
+          }
+        },
+      });
+      yPosition = doc.lastAutoTable.finalY + 10;
+    }
+
+    // Description section
     const description = getSubsidyDescription(subsidy);
     if (description) {
-      doc.setDrawColor(226, 232, 240);
+      // Section header
+      doc.setDrawColor(...COLORS.border);
       doc.line(margin, yPosition, pageWidth - margin, yPosition);
       yPosition += 8;
 
       doc.setFontSize(11);
       doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...COLORS.text);
       doc.text('Description', margin, yPosition);
-      yPosition += 7;
+      yPosition += 8;
 
       doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
-      const descLines = splitTextToLines(doc, description, contentWidth);
+      doc.setTextColor(...COLORS.gray);
+      const descLines = splitDescriptionToLines(doc, description, contentWidth);
 
       const lineHeight = 4.5;
       for (const line of descLines) {
-        if (checkPageBreak(lineHeight + 2)) {
-          // Continue description on new page
+        if (yPosition > pageHeight - margin - 20) {
+          doc.addPage();
+          yPosition = margin;
         }
         doc.text(line, margin, yPosition);
         yPosition += lineHeight;
       }
     }
 
-    // Application link
-    if (subsidy.application_url) {
-      yPosition += 5;
-      checkPageBreak(15);
-      doc.setDrawColor(226, 232, 240);
+    // Links section
+    if (subsidy.application_url || subsidy.source_url) {
+      yPosition += 8;
+      if (yPosition > pageHeight - 40) {
+        doc.addPage();
+        yPosition = margin;
+      }
+
+      // Section header
+      doc.setDrawColor(...COLORS.border);
       doc.line(margin, yPosition, pageWidth - margin, yPosition);
       yPosition += 8;
 
-      doc.setFontSize(10);
-      doc.setTextColor(30, 64, 175);
-      doc.textWithLink('Postuler en ligne', margin, yPosition, { url: subsidy.application_url });
-      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...COLORS.text);
+      doc.text('Liens utiles', margin, yPosition);
+      yPosition += 10;
+
+      // Application link
+      if (subsidy.application_url) {
+        doc.setFillColor(...COLORS.successLight);
+        doc.roundedRect(margin, yPosition, contentWidth, 14, 3, 3, 'F');
+
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...COLORS.success);
+        doc.textWithLink('Postuler en ligne', margin + 10, yPosition + 9, {
+          url: subsidy.application_url,
+        });
+
+        // Show URL as clickable link too
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(...COLORS.success);
+        const displayUrl = subsidy.application_url.length > 50
+          ? subsidy.application_url.substring(0, 47) + '...'
+          : subsidy.application_url;
+        doc.textWithLink(displayUrl, margin + 55, yPosition + 9, {
+          url: subsidy.application_url,
+        });
+
+        yPosition += 18;
+      }
+
+      // Source link
+      if (subsidy.source_url) {
+        doc.setFillColor(...COLORS.primaryLight);
+        doc.roundedRect(margin, yPosition, contentWidth, 14, 3, 3, 'F');
+
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...COLORS.primary);
+        doc.textWithLink('Source officielle', margin + 10, yPosition + 9, {
+          url: subsidy.source_url,
+        });
+
+        // Show URL as clickable link too
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(...COLORS.primary);
+        const displayUrl = subsidy.source_url.length > 50
+          ? subsidy.source_url.substring(0, 47) + '...'
+          : subsidy.source_url;
+        doc.textWithLink(displayUrl, margin + 55, yPosition + 9, {
+          url: subsidy.source_url,
+        });
+
+        yPosition += 18;
+      }
     }
   });
 
-  // Footer on each page
+  // Add footers to all pages
   const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
-    doc.setFontSize(8);
-    doc.setTextColor(150, 150, 150);
-    doc.text(
-      `Page ${i} sur ${pageCount} - Genere via MaSubventionPro`,
-      margin,
-      pageHeight - 10
-    );
+    addFooter(i, pageCount);
   }
 
   // Generate filename
@@ -585,7 +869,7 @@ export function exportSubsidiesToPDF(
     ? cleanText(profile.company_name).substring(0, 30).replace(/[^a-zA-Z0-9\u00C0-\u024F]/g, '_').replace(/_+/g, '_')
     : 'aides';
   const dateStr = new Date().toISOString().split('T')[0];
-  const filename = `aides_${companySlug}_${dateStr}.pdf`;
+  const filename = `rapport_${companySlug}_${dateStr}.pdf`;
 
   // Get blob
   const blob = doc.output('blob');

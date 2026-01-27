@@ -17,7 +17,10 @@ const SUBSIDY_COLUMNS = `
   primary_sector,
   application_url,
   source_url,
-  is_active
+  is_active,
+  aid_benef,
+  aid_conditions,
+  decoded_profils
 `;
 
 export interface SearchFilters {
@@ -28,6 +31,8 @@ export interface SearchFilters {
   minAmount?: number;
   maxAmount?: number;
   sortBy: 'deadline' | 'amount_desc' | 'amount_asc' | 'relevance';
+  /** Filter by entity type eligibility (association, entreprise, etc.) */
+  entityType?: 'association' | 'entreprise' | null;
 }
 
 interface UseSubsidySearchReturn {
@@ -57,6 +62,7 @@ export function useSubsidySearch(): UseSubsidySearchReturn {
     fundingTypes: [],
     sectors: [],
     sortBy: 'deadline',
+    entityType: null,
   });
 
   const buildQuery = useCallback((filters: SearchFilters, page: number) => {
@@ -64,6 +70,11 @@ export function useSubsidySearch(): UseSubsidySearchReturn {
       .from('subsidies')
       .select(SUBSIDY_COLUMNS, { count: 'exact' })
       .eq('is_active', true);
+
+    // Filter out expired subsidies (deadline in the past)
+    // Use ISO date format for comparison
+    const today = new Date().toISOString().split('T')[0];
+    query = query.or(`deadline.is.null,deadline.gte.${today}`);
 
     // Text search on title and description
     if (filters.query && filters.query.trim()) {
@@ -101,6 +112,22 @@ export function useSubsidySearch(): UseSubsidySearchReturn {
     }
     if (filters.maxAmount) {
       query = query.lte('amount_min', filters.maxAmount);
+    }
+
+    // Entity type filter (association vs entreprise)
+    // Uses text search on aid_benef field to find association-eligible subsidies
+    if (filters.entityType === 'association') {
+      // Search for association-related keywords in aid_benef and description
+      query = query.or(
+        'aid_benef.ilike.%association%,' +
+        'aid_benef.ilike.%associatif%,' +
+        'aid_benef.ilike.%loi 1901%,' +
+        'aid_benef.ilike.%fondation%,' +
+        'aid_benef.ilike.%coopérative%,' +
+        'aid_benef.ilike.%économie sociale%,' +
+        'description.ilike.%association%,' +
+        'description->>fr.ilike.%association%'
+      );
     }
 
     // Sorting

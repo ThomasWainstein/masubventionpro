@@ -17,6 +17,8 @@ import {
   LEGAL_FORMS,
   PROJECT_TYPES,
   BUSINESS_SECTORS,
+  ASSOCIATION_TYPES,
+  isAssociationType,
 } from '@/types';
 import { Textarea } from '@/components/ui/textarea';
 import { CompanySearch } from './CompanySearch';
@@ -72,6 +74,14 @@ export function ProfileForm({
     nombre_etablissements: initialData.nombre_etablissements || null as number | null,
     nombre_etablissements_ouverts: initialData.nombre_etablissements_ouverts || null as number | null,
     capital_social: initialData.capital_social || null as number | null,
+    // Association-specific fields
+    association_type: initialData.association_type || '',
+    association_purpose: initialData.association_purpose || '',
+    member_count: initialData.member_count?.toString() || '',
+    volunteer_count: initialData.volunteer_count?.toString() || '',
+    budget_annual: initialData.budget_annual?.toString() || '',
+    agrement_esus: initialData.agrement_esus || false,
+    rna_number: initialData.rna_number || '',
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -90,13 +100,21 @@ export function ProfileForm({
   }, []);
 
   const handleCompanySelect = useCallback((company: CompanySearchResult) => {
+    // Check if this is an association (has RNA number from association search)
+    // @ts-expect-error - custom field for associations
+    const rnaNumber = company._rnaNumber as string | undefined;
+    // @ts-expect-error - custom field for associations
+    const associationPurpose = company._associationPurpose as string | undefined;
+    // @ts-expect-error - custom field for associations
+    const isRUP = company._isRUP as boolean | undefined;
+
     // Auto-fill form fields from company data
     // Values are already mapped in companySearch.ts to match our form values
     setFormData((prev) => ({
       ...prev,
       company_name: company.name || prev.company_name,
-      siret: company.siret || prev.siret,
-      siren: company.siren || prev.siren,
+      siret: rnaNumber ? '' : (company.siret || prev.siret),  // Clear SIRET for RNA-only associations
+      siren: rnaNumber ? '' : (company.siren || prev.siren),  // Clear SIREN for RNA-only associations
       naf_code: company.nafCode || prev.naf_code,
       naf_label: company.nafLabel || prev.naf_label,
       sector: company.sector || prev.sector,
@@ -116,6 +134,10 @@ export function ProfileForm({
       dirigeants: company.dirigeants || prev.dirigeants,
       nombre_etablissements: company.nombreEtablissements || prev.nombre_etablissements,
       nombre_etablissements_ouverts: company.nombreEtablissementsOuverts || prev.nombre_etablissements_ouverts,
+      // Association-specific fields from RNA search
+      rna_number: rnaNumber || prev.rna_number,
+      association_purpose: associationPurpose || prev.association_purpose,
+      association_type: isRUP ? 'rup' : (company.legalForm === 'ASSO' ? 'loi_1901' : prev.association_type),
     }));
 
     setCompanyEnriched(true);
@@ -168,6 +190,15 @@ export function ProfileForm({
         nombre_etablissements: formData.nombre_etablissements,
         nombre_etablissements_ouverts: formData.nombre_etablissements_ouverts,
         capital_social: formData.capital_social,
+        // Association-specific fields
+        is_association: isAssociationType(formData.legal_form),
+        association_type: formData.association_type || null,
+        association_purpose: formData.association_purpose || null,
+        member_count: formData.member_count ? parseInt(formData.member_count) : null,
+        volunteer_count: formData.volunteer_count ? parseInt(formData.volunteer_count) : null,
+        budget_annual: formData.budget_annual ? parseFloat(formData.budget_annual) : null,
+        agrement_esus: formData.agrement_esus || null,
+        rna_number: formData.rna_number || null,
       });
     } catch (err: any) {
       setError(err.message || 'Une erreur est survenue');
@@ -206,10 +237,14 @@ export function ProfileForm({
           initialValue={initialData.company_name || ''}
         />
 
-        {companyEnriched && formData.siret && (
-          <div className="mt-3 flex items-center gap-2 text-sm text-emerald-700">
+        {companyEnriched && (formData.siret || formData.rna_number) && (
+          <div className={`mt-3 flex items-center gap-2 text-sm ${formData.rna_number ? 'text-purple-700' : 'text-emerald-700'}`}>
             <CheckCircle className="h-4 w-4" />
-            <span>Entreprise identifiée - SIRET: {formData.siret}</span>
+            <span>
+              {formData.rna_number
+                ? `Association identifiée - RNA: ${formData.rna_number}`
+                : `Entreprise identifiée - SIRET: ${formData.siret}`}
+            </span>
           </div>
         )}
       </div>
@@ -435,6 +470,123 @@ export function ProfileForm({
           <p className="mt-1 text-slate-900 bg-slate-50 px-3 py-2 rounded-md text-sm">
             {formData.company_category}
           </p>
+        </div>
+      )}
+
+      {/* Association-specific fields */}
+      {isAssociationType(formData.legal_form) && (
+        <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 space-y-4">
+          <div className="flex items-center gap-2 mb-2">
+            <Building className="h-5 w-5 text-purple-600" />
+            <h3 className="font-medium text-slate-900">Informations association</h3>
+          </div>
+
+          {/* Association Type */}
+          <div>
+            <Label htmlFor="association_type" className="text-sm font-medium">
+              Type d'association
+            </Label>
+            <Select
+              value={formData.association_type}
+              onValueChange={handleSelectChange('association_type')}
+            >
+              <SelectTrigger className="mt-1">
+                <SelectValue placeholder="Sélectionnez le type" />
+              </SelectTrigger>
+              <SelectContent>
+                {ASSOCIATION_TYPES.map((type) => (
+                  <SelectItem key={type.value} value={type.value}>
+                    {type.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Association Purpose */}
+          <div>
+            <Label htmlFor="association_purpose" className="text-sm font-medium">
+              Objet / Mission de l'association
+            </Label>
+            <Textarea
+              id="association_purpose"
+              value={formData.association_purpose}
+              onChange={handleFieldChange('association_purpose')}
+              placeholder="Décrivez la mission et les activités de votre association..."
+              className="mt-1 min-h-[80px]"
+              rows={3}
+            />
+            <p className="text-xs text-slate-500 mt-1">
+              Cette information aide à trouver des subventions plus adaptées
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Member Count */}
+            <div>
+              <Label htmlFor="member_count" className="text-sm font-medium">
+                Nombre de membres
+              </Label>
+              <Input
+                id="member_count"
+                type="number"
+                value={formData.member_count}
+                onChange={handleFieldChange('member_count')}
+                placeholder="Ex: 150"
+                min="0"
+                className="mt-1"
+              />
+            </div>
+
+            {/* Volunteer Count */}
+            <div>
+              <Label htmlFor="volunteer_count" className="text-sm font-medium">
+                Nombre de bénévoles
+              </Label>
+              <Input
+                id="volunteer_count"
+                type="number"
+                value={formData.volunteer_count}
+                onChange={handleFieldChange('volunteer_count')}
+                placeholder="Ex: 25"
+                min="0"
+                className="mt-1"
+              />
+            </div>
+          </div>
+
+          {/* Annual Budget */}
+          <div>
+            <Label htmlFor="budget_annual" className="text-sm font-medium">
+              Budget annuel (€)
+            </Label>
+            <Input
+              id="budget_annual"
+              type="number"
+              value={formData.budget_annual}
+              onChange={handleFieldChange('budget_annual')}
+              placeholder="Ex: 50000"
+              min="0"
+              className="mt-1"
+            />
+            <p className="text-xs text-slate-500 mt-1">
+              Budget total de l'association (hors chiffre d'affaires commercial)
+            </p>
+          </div>
+
+          {/* ESUS Certification */}
+          <div className="flex items-center gap-3 pt-2">
+            <input
+              type="checkbox"
+              id="agrement_esus"
+              checked={formData.agrement_esus}
+              onChange={(e) => setFormData(prev => ({ ...prev, agrement_esus: e.target.checked }))}
+              className="h-4 w-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
+            />
+            <Label htmlFor="agrement_esus" className="text-sm font-medium cursor-pointer">
+              Agrément ESUS (Entreprise Solidaire d'Utilité Sociale)
+            </Label>
+          </div>
         </div>
       )}
 

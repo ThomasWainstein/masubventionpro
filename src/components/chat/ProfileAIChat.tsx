@@ -85,7 +85,11 @@ export function ProfileAIChat({ className = '' }: ProfileAIChatProps) {
   }, [messages, isStreaming]);
 
   const handleSendMessage = (content: string) => {
-    if (!profile?.id) return;
+    console.log('[ProfileAIChat] handleSendMessage called', { content, profileId: profile?.id, hasProfile });
+    if (!profile?.id) {
+      console.warn('[ProfileAIChat] No profile.id, cannot send message');
+      return;
+    }
     sendMessage(content, profile.id, profile);
   };
 

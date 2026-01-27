@@ -65,7 +65,7 @@ export function ChatInput({
       <Button
         onClick={handleSubmit}
         disabled={!message.trim() || disabled || isLoading}
-        className="h-12 w-12 shrink-0"
+        className="h-12 w-12 shrink-0 bg-blue-600 hover:bg-blue-700 text-white disabled:bg-blue-300 disabled:opacity-100"
       >
         {isLoading ? (
           <Loader2 className="h-5 w-5 animate-spin" />

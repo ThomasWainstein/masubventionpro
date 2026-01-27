@@ -17,18 +17,33 @@ export function ChatMessage({ message }: ChatMessageProps) {
     const lines = content.split('\n');
 
     return lines.map((line, i) => {
-      // Bold text: **text**
-      let processed = line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      // First, clean up malformed HTML links from DeepSeek
+      // Pattern: /aide/UUID" class="..." target="..." rel="...">Link Text
+      // Convert to proper format: [Link Text](/app/subsidy/UUID)
+      let processed = line.replace(
+        /\/aide\/([a-f0-9-]{36})"[^>]*>([^<]+)/g,
+        '<a href="/app/subsidy/$1" class="text-blue-600 hover:underline">$2</a>'
+      );
 
-      // Links: [text](url) or /aide/uuid pattern
+      // Also handle incomplete malformed patterns: /aide/UUID" class="...
+      // (when the link text is missing or truncated)
+      processed = processed.replace(
+        /\/aide\/([a-f0-9-]{36})"[^>]*$/g,
+        '<a href="/app/subsidy/$1" class="text-blue-600 hover:underline">Voir l\'aide</a>'
+      );
+
+      // Bold text: **text**
+      processed = processed.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+      // Links: [text](url)
       processed = processed.replace(
         /\[([^\]]+)\]\(([^)]+)\)/g,
         '<a href="$2" class="text-blue-600 hover:underline" target="_blank" rel="noopener">$1</a>'
       );
 
-      // Convert /aide/uuid to clickable links
+      // Convert remaining /aide/uuid to clickable links (clean patterns)
       processed = processed.replace(
-        /\/aide\/([a-f0-9-]{36})/g,
+        /\/aide\/([a-f0-9-]{36})(?![a-f0-9"])/g,
         '<a href="/app/subsidy/$1" class="text-blue-600 hover:underline">/aide/$1</a>'
       );
 

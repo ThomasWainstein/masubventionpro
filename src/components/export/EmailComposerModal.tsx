@@ -17,6 +17,7 @@ import {
   Sparkles,
   AlertCircle,
   Check,
+  Eye,
 } from 'lucide-react';
 import { Subsidy, getSubsidyTitle, MaSubventionProProfile } from '@/types';
 import { exportSubsidiesToPDF } from '@/lib/pdfExport';
@@ -173,7 +174,7 @@ export function EmailComposerModal({
       let pdfFilename: string | null = null;
 
       if (attachPDF) {
-        const { blob, filename } = exportSubsidiesToPDF(subsidies, {
+        const { blob, filename } = await exportSubsidiesToPDF(subsidies, {
           download: false,
           profile,
         });
@@ -195,7 +196,7 @@ export function EmailComposerModal({
 
       // Call the send-export-email edge function
       // API matches the expected contract from subvention360
-      const { data, error: sendError } = await supabase.functions.invoke('send-export-email', {
+      const { error: sendError } = await supabase.functions.invoke('send-export-email', {
         body: {
           recipientEmail: recipientEmail.trim(),
           recipientName: recipientName.trim() || undefined,
@@ -234,6 +235,16 @@ export function EmailComposerModal({
   };
 
   const totalFunding = getTotalMaxFunding(subsidies);
+
+  // Preview PDF in new tab
+  const handlePreviewPDF = async () => {
+    const { blob } = await exportSubsidiesToPDF(subsidies, {
+      download: false,
+      profile,
+    });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+  };
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
@@ -318,34 +329,49 @@ export function EmailComposerModal({
           </div>
 
           {/* PDF Attachment Toggle */}
-          <button
-            type="button"
-            onClick={() => setAttachPDF(!attachPDF)}
-            className={`flex items-center justify-between w-full p-3 rounded-lg border transition-colors ${
-              attachPDF
-                ? 'bg-blue-50 border-blue-200'
-                : 'bg-slate-50 border-slate-200'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <FileText className={`h-5 w-5 ${attachPDF ? 'text-blue-600' : 'text-slate-400'}`} />
-              <div className="text-left">
-                <p className="font-medium text-sm">Joindre le rapport PDF</p>
-                <p className="text-xs text-slate-500">
-                  Rapport detaille avec toutes les aides selectionnees
-                </p>
-              </div>
-            </div>
-            <div
-              className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
-                attachPDF
-                  ? 'bg-blue-600 border-blue-600'
-                  : 'bg-white border-slate-300'
-              }`}
+          <div className={`rounded-lg border transition-colors ${
+            attachPDF
+              ? 'bg-blue-50 border-blue-200'
+              : 'bg-slate-50 border-slate-200'
+          }`}>
+            <button
+              type="button"
+              onClick={() => setAttachPDF(!attachPDF)}
+              className="flex items-center justify-between w-full p-3"
             >
-              {attachPDF && <Check className="h-3 w-3 text-white" />}
+              <div className="flex items-center gap-3">
+                <FileText className={`h-5 w-5 ${attachPDF ? 'text-blue-600' : 'text-slate-400'}`} />
+                <div className="text-left">
+                  <p className="font-medium text-sm">Joindre le rapport PDF</p>
+                  <p className="text-xs text-slate-500">
+                    Rapport detaille avec toutes les aides selectionnees
+                  </p>
+                </div>
+              </div>
+              <div
+                className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+                  attachPDF
+                    ? 'bg-blue-600 border-blue-600'
+                    : 'bg-white border-slate-300'
+                }`}
+              >
+                {attachPDF && <Check className="h-3 w-3 text-white" />}
+              </div>
+            </button>
+            {/* Preview PDF button */}
+            <div className="px-3 pb-3">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handlePreviewPDF}
+                className="w-full"
+              >
+                <Eye className="h-4 w-4 mr-2" />
+                Voir le rapport PDF
+              </Button>
             </div>
-          </button>
+          </div>
 
           {/* Error */}
           {error && (

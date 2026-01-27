@@ -218,12 +218,14 @@ export function SearchPage() {
     value,
     options,
     onChange,
+    columns = 1,
   }: {
     icon: React.ElementType;
     label: string;
     value: string;
     options: { value: string; label: string }[];
     onChange: (value: string) => void;
+    columns?: number;
   }) => {
     const selectedLabel = options.find(o => o.value === value)?.label;
     const displayLabel = value ? selectedLabel : label;
@@ -244,8 +246,8 @@ export function SearchPage() {
             <ChevronDown className="h-3.5 w-3.5 opacity-50" />
           </button>
         </PopoverTrigger>
-        <PopoverContent className="w-56 p-2" align="start">
-          <div className="space-y-1">
+        <PopoverContent className={columns > 1 ? "w-[420px] p-2" : "w-56 p-2"} align="start">
+          <div className={columns > 1 ? "grid grid-cols-2 gap-1" : "space-y-1"}>
             {options.map((option) => (
               <button
                 key={option.value}
@@ -320,6 +322,7 @@ export function SearchPage() {
             ...FRENCH_REGIONS.map(r => ({ value: r, label: r })),
           ]}
           onChange={setSelectedRegion}
+          columns={2}
         />
 
         <FilterChip
@@ -331,6 +334,7 @@ export function SearchPage() {
             ...[...BUSINESS_SECTORS].sort((a, b) => a.label.localeCompare(b.label, 'fr')).map(s => ({ value: s.value, label: s.label })),
           ]}
           onChange={setSelectedSector}
+          columns={2}
         />
 
         <FilterChip

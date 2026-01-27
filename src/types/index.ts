@@ -64,6 +64,7 @@ export interface MaSubventionProProfile {
   company_category: string | null;
   website_url: string | null;
   website_intelligence: WebsiteIntelligenceData | null;
+  logo_url: string | null;
   description: string | null;
   certifications: string[];
   project_types: string[];
@@ -73,6 +74,16 @@ export interface MaSubventionProProfile {
   nombre_etablissements: number | null;    // Total number of establishments
   nombre_etablissements_ouverts: number | null;  // Number of active establishments
   capital_social: number | null;           // Capital social in euros (from INPI/RNE)
+  // Association-specific fields
+  is_association: boolean | null;          // True if legal_form is ASSO, COOP, or FONDATION
+  association_type: string | null;         // Type of association (loi_1901, rup, etc.)
+  association_purpose: string | null;      // Mission/purpose of the association
+  member_count: number | null;             // Number of members (for associations)
+  volunteer_count: number | null;          // Number of volunteers (for associations)
+  budget_annual: number | null;            // Annual budget (used instead of turnover for associations)
+  rup_date: string | null;                 // Date of RUP recognition (if applicable)
+  agrement_esus: boolean | null;           // ESUS (Entreprise Solidaire d'Utilité Sociale) certification
+  rna_number: string | null;               // RNA number (W + 9 digits) for associations
   created_at: string;
   updated_at: string;
 }
@@ -124,6 +135,40 @@ export interface Subsidy {
   is_active: boolean | null;
   created_at: string | null;
   updated_at: string | null;
+  // Link validation fields
+  link_status?: 'unknown' | 'valid' | 'invalid' | 'reported' | null;
+  link_last_checked?: string | null;
+  link_error?: string | null;
+  link_report_count?: number | null;
+  // Logo from funding agency
+  logo_url?: string | null;
+  // Eligibility & beneficiary fields
+  aid_conditions?: string | null;
+  aid_benef?: string | null;
+  decoded_profils?: Array<{ code: string; label: string }> | null;
+  effectif?: string | null;
+  age_entreprise?: string | null;
+  jeunes?: boolean | null;
+  femmes?: boolean | null;
+  seniors?: boolean | null;
+  handicapes?: boolean | null;
+  // Budget & funding details
+  aid_montant?: string | null;
+  decoded_natures?: Array<{ code: string; label: string }> | null;
+  // Additional details
+  aid_objet?: string | null;
+  aid_operations_el?: string | null;
+  aid_validation?: string | null;
+  duree_projet?: string | null;
+  decoded_projets?: Array<{ code: string; label: string }> | null;
+  decoded_financeurs?: Array<{ code: string; label: string }> | null;
+  contacts?: Array<{ nom?: string; email?: string; telephone?: string }> | null;
+  complements_sources?: string | null;
+  complements_formulaires?: string | null;
+  // Entity type eligibility (computed from aid_benef, decoded_profils)
+  eligible_entity_types?: string[] | null;  // ['entreprise', 'association', 'collectivite', etc.]
+  association_eligible?: boolean | null;    // Explicitly eligible for associations
+  company_only?: boolean | null;            // Only for companies (excludes associations)
 }
 
 export interface User {
@@ -189,7 +234,32 @@ export const LEGAL_FORMS = [
   { value: 'EI', label: 'Entreprise Individuelle' },
   { value: 'MICRO', label: 'Micro-entreprise' },
   { value: 'ASSO', label: 'Association' },
+  { value: 'COOP', label: 'Coopérative' },
+  { value: 'FONDATION', label: 'Fondation' },
   { value: 'OTHER', label: 'Autre' },
+] as const;
+
+// Entity types for eligibility matching
+export const ENTITY_TYPES = [
+  { value: 'entreprise', label: 'Entreprise', keywords: ['entreprise', 'société', 'pme', 'tpe', 'eti', 'startup'] },
+  { value: 'association', label: 'Association', keywords: ['association', 'asso', 'organisme à but non lucratif', 'loi 1901'] },
+  { value: 'collectivite', label: 'Collectivité', keywords: ['collectivité', 'commune', 'mairie', 'département', 'région', 'epci'] },
+  { value: 'etablissement_public', label: 'Établissement public', keywords: ['établissement public', 'epic', 'epa'] },
+  { value: 'particulier', label: 'Particulier', keywords: ['particulier', 'individuel', 'personne physique'] },
+] as const;
+
+// Association types (for associations only)
+export const ASSOCIATION_TYPES = [
+  { value: 'loi_1901', label: 'Association loi 1901' },
+  { value: 'rup', label: 'Association reconnue d\'utilité publique' },
+  { value: 'rig', label: 'Association d\'intérêt général' },
+  { value: 'culturelle', label: 'Association culturelle' },
+  { value: 'sportive', label: 'Association sportive' },
+  { value: 'educative', label: 'Association éducative' },
+  { value: 'sociale', label: 'Association sociale / humanitaire' },
+  { value: 'environnementale', label: 'Association environnementale' },
+  { value: 'professionnelle', label: 'Association professionnelle' },
+  { value: 'other', label: 'Autre type d\'association' },
 ] as const;
 
 // Funding types
@@ -242,6 +312,20 @@ export const DOCUMENT_CATEGORIES = [
   { value: 'business', label: 'Document commercial' },
   { value: 'other', label: 'Autre' },
 ] as const;
+
+// Helper to check if a legal form is an association-type entity
+export function isAssociationType(legalForm: string | null): boolean {
+  if (!legalForm) return false;
+  const associationForms = ['ASSO', 'COOP', 'FONDATION'];
+  return associationForms.includes(legalForm.toUpperCase());
+}
+
+// Helper to get entity type from legal form
+export function getEntityTypeFromLegalForm(legalForm: string | null): 'association' | 'entreprise' | null {
+  if (!legalForm) return null;
+  if (isAssociationType(legalForm)) return 'association';
+  return 'entreprise';
+}
 
 // Helper to extract French title from multilingual field
 export function getSubsidyTitle(subsidy: Subsidy): string {

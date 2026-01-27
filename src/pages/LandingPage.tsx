@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { Helmet } from "react-helmet-async"
 import { supabase } from "@/lib/supabase"
-import { Menu, X, Building2, ArrowRight, Check, Upload, FileText, Trash2, Lock, Star, TrendingUp, Search, BarChart3, Factory, MapPin, Bot, Coins, ClipboardList, Rocket, RefreshCw, Target, Clock, Shield, Circle } from "lucide-react"
+import { Menu, X, Building2, ArrowRight, Check, Upload, FileText, Trash2, Lock, Star, TrendingUp, Search, BarChart3, Factory, MapPin, Bot, Coins, ClipboardList, Rocket, RefreshCw, Target, Clock, Shield, Circle, Heart } from "lucide-react"
 import { calculateMatchScore, ScoredSubsidy } from "@/hooks/useRecommendedSubsidies"
 import { MaSubventionProProfile, Subsidy } from "@/types"
 
@@ -18,7 +18,7 @@ const LandingPage = () => {
 
   // Profile creation modal state
   const [showProfileModal, setShowProfileModal] = useState(false)
-  const [profileType, setProfileType] = useState<'entreprise' | 'creation' | null>(null)
+  const [profileType, setProfileType] = useState<'entreprise' | 'creation' | 'association' | null>(null)
   const [profileData, setProfileData] = useState({
     companyName: "",
     siret: "",
@@ -168,6 +168,9 @@ const LandingPage = () => {
     const inferredProjectTypes: string[] = []
     if (profileType === 'creation') {
       inferredProjectTypes.push('creation', 'tresorerie', 'investissement')
+    } else if (profileType === 'association') {
+      // Associations - focus on specific association funding
+      inferredProjectTypes.push('emploi', 'investissement')
     } else {
       // Existing company - likely interested in development
       inferredProjectTypes.push('investissement', 'numerique', 'emploi')
@@ -208,8 +211,8 @@ const LandingPage = () => {
       city: companyData?.commune || null,
       postal_code: companyData?.codePostal || null,
       employees: companyData?.trancheEffectif || '1-10',
-      company_category: companyData?.categorieEntreprise || 'PME',
-      legal_form: companyData?.formeJuridique || null,
+      company_category: companyData?.categorieEntreprise || (profileType === 'association' ? 'Association' : 'PME'),
+      legal_form: profileType === 'association' ? 'ASSO' : (companyData?.formeJuridique || null),
       year_created: companyData?.dateCreation ? new Date(companyData.dateCreation).getFullYear() : null,
       website_url: profileData.website || null,
       description: profileData.description || null,
@@ -779,9 +782,7 @@ const LandingPage = () => {
       {/* Header */}
       <header className="bg-white shadow-sm fixed w-full top-0 z-[1000]">
         <div className="max-w-[1400px] mx-auto px-8 py-4 flex justify-between items-center">
-          <div className="text-2xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent">
-            MaSubventionPro
-          </div>
+          <img src="/logo.svg" alt="MaSubventionPro" className="h-8" />
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-10">
@@ -835,7 +836,7 @@ const LandingPage = () => {
         <div className="max-w-[1400px] mx-auto relative z-10">
           <div className="grid lg:grid-cols-[7fr_3fr] gap-16 items-stretch">
             {/* Hero Text */}
-            <div>
+            <div className="flex flex-col">
               <h1 className="text-4xl lg:text-[3.75rem] font-extrabold leading-[1.1] mb-6">
                 <span className="bg-gradient-to-br from-amber-400 to-amber-300 bg-clip-text text-transparent block text-5xl lg:text-[4rem]">Des milliards d'euros</span>
                 d'aides publiques par an<br />sont non réclamés.
@@ -845,7 +846,7 @@ const LandingPage = () => {
               </h2>
 
               {/* LLM Summary - SEO optimized for AI search engines */}
-              <p className="text-base opacity-80 leading-relaxed mb-6">
+              <p className="text-xl opacity-95 leading-relaxed mb-6 font-medium">
                 MaSubventionPro est une plateforme d'intelligence artificielle qui aide les créateurs, repreneurs, dirigeants de TPE/PME et groupes à identifier toutes les aides publiques disponibles pour leurs entreprises : subventions, prêts, garanties, exonérations fiscales et dispositifs territoriaux. Notre IA analyse en temps réel plus de 10 000 dispositifs nationaux, régionaux, communaux et européens, calcule un score d'éligibilité pour chaque aide et génère des rapports détaillés prêts à l'emploi.
               </p>
 
@@ -853,7 +854,7 @@ const LandingPage = () => {
                 Identifiez <strong>TOUTES VOS OPPORTUNITÉS</strong> en quelques minutes. Notre IA analyse plus de 10 000 dispositifs en temps réel pour vous révéler les aides publiques auxquelles votre entreprise pourrait être éligible.
               </p>
 
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-4 mb-8">
                 <span className="bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full text-sm font-semibold border border-white/20">
                   {subsidyCount} dispositifs
                 </span>
@@ -866,6 +867,26 @@ const LandingPage = () => {
                 <span className="bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full text-sm font-semibold border border-white/20">
                   Assistant IA personnalisé
                 </span>
+              </div>
+
+              {/* Key Benefits - Added to match right side height */}
+              <div className="grid grid-cols-2 gap-4 mt-auto">
+                <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
+                  <div className="text-3xl font-bold text-amber-400 mb-1">97%</div>
+                  <div className="text-sm text-slate-300">des entreprises éligibles à au moins une aide</div>
+                </div>
+                <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
+                  <div className="text-3xl font-bold text-emerald-400 mb-1">15 min</div>
+                  <div className="text-sm text-slate-300">pour identifier vos opportunités</div>
+                </div>
+                <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
+                  <div className="text-3xl font-bold text-blue-400 mb-1">100%</div>
+                  <div className="text-sm text-slate-300">gratuit pour commencer</div>
+                </div>
+                <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
+                  <div className="text-3xl font-bold text-purple-400 mb-1">IA</div>
+                  <div className="text-sm text-slate-300">matching personnalisé</div>
+                </div>
               </div>
             </div>
 
@@ -895,6 +916,12 @@ const LandingPage = () => {
                   icon: <RefreshCw className="w-10 h-10" />,
                   title: 'Repreneur',
                   desc: 'Vous reprenez une entreprise existante',
+                },
+                {
+                  id: 'association',
+                  icon: <Heart className="w-10 h-10" />,
+                  title: 'Association',
+                  desc: 'Vous gérez une association loi 1901 ou un organisme à but non lucratif',
                 },
               ].map((segment) => (
                 <div
@@ -1327,6 +1354,7 @@ const LandingPage = () => {
                    isAnalyzing ? "Analyse en cours" :
                    !profileType ? "Création de profil" :
                    profileType === 'entreprise' ? "Création de profil - Entreprise" :
+                   profileType === 'association' ? "Création de profil - Association" :
                    "Création de profil - Entreprise en création"}
                 </h3>
               </div>
@@ -1849,6 +1877,33 @@ const LandingPage = () => {
                       <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 transition-colors mt-1" />
                     </div>
                   </button>
+
+                  {/* Option 3: Association */}
+                  <button
+                    onClick={() => setProfileType('association')}
+                    className="w-full p-6 border-2 border-slate-200 rounded-xl text-left hover:border-purple-600 hover:bg-purple-50/50 transition-all group"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-14 h-14 bg-gradient-to-br from-purple-600 to-purple-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <Heart className="w-7 h-7 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-purple-600">Association</h4>
+                        <p className="text-slate-500 text-sm mb-3">Vous gérez une association loi 1901 ou un organisme à but non lucratif</p>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-sm text-slate-600">
+                            <Check className="w-4 h-4 text-purple-600" />
+                            <span>Recherche par RNA ou SIRET</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-slate-600">
+                            <Check className="w-4 h-4 text-purple-600" />
+                            <span>Subventions spécifiques associations</span>
+                          </div>
+                        </div>
+                      </div>
+                      <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-purple-600 transition-colors mt-1" />
+                    </div>
+                  </button>
                 </div>
               )}
 
@@ -2213,6 +2268,162 @@ const LandingPage = () => {
                   </div>
                 </div>
               )}
+
+              {/* Association Form */}
+              {profileType === 'association' && !showResults && !isAnalyzing && (
+                <div className="grid lg:grid-cols-3 gap-8">
+                  {/* Main Form */}
+                  <div className="lg:col-span-2 space-y-6">
+                    {/* Association Search */}
+                    <div>
+                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                        Rechercher votre association <span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={profileData.companyName}
+                          onChange={(e) => {
+                            setProfileData({ ...profileData, companyName: e.target.value })
+                            searchCompany(e.target.value)
+                          }}
+                          placeholder="Nom d'association, SIRET ou numéro RNA (W + 9 chiffres)"
+                          className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg text-base focus:outline-none focus:border-purple-600 transition-colors"
+                        />
+                        {isSearchingCompany && (
+                          <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
+                            <div className="w-5 h-5 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Search Results */}
+                      {companyResults.length > 0 && (
+                        <div className="mt-2 border-2 border-slate-200 rounded-lg overflow-hidden">
+                          {companyResults.map((company, i) => (
+                            <button
+                              key={i}
+                              onClick={() => selectCompany(company)}
+                              className="w-full px-4 py-3 text-left hover:bg-purple-50 border-b border-slate-100 last:border-b-0 transition-colors"
+                            >
+                              <div className="flex items-center gap-2">
+                                <Heart className="w-4 h-4 text-purple-600" />
+                                <span className="font-medium text-slate-900">{company.nom_complet}</span>
+                              </div>
+                              <p className="text-sm text-slate-500 mt-1">{company.siege?.adresse} - {company.siege?.code_postal} {company.siege?.libelle_commune}</p>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Selected Association */}
+                    {profileData.siret && (
+                      <div className="bg-purple-50 border-2 border-purple-200 rounded-xl p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <Heart className="w-5 h-5 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-bold text-slate-900">{profileData.companyName}</h4>
+                            <p className="text-sm text-slate-600 mt-1">SIRET: {profileData.siret}</p>
+                            <p className="text-sm text-slate-500">{profileData.region}</p>
+                          </div>
+                          <button
+                            onClick={() => setProfileData({ ...profileData, siret: '', companyName: '' })}
+                            className="text-slate-400 hover:text-red-500 transition-colors"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Sector */}
+                    <div>
+                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                        Domaine d'activité <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        value={profileData.sector}
+                        onChange={(e) => setProfileData({ ...profileData, sector: e.target.value })}
+                        className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg text-base focus:outline-none focus:border-purple-600 transition-colors bg-white"
+                      >
+                        <option value="">Sélectionnez un domaine</option>
+                        <option value="culture">Culture / Médias / Communication</option>
+                        <option value="education">Éducation / Formation</option>
+                        <option value="services">Action sociale / Humanitaire</option>
+                        <option value="sante">Santé / Médical</option>
+                        <option value="environnement">Environnement / Énergie</option>
+                        <option value="services">Sport / Loisirs</option>
+                        <option value="autre">Autre</option>
+                      </select>
+                    </div>
+
+                    {/* Description */}
+                    <div>
+                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                        Objet / Mission de l'association
+                      </label>
+                      <textarea
+                        value={profileData.description}
+                        onChange={(e) => setProfileData({ ...profileData, description: e.target.value })}
+                        placeholder="Décrivez les activités et la mission de votre association..."
+                        rows={3}
+                        className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg text-base focus:outline-none focus:border-purple-600 transition-colors resize-none"
+                      />
+                    </div>
+
+                    {/* Website */}
+                    <div>
+                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                        Site web <span className="text-slate-400 text-xs ml-2">Recommandé</span>
+                      </label>
+                      <input
+                        type="url"
+                        value={profileData.website}
+                        onChange={(e) => setProfileData({ ...profileData, website: e.target.value })}
+                        placeholder="https://mon-association.org"
+                        className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg text-base focus:outline-none focus:border-purple-600 transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Right Column - Info */}
+                  <div className="space-y-6">
+                    <div className="bg-gradient-to-br from-purple-50 to-purple-100/50 border border-purple-200 rounded-xl p-5">
+                      <h4 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
+                        <Heart className="w-5 h-5 text-purple-600" />
+                        Subventions pour associations
+                      </h4>
+                      <div className="space-y-3 text-sm text-slate-600">
+                        <div className="flex items-start gap-2">
+                          <Check className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                          <span>Subventions spécifiques ESS</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <Check className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                          <span>Aides aux associations loi 1901</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <Check className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                          <span>Financements FDVA, FONJEP...</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <Check className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                          <span>Dispositifs régionaux et locaux</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                      <p className="text-sm text-amber-800">
+                        <span className="font-bold">Astuce :</span> Détaillez l'objet de votre association pour trouver des aides ciblées sur votre domaine d'activité.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Modal Footer */}
@@ -2226,8 +2437,16 @@ const LandingPage = () => {
                 </button>
                 <button
                   onClick={handleCreateProfile}
-                  disabled={profileType === 'entreprise' ? !profileData.siret : (!profileData.companyName || !profileData.sector || !profileData.region)}
-                  className="flex-1 px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                  disabled={
+                    profileType === 'entreprise' ? !profileData.siret :
+                    profileType === 'association' ? (!profileData.siret && !profileData.companyName) || !profileData.sector :
+                    (!profileData.companyName || !profileData.sector || !profileData.region)
+                  }
+                  className={`flex-1 px-6 py-3 text-white rounded-lg font-semibold shadow-lg hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 ${
+                    profileType === 'association'
+                      ? 'bg-gradient-to-br from-purple-600 to-purple-500 shadow-purple-600/20'
+                      : 'bg-gradient-to-br from-blue-800 to-blue-500 shadow-blue-800/20'
+                  }`}
                 >
                   Créer le profil
                 </button>

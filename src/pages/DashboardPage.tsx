@@ -17,11 +17,9 @@ import {
   AlertCircle,
   AlertTriangle,
   Loader2,
-  TrendingUp,
   Clock,
   Sparkles,
   Star,
-  Send,
   Trophy,
   Euro,
   Bell,
@@ -81,90 +79,6 @@ export function DashboardPage() {
       return daysUntil > 0 && daysUntil <= 30 && s.status !== 'received' && s.status !== 'rejected';
     })
     .sort((a, b) => new Date(a.subsidy!.deadline!).getTime() - new Date(b.subsidy!.deadline!).getTime());
-
-  // Dynamic tips based on user context
-  const getDynamicTip = () => {
-    // Priority 1: No profile - encourage completion
-    if (!hasProfile) {
-      return {
-        icon: Building2,
-        title: 'Complétez votre profil',
-        message: 'Pour recevoir des recommandations d\'aides personnalisées et pertinentes, complétez les informations de votre entreprise.',
-        actionText: 'Compléter mon profil',
-        actionLink: '/app/profile/setup',
-      };
-    }
-
-    // Priority 2: Upcoming deadlines
-    if (upcomingDeadlines.length > 0) {
-      const nextDeadline = upcomingDeadlines[0];
-      const deadline = new Date(nextDeadline.subsidy!.deadline!);
-      const daysUntil = Math.ceil((deadline.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
-      const subsidyTitle = nextDeadline.subsidy ? getSubsidyTitle(nextDeadline.subsidy) : 'Aide';
-      return {
-        icon: Clock,
-        title: `Deadline dans ${daysUntil} jour${daysUntil > 1 ? 's' : ''}`,
-        message: `Votre aide "${subsidyTitle.substring(0, 50)}${subsidyTitle.length > 50 ? '...' : ''}" arrive à échéance bientôt. N'oubliez pas de soumettre votre candidature.`,
-        actionText: 'Voir les détails',
-        actionLink: `/app/subsidy/${nextDeadline.subsidy_id}`,
-      };
-    }
-
-    // Priority 3: No saved subsidies - encourage exploration
-    if (savedSubsidies.length === 0) {
-      return {
-        icon: Search,
-        title: 'Explorez les aides disponibles',
-        message: 'Commencez par rechercher des aides adaptées à votre entreprise et sauvegardez celles qui vous intéressent.',
-        actionText: 'Rechercher des aides',
-        actionLink: '/app/search',
-      };
-    }
-
-    // Priority 4: Saved but no applications
-    if (stats.applied === 0 && stats.saved > 0) {
-      return {
-        icon: Send,
-        title: 'Passez à l\'action',
-        message: `Vous avez ${stats.saved} aide${stats.saved > 1 ? 's' : ''} sauvegardée${stats.saved > 1 ? 's' : ''}. Mettez à jour leur statut quand vous soumettez vos candidatures.`,
-        actionText: 'Voir mes aides',
-        actionLink: '/app/saved',
-      };
-    }
-
-    // Priority 5: Applications in progress
-    if (stats.applied > 0 && stats.received === 0) {
-      return {
-        icon: TrendingUp,
-        title: 'Candidatures en cours',
-        message: `Vous avez ${stats.applied} candidature${stats.applied > 1 ? 's' : ''} en cours. Pensez à suivre leur avancement et mettre à jour leur statut.`,
-        actionText: 'Suivre mes candidatures',
-        actionLink: '/app/saved?status=applied',
-      };
-    }
-
-    // Priority 6: Success - celebrate and encourage more
-    if (stats.received > 0) {
-      return {
-        icon: Trophy,
-        title: 'Félicitations pour vos succès !',
-        message: `Vous avez obtenu ${stats.received} aide${stats.received > 1 ? 's' : ''}${stats.fundingWon > 0 ? ` pour un total de ${formatCurrency(stats.fundingWon)}` : ''}. Continuez à explorer de nouvelles opportunités.`,
-        actionText: 'Trouver plus d\'aides',
-        actionLink: '/app/search',
-      };
-    }
-
-    // Default tip
-    return {
-      icon: TrendingUp,
-      title: 'Conseil du jour',
-      message: 'Complétez votre profil avec le maximum d\'informations pour recevoir des recommandations d\'aides plus pertinentes.',
-      actionText: 'Voir mon profil',
-      actionLink: '/app/profile',
-    };
-  };
-
-  const dynamicTip = getDynamicTip();
 
   // Calculate profile completion percentage (same logic as ProfilePage)
   const calculateProfileComplétion = () => {
@@ -555,26 +469,6 @@ export function DashboardPage() {
         )}
       </div>
 
-      {/* Dynamic Tips */}
-      <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-        <div className="flex items-start gap-4">
-          <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-lg flex-shrink-0">
-            <dynamicTip.icon className="h-5 w-5 text-blue-600" />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-semibold text-slate-900">{dynamicTip.title}</h3>
-            <p className="text-slate-600 text-sm mt-1">
-              {dynamicTip.message}
-            </p>
-            <Link to={dynamicTip.actionLink}>
-              <Button variant="outline" size="sm" className="mt-3">
-                {dynamicTip.actionText}
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

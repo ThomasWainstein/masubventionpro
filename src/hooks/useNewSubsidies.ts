@@ -33,11 +33,14 @@ export function useNewSubsidies() {
 
       setLoading(true);
       try {
+        // Filter out expired subsidies (deadline in the past)
+        const today = new Date().toISOString().split('T')[0];
         const { count, error } = await supabase
           .from('subsidies')
           .select('id', { count: 'exact', head: true })
           .eq('is_active', true)
-          .gt('created_at', lastViewed);
+          .gt('created_at', lastViewed)
+          .or(`deadline.is.null,deadline.gte.${today}`);
 
         if (error) {
           console.error('Error fetching new subsidies count:', error);

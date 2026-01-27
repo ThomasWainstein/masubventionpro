@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Subsidy, getSubsidyTitle } from '@/types';
 import { MapPin, Building, Bookmark, BookmarkCheck } from 'lucide-react';
 
@@ -13,7 +13,12 @@ export function SubsidyGridCard({
   isSaved = false,
   onToggleSave,
 }: SubsidyGridCardProps) {
+  const navigate = useNavigate();
   const title = getSubsidyTitle(subsidy);
+
+  const handleCardClick = () => {
+    navigate(`/app/subsidy/${subsidy.id}`);
+  };
 
   // Format amount display
   const formatAmount = (amount: number | null) => {
@@ -56,13 +61,16 @@ export function SubsidyGridCard({
   };
 
   return (
-    <div className="bg-white rounded-lg border border-slate-200 p-4 hover:shadow-lg hover:border-slate-300 transition-all h-full flex flex-col">
+    <div
+      onClick={handleCardClick}
+      className="bg-white rounded-lg border border-slate-200 p-4 hover:shadow-lg hover:border-slate-300 transition-all h-full flex flex-col cursor-pointer group"
+    >
       {/* Save Button - Positioned top right */}
       {onToggleSave && (
         <div className="flex justify-end -mt-1 -mr-1 mb-2">
           <button
             onClick={(e) => {
-              e.preventDefault();
+              e.stopPropagation();
               onToggleSave(subsidy.id);
             }}
             className={`p-1.5 rounded-full transition-colors ${
@@ -81,11 +89,11 @@ export function SubsidyGridCard({
       )}
 
       {/* Title */}
-      <Link to={`/app/subsidy/${subsidy.id}`} className="block group flex-1">
+      <div className="flex-1">
         <h3 className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2 text-sm leading-snug mb-3">
           {title}
         </h3>
-      </Link>
+      </div>
 
       {/* Amount */}
       <p className="text-base font-semibold text-slate-900 mb-3">

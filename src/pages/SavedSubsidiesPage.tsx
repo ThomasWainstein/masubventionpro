@@ -229,26 +229,38 @@ export function SavedSubsidiesPage() {
     });
   };
 
+  // Get unsaved recommendations (not in saved list)
+  const unsavedRecommendations = useMemo(() => {
+    return recommendations.filter((rec) => !savedSubsidies.some((s) => s.subsidy_id === rec.id));
+  }, [recommendations, savedSubsidies]);
+
+  // Total count of all selectable items (saved + unsaved recommendations)
+  const totalSelectableCount = filteredSubsidies.length + (hasProfile ? unsavedRecommendations.slice(0, 12).length : 0);
+
   const handleSelectAll = () => {
-    const allIds = filteredSubsidies.map((s) => s.subsidy_id);
-    setSelectedSubsidies(new Set(allIds));
+    const savedIds = filteredSubsidies.map((s) => s.subsidy_id);
+    const recommendedIds = hasProfile ? unsavedRecommendations.slice(0, 12).map((s) => s.id) : [];
+    setSelectedSubsidies(new Set([...savedIds, ...recommendedIds]));
   };
 
   const handleDeselectAll = () => {
     setSelectedSubsidies(new Set());
   };
 
-  const handleExportPDF = () => {
-    // Get selected subsidies data
-    const selectedData = filteredSubsidies
+  const handleExportPDF = async () => {
+    // Get selected subsidies data from both saved and recommendations
+    const fromSaved = filteredSubsidies
       .filter((s) => selectedSubsidies.has(s.subsidy_id))
       .map((s) => s.subsidy!)
       .filter(Boolean);
+    const fromRecommended = unsavedRecommendations
+      .filter((s) => selectedSubsidies.has(s.id));
+    const selectedData = [...fromSaved, ...fromRecommended];
 
     if (selectedData.length === 0) return;
 
-    // Export PDF with profile context
-    exportSubsidiesToPDF(selectedData, {
+    // Export PDF with profile context (with logos)
+    await exportSubsidiesToPDF(selectedData, {
       download: true,
       profile: hasProfile ? profile : null,
     });
@@ -267,13 +279,16 @@ export function SavedSubsidiesPage() {
     setShowEmailModal(true);
   };
 
-  // Get selected subsidies for email modal
+  // Get selected subsidies for email modal (from both saved and recommendations)
   const selectedSubsidiesData = useMemo(() => {
-    return filteredSubsidies
+    const fromSaved = filteredSubsidies
       .filter((s) => selectedSubsidies.has(s.subsidy_id))
       .map((s) => s.subsidy!)
       .filter(Boolean);
-  }, [filteredSubsidies, selectedSubsidies]);
+    const fromRecommended = unsavedRecommendations
+      .filter((s) => selectedSubsidies.has(s.id));
+    return [...fromSaved, ...fromRecommended];
+  }, [filteredSubsidies, unsavedRecommendations, selectedSubsidies]);
 
   return (
     <div className="space-y-6">
@@ -300,7 +315,7 @@ export function SavedSubsidiesPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {savedSubsidies.length > 0 && !isSelectionMode && (
+          {(savedSubsidies.length > 0 || (hasProfile && recommendations.length > 0)) && !isSelectionMode && (
             <Button variant="outline" onClick={handleEnterSelectionMode}>
               <Send className="mr-2 h-4 w-4" />
               Transmettre
@@ -715,17 +730,19 @@ export function SavedSubsidiesPage() {
             </div>
           ) : (
             <div className="space-y-3">
-              {recommendations
-                .filter((rec) => !savedSubsidies.some((s) => s.subsidy_id === rec.id))
+              {unsavedRecommendations
                 .slice(0, 12)
                 .map((subsidy) => (
                   <SubsidyCard
                     key={subsidy.id}
                     subsidy={subsidy}
                     isSaved={isSaved(subsidy.id)}
-                    onToggleSave={toggleSave}
+                    onToggleSave={isSelectionMode ? undefined : toggleSave}
                     matchScore={subsidy.matchScore}
                     matchReasons={subsidy.matchReasons}
+                    isSelectionMode={isSelectionMode}
+                    isSelected={selectedSubsidies.has(subsidy.id)}
+                    onSelect={handleToggleSelection}
                   />
                 ))}
             </div>
@@ -737,7 +754,7 @@ export function SavedSubsidiesPage() {
       {isSelectionMode && (
         <SelectionToolbar
           selectedCount={selectedSubsidies.size}
-          totalCount={filteredSubsidies.length}
+          totalCount={totalSelectableCount}
           onSelectAll={handleSelectAll}
           onDeselectAll={handleDeselectAll}
           onExportPDF={handleExportPDF}

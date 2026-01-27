@@ -223,10 +223,15 @@ export function useStreamingAI(): UseStreamingAIReturn {
   // Internal function to actually send the message (after PII check passed)
   const doSendMessage = useCallback(
     async (content: string, profileId: string, profile?: MaSubventionProProfile | null) => {
-      if (!user || !content.trim()) return;
+      console.log('[doSendMessage] Starting...');
+      if (!user || !content.trim()) {
+        console.warn('[doSendMessage] Early return: no user or empty content');
+        return;
+      }
 
       // Determine business tier from profile
       const userTier = determineBusinessTier(profile || null);
+      console.log('[doSendMessage] User tier:', userTier);
 
       // Cancel any ongoing stream
       if (abortControllerRef.current) {
@@ -258,13 +263,17 @@ export function useStreamingAI(): UseStreamingAIReturn {
 
       try {
         // Refresh session to get fresh token
+        console.log('[doSendMessage] Refreshing session...');
         const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
         let session = refreshData?.session;
+        console.log('[doSendMessage] Refresh result:', { hasSession: !!session, error: refreshError?.message });
 
         // Fallback to getSession if refresh fails
         if (refreshError || !session) {
+          console.log('[doSendMessage] Using getSession fallback...');
           const { data: sessionData } = await supabase.auth.getSession();
           session = sessionData?.session;
+          console.log('[doSendMessage] getSession result:', { hasSession: !!session });
         }
 
         if (!session?.access_token) {
@@ -279,6 +288,7 @@ export function useStreamingAI(): UseStreamingAIReturn {
 
         abortControllerRef.current = new AbortController();
 
+        console.log('[doSendMessage] Calling Edge Function...', { url: EDGE_FUNCTION_URL, profileId });
         const response = await fetch(EDGE_FUNCTION_URL, {
           method: 'POST',
           headers: {
@@ -293,13 +303,21 @@ export function useStreamingAI(): UseStreamingAIReturn {
             conversationHistory,
             sessionId: null,
             userTier, // Dynamic tier based on profile: startup, tpe, pme, eti, ge, association
+            profileSource: 'masubventionpro', // Tell Edge Function which table to query
           }),
           signal: abortControllerRef.current.signal,
         });
 
+        console.log('[doSendMessage] Edge Function response received:', {
+          status: response.status,
+          ok: response.ok,
+          statusText: response.statusText,
+          headers: Object.fromEntries(response.headers.entries())
+        });
+
         if (!response.ok) {
           const errorText = await response.text();
-          console.error('Stream error response:', errorText);
+          console.error('[doSendMessage] Stream error response:', errorText);
           throw new Error(`Erreur du service: ${response.status}`);
         }
 
@@ -308,11 +326,15 @@ export function useStreamingAI(): UseStreamingAIReturn {
           throw new Error('Impossible de lire la reponse');
         }
 
+        console.log('[doSendMessage] Stream reader obtained, starting to read...');
         const decoder = new TextDecoder();
         let accumulatedContent = '';
+        let chunkCount = 0;
 
         while (true) {
           const { done, value } = await reader.read();
+          chunkCount++;
+          console.log(`[doSendMessage] Chunk ${chunkCount}:`, { done, valueLength: value?.length });
           if (done) break;
 
           const chunk = decoder.decode(value, { stream: true });
@@ -327,8 +349,15 @@ export function useStreamingAI(): UseStreamingAIReturn {
               try {
                 const parsed = JSON.parse(data);
 
+                if (chunkCount <= 3) {
+                  console.log(`[doSendMessage] Parsed data:`, { type: parsed.type, hasContent: !!parsed.content });
+                }
+
                 if (parsed.type === 'content') {
                   accumulatedContent += parsed.content;
+                  if (chunkCount <= 3) {
+                    console.log(`[doSendMessage] Content accumulated, length:`, accumulatedContent.length);
+                  }
                   updateLastMessage(accumulatedContent, true);
                 } else if (parsed.type === 'done') {
                   // Extract intelligence data
@@ -350,18 +379,27 @@ export function useStreamingAI(): UseStreamingAIReturn {
                     success: true,
                   });
                 }
-              } catch {
-                // Skip invalid JSON
+              } catch (parseErr) {
+                // Log parsing errors for debugging
+                if (chunkCount <= 3) {
+                  console.warn(`[doSendMessage] JSON parse error:`, parseErr, 'data:', data.substring(0, 100));
+                }
               }
             }
           }
         }
       } catch (err: any) {
         if (err.name === 'AbortError') {
+          console.log('[doSendMessage] Request was aborted');
           return;
         }
 
-        console.error('Streaming error:', err);
+        console.error('[doSendMessage] Streaming error:', err);
+        console.error('[doSendMessage] Error details:', {
+          name: err.name,
+          message: err.message,
+          stack: err.stack,
+        });
         setError(err.message || 'Une erreur est survenue');
 
         // Update the assistant message to show error
@@ -380,25 +418,36 @@ export function useStreamingAI(): UseStreamingAIReturn {
   // Public sendMessage function with PII detection
   const sendMessage = useCallback(
     async (content: string, profileId: string, profile?: MaSubventionProProfile | null) => {
-      if (!user || !content.trim()) return;
+      console.log('[useStreamingAI] sendMessage called', { content: content.substring(0, 50), profileId, hasUser: !!user });
+      if (!user || !content.trim()) {
+        console.warn('[useStreamingAI] Early return: no user or empty content');
+        return;
+      }
 
       // Check AI usage before proceeding
+      console.log('[useStreamingAI] Checking AI usage...');
       const usageCheck = await checkUsage();
+      console.log('[useStreamingAI] Usage check result:', usageCheck);
       if (!usageCheck.allowed) {
+        console.warn('[useStreamingAI] Usage not allowed:', usageCheck.error);
         setError(usageCheck.error || 'Limite d\'utilisation IA atteinte');
         return;
       }
 
       // Check for PII in the message
+      console.log('[useStreamingAI] Checking for PII...');
       const piiResult = detectPII(content.trim());
+      console.log('[useStreamingAI] PII check result:', piiResult);
       if (piiResult.hasPII) {
         // Store context for when user makes a choice
+        console.log('[useStreamingAI] PII detected, waiting for user choice');
         pendingContextRef.current = { profileId, profile: profile || null };
         setPendingPII({ message: content.trim(), matches: piiResult.matches });
         return; // Wait for user decision via handlePIIChoice
       }
 
       // No PII found, send directly
+      console.log('[useStreamingAI] No PII, calling doSendMessage');
       await doSendMessage(content, profileId, profile);
     },
     [user, checkUsage, doSendMessage]

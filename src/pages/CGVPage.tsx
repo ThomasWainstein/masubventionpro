@@ -114,7 +114,7 @@ const CGVPage = () => {
                   </div>
                   <div className="text-right">
                     <p className="text-2xl font-bold text-blue-600">49 €</p>
-                    <p className="text-xs text-slate-500">TTC</p>
+                    <p className="text-xs text-slate-500">HT</p>
                   </div>
                 </div>
               </div>
@@ -127,8 +127,8 @@ const CGVPage = () => {
                     <p className="text-sm text-slate-600">Abonnement 12 mois - Accès illimité</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold text-blue-600">149 €</p>
-                    <p className="text-xs text-slate-500">TTC / an</p>
+                    <p className="text-2xl font-bold text-blue-600">189 €</p>
+                    <p className="text-xs text-slate-500">HT / an</p>
                   </div>
                 </div>
               </div>
@@ -138,12 +138,12 @@ const CGVPage = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="font-semibold text-slate-900">Premium Groupe</h4>
-                    <p className="text-sm text-slate-600">Abonnement 12 mois - 10 sociétés incluses</p>
-                    <p className="text-xs text-slate-500 mt-1">+29 € par pack de 10 sociétés supplémentaires</p>
+                    <p className="text-sm text-slate-600">Abonnement 12 mois - 5 sociétés incluses</p>
+                    <p className="text-xs text-slate-500 mt-1">+99 € par pack de 5 sociétés supplémentaires</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold text-blue-600">299 €</p>
-                    <p className="text-xs text-slate-500">TTC / an</p>
+                    <p className="text-2xl font-bold text-blue-600">549 €</p>
+                    <p className="text-xs text-slate-500">HT / an</p>
                   </div>
                 </div>
               </div>
@@ -154,8 +154,8 @@ const CGVPage = () => {
             <div>
               <h3 className="font-semibold text-slate-800 mb-2">Devise</h3>
               <p className="text-slate-600">
-                Tous les prix sont exprimés en euros (EUR) et incluent la TVA française au taux
-                en vigueur (20%).
+                Tous les prix sont exprimés en euros (EUR) hors taxes (HT). La TVA française au taux
+                en vigueur (20%) s'applique en sus.
               </p>
             </div>
             <div>

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useProfile } from '@/contexts/ProfileContext';
@@ -21,6 +22,7 @@ import {
   UserCircle,
   Store,
   Euro,
+  Pencil,
 } from 'lucide-react';
 import { BUSINESS_SECTORS } from '@/types';
 import { formatSIRET } from '@/lib/validation/siret';
@@ -28,11 +30,13 @@ import { MaskedField } from '@/components/ui/MaskedField';
 import { DocumentUpload } from '@/components/profile/DocumentUpload';
 import { ProfileEnrichmentSection } from '@/components/profile/ProfileEnrichmentSection';
 import { WebsiteIntelligenceDisplay } from '@/components/profile/WebsiteIntelligenceDisplay';
+import CompanyLogoUploadModal from '@/components/profile/CompanyLogoUploadModal';
 import type { WebsiteIntelligenceData } from '@/types';
 
 export function ProfilePage() {
   const navigate = useNavigate();
-  const { profile, loading, hasProfile } = useProfile();
+  const { profile, loading, hasProfile, refreshProfile } = useProfile();
+  const [showLogoModal, setShowLogoModal] = useState(false);
 
   if (loading) {
     return (
@@ -90,9 +94,28 @@ export function ProfilePage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="flex items-center justify-center w-14 h-14 bg-blue-100 rounded-xl">
-            <Building2 className="w-7 h-7 text-blue-600" />
-          </div>
+          {/* Logo with edit overlay */}
+          <button
+            onClick={() => setShowLogoModal(true)}
+            className="relative group cursor-pointer"
+            title="Modifier le logo"
+          >
+            <div className="flex items-center justify-center w-14 h-14 bg-blue-100 rounded-xl overflow-hidden">
+              {profile.logo_url ? (
+                <img
+                  src={profile.logo_url}
+                  alt={profile.company_name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <Building2 className="w-7 h-7 text-blue-600" />
+              )}
+            </div>
+            {/* Pencil overlay */}
+            <div className="absolute inset-0 bg-black/50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <Pencil className="w-5 h-5 text-white" />
+            </div>
+          </button>
           <div>
             <h1 className="text-2xl font-bold text-slate-900">{profile.company_name}</h1>
             {profile.siret && (
@@ -401,6 +424,17 @@ export function ProfilePage() {
           <DocumentUpload />
         </div>
       </div>
+
+      {/* Logo Upload Modal */}
+      <CompanyLogoUploadModal
+        open={showLogoModal}
+        onClose={() => setShowLogoModal(false)}
+        profileId={profile.id}
+        currentLogoUrl={profile.logo_url}
+        onLogoUpdated={() => {
+          refreshProfile();
+        }}
+      />
     </div>
   );
 }

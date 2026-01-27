@@ -20,6 +20,13 @@ import {
   Clock,
   Tag,
   Download,
+  AlertTriangle,
+  Flag,
+  Users,
+  CheckCircle,
+  Briefcase,
+  FileText,
+  Banknote,
 } from 'lucide-react';
 import { exportSubsidyToPDF } from '@/lib/pdfExport';
 
@@ -29,10 +36,15 @@ export function SubsidyDetailPage() {
   const [subsidy, setSubsidy] = useState<Subsidy | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [reportingLink, setReportingLink] = useState(false);
+  const [linkReported, setLinkReported] = useState(false);
 
   // Use the saved subsidies hook for database persistence
   const { isSaved: checkIsSaved, toggleSave, loading: savingLoading } = useSavedSubsidies();
   const isSaved = id ? checkIsSaved(id) : false;
+
+  // Check if link is broken
+  const isLinkBroken = subsidy?.link_status === 'invalid' || subsidy?.link_status === 'reported';
 
   useEffect(() => {
     const fetchSubsidy = async () => {
@@ -66,6 +78,30 @@ export function SubsidyDetailPage() {
       await toggleSave(id);
     } catch (err) {
       console.error('Error toggling save:', err);
+    }
+  };
+
+  // Handle report broken link
+  const handleReportBrokenLink = async () => {
+    if (!id || reportingLink || linkReported) return;
+
+    try {
+      setReportingLink(true);
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+
+      const response = await fetch(`${supabaseUrl}/functions/v1/validate-subsidy-links`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ report: true, subsidyId: id }),
+      });
+
+      if (response.ok) {
+        setLinkReported(true);
+      }
+    } catch (err) {
+      console.error('Error reporting broken link:', err);
+    } finally {
+      setReportingLink(false);
     }
   };
 
@@ -227,6 +263,176 @@ export function SubsidyDetailPage() {
           )}
         </div>
 
+        {/* Eligibility Section */}
+        {(subsidy.aid_conditions?.trim() || subsidy.aid_benef?.trim() || subsidy.decoded_profils?.length || subsidy.effectif?.trim() || subsidy.age_entreprise?.trim() || subsidy.jeunes || subsidy.femmes || subsidy.seniors || subsidy.handicapes) && (
+          <div className="p-6 md:p-8 border-t border-slate-100">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+              <Users className="h-5 w-5 text-blue-600" />
+              Éligibilité
+            </h2>
+            <div className="space-y-4">
+              {/* Eligibility conditions */}
+              {subsidy.aid_conditions?.trim() && (
+                <div>
+                  <h3 className="text-sm font-medium text-slate-700 mb-2 flex items-center gap-1">
+                    <CheckCircle className="h-4 w-4 text-emerald-600" />
+                    Conditions d'éligibilité
+                  </h3>
+                  <p className="text-slate-600 whitespace-pre-wrap bg-slate-50 p-4 rounded-lg">
+                    {subsidy.aid_conditions.trim()}
+                  </p>
+                </div>
+              )}
+
+              {/* Beneficiaries */}
+              {subsidy.aid_benef?.trim() && (
+                <div>
+                  <h3 className="text-sm font-medium text-slate-700 mb-2 flex items-center gap-1">
+                    <Briefcase className="h-4 w-4 text-blue-600" />
+                    Bénéficiaires
+                  </h3>
+                  <p className="text-slate-600 whitespace-pre-wrap bg-slate-50 p-4 rounded-lg">
+                    {subsidy.aid_benef.trim()}
+                  </p>
+                </div>
+              )}
+
+              {/* Beneficiary profiles */}
+              {subsidy.decoded_profils && subsidy.decoded_profils.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-medium text-slate-700 mb-2">Profils éligibles</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {subsidy.decoded_profils.map((profil, i) => (
+                      <span
+                        key={i}
+                        className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm"
+                      >
+                        {profil.label || profil.code}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Company criteria */}
+              {(subsidy.effectif?.trim() || subsidy.age_entreprise?.trim()) && (
+                <div className="flex flex-wrap gap-4">
+                  {subsidy.effectif?.trim() && (
+                    <div className="bg-slate-50 px-4 py-2 rounded-lg">
+                      <span className="text-sm text-slate-500">Effectif: </span>
+                      <span className="font-medium text-slate-700">{subsidy.effectif.trim()}</span>
+                    </div>
+                  )}
+                  {subsidy.age_entreprise?.trim() && (
+                    <div className="bg-slate-50 px-4 py-2 rounded-lg">
+                      <span className="text-sm text-slate-500">Âge entreprise: </span>
+                      <span className="font-medium text-slate-700">{subsidy.age_entreprise.trim()}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Target audiences */}
+              {(subsidy.jeunes || subsidy.femmes || subsidy.seniors || subsidy.handicapes) && (
+                <div>
+                  <h3 className="text-sm font-medium text-slate-700 mb-2">Publics prioritaires</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {subsidy.jeunes && (
+                      <span className="bg-purple-50 text-purple-700 px-3 py-1 rounded-full text-sm">
+                        Jeunes
+                      </span>
+                    )}
+                    {subsidy.femmes && (
+                      <span className="bg-pink-50 text-pink-700 px-3 py-1 rounded-full text-sm">
+                        Femmes
+                      </span>
+                    )}
+                    {subsidy.seniors && (
+                      <span className="bg-orange-50 text-orange-700 px-3 py-1 rounded-full text-sm">
+                        Seniors
+                      </span>
+                    )}
+                    {subsidy.handicapes && (
+                      <span className="bg-teal-50 text-teal-700 px-3 py-1 rounded-full text-sm">
+                        Personnes handicapées
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Budget & Funding Section */}
+        {(subsidy.aid_montant?.trim() || subsidy.decoded_natures?.length || subsidy.duree_projet?.trim()) && (
+          <div className="p-6 md:p-8 border-t border-slate-100">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+              <Banknote className="h-5 w-5 text-emerald-600" />
+              Financement
+            </h2>
+            <div className="space-y-4">
+              {/* Detailed funding info */}
+              {subsidy.aid_montant?.trim() && (
+                <div>
+                  <h3 className="text-sm font-medium text-slate-700 mb-2">Détails du financement</h3>
+                  <p className="text-slate-600 whitespace-pre-wrap bg-emerald-50 p-4 rounded-lg border border-emerald-100">
+                    {subsidy.aid_montant.trim()}
+                  </p>
+                </div>
+              )}
+
+              {/* Funding types */}
+              {subsidy.decoded_natures && subsidy.decoded_natures.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-medium text-slate-700 mb-2">Types de financement</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {subsidy.decoded_natures.map((nature, i) => (
+                      <span
+                        key={i}
+                        className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-sm"
+                      >
+                        {nature.label || nature.code}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Project duration */}
+              {subsidy.duree_projet?.trim() && (
+                <div className="bg-slate-50 px-4 py-2 rounded-lg inline-block">
+                  <span className="text-sm text-slate-500">Durée du projet: </span>
+                  <span className="font-medium text-slate-700">{subsidy.duree_projet.trim()}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Eligible Operations */}
+        {subsidy.aid_operations_el?.trim() && (
+          <div className="p-6 md:p-8 border-t border-slate-100">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+              <FileText className="h-5 w-5 text-slate-600" />
+              Opérations éligibles
+            </h2>
+            <p className="text-slate-600 whitespace-pre-wrap bg-slate-50 p-4 rounded-lg">
+              {subsidy.aid_operations_el.trim()}
+            </p>
+          </div>
+        )}
+
+        {/* Validation Process */}
+        {subsidy.aid_validation?.trim() && (
+          <div className="p-6 md:p-8 border-t border-slate-100">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4">Processus de validation</h2>
+            <p className="text-slate-600 whitespace-pre-wrap bg-slate-50 p-4 rounded-lg">
+              {subsidy.aid_validation.trim()}
+            </p>
+          </div>
+        )}
+
         {/* Additional Info */}
         <div className="p-6 md:p-8 bg-slate-50 border-t border-slate-100">
           <h2 className="text-lg font-semibold text-slate-900 mb-4">Informations complémentaires</h2>
@@ -264,6 +470,20 @@ export function SubsidyDetailPage() {
           </dl>
         </div>
 
+        {/* Broken Link Warning */}
+        {isLinkBroken && (
+          <div className="mx-6 md:mx-8 mt-6 bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3">
+            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-medium text-amber-800">Lien potentiellement invalide</p>
+              <p className="text-sm text-amber-700 mt-1">
+                Ce lien a été signalé comme ne fonctionnant plus.
+                Nous vous recommandons de vérifier directement sur le site officiel.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Actions */}
         <div className="p-6 md:p-8 border-t border-slate-100 flex flex-wrap gap-4">
           {subsidy.application_url && (
@@ -273,7 +493,10 @@ export function SubsidyDetailPage() {
               rel="noopener noreferrer"
               className="flex-1 md:flex-none"
             >
-              <Button className="w-full md:w-auto">
+              <Button
+                className={`w-full md:w-auto ${isLinkBroken ? 'bg-amber-600 hover:bg-amber-700' : ''}`}
+              >
+                {isLinkBroken && <AlertTriangle className="mr-2 h-4 w-4" />}
                 Postuler maintenant
                 <ExternalLink className="ml-2 h-4 w-4" />
               </Button>
@@ -300,6 +523,19 @@ export function SubsidyDetailPage() {
             <Download className="mr-2 h-4 w-4" />
             Exporter PDF
           </Button>
+
+          {/* Report broken link button */}
+          {subsidy.application_url && !isLinkBroken && (
+            <Button
+              variant="ghost"
+              onClick={handleReportBrokenLink}
+              disabled={reportingLink || linkReported}
+              className="text-slate-500 hover:text-amber-600"
+            >
+              <Flag className="mr-2 h-4 w-4" />
+              {linkReported ? 'Signalé' : reportingLink ? 'Signalement...' : 'Signaler lien cassé'}
+            </Button>
+          )}
         </div>
       </div>
     </div>

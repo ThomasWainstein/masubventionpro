@@ -56,7 +56,15 @@ export function useSavedSubsidies(): UseSavedSubsidiesReturn {
 
       if (fetchError) throw fetchError;
 
-      setSavedSubsidies(data || []);
+      // Filter out expired subsidies (deadline in the past)
+      const today = new Date().toISOString().split('T')[0];
+      const validSubsidies = (data || []).filter((saved) => {
+        const deadline = saved.subsidy?.deadline;
+        // Keep if no deadline or deadline is today or in the future
+        return !deadline || deadline >= today;
+      });
+
+      setSavedSubsidies(validSubsidies);
     } catch (err: any) {
       console.error('Error fetching saved subsidies:', err);
       setError(err.message || 'Erreur lors du chargement');
