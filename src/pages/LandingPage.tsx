@@ -795,6 +795,9 @@ const LandingPage = () => {
             <a href="#tarifs" className="text-slate-900 font-medium hover:text-blue-800 transition-colors">
               Tarifs
             </a>
+            <Link to="/notre-histoire" className="text-slate-900 font-medium hover:text-blue-800 transition-colors">
+              Notre histoire
+            </Link>
             <Link
               to="/login"
               className="px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-800/30 transition-all"
@@ -818,6 +821,7 @@ const LandingPage = () => {
             <a href="#profils" className="block text-slate-900 font-medium">Pour qui ?</a>
             <a href="#fonctionnalites" className="block text-slate-900 font-medium">Fonctionnalites</a>
             <a href="#tarifs" className="block text-slate-900 font-medium">Tarifs</a>
+            <Link to="/notre-histoire" className="block text-slate-900 font-medium">Notre histoire</Link>
             <Link
               to="/login"
               className="block w-full text-center px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold"
@@ -1280,7 +1284,7 @@ const LandingPage = () => {
             <div>
               <h5 className="text-lg font-semibold mb-4">Entreprise</h5>
               <div className="space-y-3">
-                <a href="#" className="block text-white/70 hover:text-white transition-colors">À propos</a>
+                <Link to="/notre-histoire" className="block text-white/70 hover:text-white transition-colors">Notre histoire</Link>
                 <a href="#" className="block text-white/70 hover:text-white transition-colors">Notre technologie</a>
                 <a href="#" className="block text-white/70 hover:text-white transition-colors">Blog</a>
                 <a href="#" className="block text-white/70 hover:text-white transition-colors">Presse</a>

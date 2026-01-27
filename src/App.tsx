@@ -16,6 +16,7 @@ import CGVPage from './pages/CGVPage'
 import PrivacyPage from './pages/PrivacyPage'
 import CookiesPage from './pages/CookiesPage'
 import AITransparencyPage from './pages/AITransparencyPage'
+import NotreHistoirePage from './pages/NotreHistoirePage'
 
 // Protected pages
 import DashboardPage from './pages/DashboardPage'
@@ -53,6 +54,7 @@ function App() {
       <Route path="/privacy" element={<PrivacyPage />} />
       <Route path="/cookies" element={<CookiesPage />} />
       <Route path="/ai-transparency" element={<AITransparencyPage />} />
+      <Route path="/notre-histoire" element={<NotreHistoirePage />} />
 
       {/* Protected routes */}
       <Route element={<ProtectedRoute />}>
