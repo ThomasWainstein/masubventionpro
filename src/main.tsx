@@ -22,3 +22,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </HelmetProvider>
   </React.StrictMode>,
 )
+
+// Signal to prerenderer that the page is ready to be captured
+document.dispatchEvent(new Event('prerender-ready'))

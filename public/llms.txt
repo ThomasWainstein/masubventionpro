@@ -1,0 +1,77 @@
+# MaSubventionPro - LLMs.txt
+# This file provides context for AI crawlers and language models about this website.
+# Learn more: https://llmstxt.org/
+
+## About MaSubventionPro
+
+MaSubventionPro is a French AI-powered platform that helps businesses discover and access public subsidies, grants, and financial aid programs. The platform analyzes over 10,000 public aid programs from European, national, regional, and local sources to match businesses with eligible funding opportunities.
+
+## What We Do
+
+- **Subsidy Search**: Search and filter through 10,000+ public aid programs (subventions, grants, loans, tax exemptions, guarantees)
+- **Eligibility Scoring**: AI-powered analysis to calculate eligibility scores for each funding program
+- **Profile Matching**: Automatic matching based on company profile (sector, size, location, project type)
+- **PDF Reports**: Detailed reports on matched subsidies with eligibility analysis
+- **Expert Search Engine**: Advanced search with filters for funding type, region, sector, and deadlines
+
+## Target Audience
+
+- **Entrepreneurs and Startups** (Createurs d'entreprise): People planning to start a business in France
+- **SME/PME Leaders**: Owners and directors of small and medium enterprises
+- **Holdings and Investment Structures**: Multi-company structures seeking group-level funding
+- **Associations**: Non-profit organizations eligible for public funding
+
+## Key Features
+
+1. Real-time analysis of public aid databases
+2. Automatic SIRET/SIREN verification via French government API
+3. Sector-based matching using NAF codes
+4. Regional filtering (all French regions including DOM-TOM)
+5. Deadline tracking and alerts
+6. AI assistant for personalized guidance
+
+## Funding Sources Covered
+
+- European Union programs (Horizon Europe, FEDER, FSE+)
+- French national programs (BPI France, France 2030, ADEME)
+- Regional aids (Conseils Regionaux)
+- Departmental aids (Conseils Departementaux)
+- Municipal aids (Communes, EPCI)
+- Sector-specific programs (Agriculture, Innovation, Digital, Green Transition)
+
+## Company Information
+
+- **Website**: https://www.masubventionpro.com
+- **Service Area**: France (Metropolitan and Overseas Territories)
+- **Language**: French
+- **Related Product**: Subvention360 (professional version for consultants and experts)
+
+## Pages Available
+
+- `/` - Homepage with subsidy search and eligibility simulation
+- `/signup` or `/inscription` - Create an account and run eligibility analysis
+- `/login` or `/connexion` - User login
+- `/notre-histoire` - Our story and mission
+- `/ai-transparency` - AI transparency and methodology
+- `/cgu` - Terms of service (Conditions Generales d'Utilisation)
+- `/cgv` - Sales terms (Conditions Generales de Vente)
+- `/privacy` - Privacy policy
+- `/cookies` - Cookie policy
+- `/mentions-legales` - Legal notices
+
+## Contact
+
+For questions about MaSubventionPro or partnership inquiries, please visit our website.
+
+## Data Sources
+
+MaSubventionPro aggregates data from official French and European public sources including:
+- Aides-entreprises.fr
+- Les-aides.fr
+- BPI France
+- ADEME
+- Regional council websites
+- European Commission funding portals
+
+---
+Last updated: 2025

@@ -778,6 +778,52 @@ const LandingPage = () => {
           content="MaSubventionPro analyse plus de 10 000 aides publiques (Etat, Regions, Communes, Europe) pour identifier vos subventions, prets, garanties et exonerations fiscales et calculer vos scores d'eligibilite, avec rapports PDF detailles et moteur de recherche expert."
         />
         <link rel="canonical" href="https://www.masubventionpro.com" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Organization",
+                "@id": "https://www.masubventionpro.com/#organization",
+                "name": "MaSubventionPro",
+                "url": "https://www.masubventionpro.com",
+                "logo": "https://www.masubventionpro.com/logo.svg",
+                "description": "Plateforme d'intelligence artificielle pour trouver les subventions et aides publiques pour les entreprises françaises",
+                "areaServed": "FR",
+                "serviceType": ["Recherche de subventions", "Analyse d'éligibilité", "Veille sur les aides publiques"]
+              },
+              {
+                "@type": "WebApplication",
+                "@id": "https://www.masubventionpro.com/#webapp",
+                "name": "MaSubventionPro",
+                "url": "https://www.masubventionpro.com",
+                "applicationCategory": "BusinessApplication",
+                "operatingSystem": "Web",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "EUR",
+                  "description": "Essai gratuit disponible"
+                },
+                "featureList": [
+                  "Analyse de plus de 10 000 dispositifs d'aides publiques",
+                  "Calcul automatique des scores d'éligibilité",
+                  "Rapports PDF détaillés",
+                  "Moteur de recherche expert",
+                  "Veille personnalisée sur les nouvelles aides"
+                ]
+              },
+              {
+                "@type": "WebSite",
+                "@id": "https://www.masubventionpro.com/#website",
+                "url": "https://www.masubventionpro.com",
+                "name": "MaSubventionPro",
+                "publisher": { "@id": "https://www.masubventionpro.com/#organization" },
+                "inLanguage": "fr-FR"
+              }
+            ]
+          })}
+        </script>
       </Helmet>
 
       {/* Header */}

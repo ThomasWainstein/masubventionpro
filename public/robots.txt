@@ -1,0 +1,34 @@
+# MaSubventionPro Robots.txt
+# https://www.masubventionpro.com
+
+User-agent: *
+Allow: /
+
+# Public pages
+Allow: /
+Allow: /signup
+Allow: /inscription
+Allow: /login
+Allow: /connexion
+Allow: /notre-histoire
+Allow: /ai-transparency
+Allow: /mentions-legales
+Allow: /cgu
+Allow: /cgv
+Allow: /privacy
+Allow: /cookies
+
+# Block protected app routes from indexing
+Disallow: /app/
+Disallow: /app/*
+
+# Block utility pages
+Disallow: /confirm-email
+Disallow: /success
+Disallow: /demo/
+
+# Sitemap location
+Sitemap: https://www.masubventionpro.com/sitemap.xml
+
+# LLMs.txt for AI crawlers
+# See: https://www.masubventionpro.com/llms.txt
