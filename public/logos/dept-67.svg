@@ -1,0 +1,1283 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+        <meta charset="utf-8">
+<link href="/DependencyHandler.axd/7eb7d6a89a5ee8e9f7047c3b6d66e375/1532767324/css" rel="preload" as="style" type="text/css"/><link href="/media/3075/cea-couverture-vignes.jpg?mode=crop&amp;format=webp&amp;quality=70&amp;width=956&amp;height=360" rel="preload" as="image" type="image/webp" media="(min-width: 768.1px) and (max-width:1365px)"/><link href="/media/3075/cea-couverture-vignes.jpg?mode=crop&amp;format=webp&amp;quality=85&amp;width=1344&amp;height=360" rel="preload" as="image" type="image/webp" media="(min-width:1366px)"/><link href="/assets/img/logo-cea-cartouche-h.svg" rel="preload" as="image" type="image/webp" media="(min-width:768px)"/>    <link rel="preconnect" href="https://stats.alsace.eu">
+    <link rel="preload" as="font" href="/assets/dist/webfonts/fa-solid-900.woff2" type="font/woff2" crossorigin>
+    <link rel="preload" as="font" href="/assets/dist/webfonts/amaranth-regular-webfont.woff2"  type="font/woff2" crossorigin>
+    <link rel="preload" as="font" href="/assets/dist/webfonts/amaranth-bold-webfont.woff2" type="font/woff2" crossorigin>
+    <title>Collectivit&#233; europ&#233;enne d&#39;Alsace | CeA</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="/favicon.ico?v=eEYMGPp6G5">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=eEYMGPp6G5">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=eEYMGPp6G5">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=eEYMGPp6G5">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg?v=eEYMGPp6G5" color="#184192">
+    <meta name="msapplication-TileColor" content="#efefef">
+    <meta name="msapplication-TileImage" content="/mstile-144x144.png?v=eEYMGPp6G5">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="search" type="application/opensearchdescription+xml" title="Rechercher un article de Collectivité européenne d'Alsace" href="/osd.xml">
+    <link rel="canonical" href="https://www.alsace.eu/">
+    <meta name="keywords" content="collectivit&#233;,alsace,CeA,D&#233;partement,Bas-Rhin,Haut-Rhin,67,68,Elsass,Europe,Collectivit&#233; europ&#233;enne d&#39;Alsace,Cd67,Cg67,CD 67,CG 67,CD 68,CG 68,CD68,CG68,actualit&#233;s,Agenda">
+    <meta name="HandheldFriendly" content="True">
+    <meta property="Type" content="website" >
+    <meta property="PublishDate" content="08/02/2019 15:53:52" >
+    <meta name="NodeId" content="1163">
+    <meta name="ParentId" content="-1,1163">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@alsace">
+    <meta name="twitter:creator" content="@alsace">
+    <meta name="twitter:description" content="CeA (Collectivit&#233; europ&#233;enne d&#39;Alsace) toutes les informations, services, comp&#233;tences, actualit&#233;s, &#233;v&#233;nements, magazines, communiqu&#233;s &amp; dossiers de presse...">
+    <meta name="twitter:title" content="Collectivit&#233; europ&#233;enne d&#39;Alsace | CeA">
+    <meta name="twitter:url" content="httpss://www.alsace.eu/">
+    <meta name="description" lang="fr" content="CeA (Collectivit&#233; europ&#233;enne d&#39;Alsace) toutes les informations, services, comp&#233;tences, actualit&#233;s, &#233;v&#233;nements, magazines, communiqu&#233;s &amp; dossiers de presse...">
+    <meta name="facebook-domain-verification" content="yyyhp5uqfho4q06hke2apjn41zpoq1">
+    <meta property="og:description" content="CeA (Collectivit&#233; europ&#233;enne d&#39;Alsace) toutes les informations, services, comp&#233;tences, actualit&#233;s, &#233;v&#233;nements, magazines, communiqu&#233;s &amp; dossiers de presse...">
+    <meta property="og:locale" content="fr_FR" >
+    <meta property="og:title" content="Collectivit&#233; europ&#233;enne d&#39;Alsace | CeA">
+    <meta property="og:url" content="httpss://www.alsace.eu/">
+    <meta property="og:type" content="article" >
+    <meta property="og:site_name" content="Collectivité européenne d'Alsace : alsace.eu">
+    <meta property="og:article:published_time" content="08/02/2019 15:53:52" >
+    <meta property="fb:app_id" content="1035759760503955" >
+    <meta name="robots" content="follow,index">
+            <meta property="og:image:type" content="image/jpeg" >
+            <meta property="og:image:width" content="1200" >
+            <meta property="og:image:height" content="627" >
+            <meta property="og:image" content="https://www.alsace.eu/media/2505/logo-fond-blanc.jpg?width=1200&amp;height=627&amp;mode=crop&amp;format=jpg&amp;quality=75">
+            <meta property="og:image:url" content="https://www.alsace.eu/media/2505/logo-fond-blanc.jpg?width=1200&amp;height=627&amp;mode=crop&amp;format=jpg&amp;quality=75">
+            <meta property="og:image:secure_url" content="https://www.alsace.eu/media/2505/logo-fond-blanc.jpg?width=1200&amp;height=627&amp;mode=crop&amp;format=jpg&amp;quality=75">
+            <meta property="og:image:alt" content="CeA (Collectivit&#233; europ&#233;enne d&#39;Alsace) toutes les informations, services, comp&#233;tences, actualit&#233;s, &#233;v&#233;nements, magazines, communiqu&#233;s &amp; dossiers de presse...">
+            <meta name="twitter:image" content="https://www.alsace.eu/media/2505/logo-fond-blanc.jpg?width=1200&amp;height=627&amp;mode=crop&amp;format=jpg&amp;quality=75">
+        <link href="https://www.alsace.eu/feed/" rel="alternate" type="application/rss+xml" title="Rss : Collectivit&#233; europ&#233;enne d&#39;Alsace | CeA">
+    <link href="https://www.alsace.eu/amp/" rel="amphtml">
+<link href="/DependencyHandler.axd/7eb7d6a89a5ee8e9f7047c3b6d66e375/1532767324/css" type="text/css" rel="stylesheet"/>
+
+
+
+    
+    
+    
+    
+    
+    
+        <link href="https://cdn.jsdelivr.net/npm/orejime@3.0.1/dist/orejime-standard.css" fetchpriority="high" rel="preload"
+          as="style" type="text/css" integrity="sha512-XBTw27yeUqK3zGDJ0FMspc1zHoaTeaBIz8S8MSGrNFJZNdiAUw4k6NCoKxomQxbWCZeZP67xA1WiLoE4m7fpmA=="
+        crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/orejime@3.0.1/dist/orejime-standard.css"
+          integrity="sha512-XBTw27yeUqK3zGDJ0FMspc1zHoaTeaBIz8S8MSGrNFJZNdiAUw4k6NCoKxomQxbWCZeZP67xA1WiLoE4m7fpmA==" crossorigin="anonymous">
+</head>
+<body id="top" class="content-website homepage home" data-idenv="1" data-idmatomo="1">
+    <noscript>
+        <p class="h1">Collectivit&#233; europ&#233;enne d&#39;Alsace</p>
+        <p>Pour acc&#233;der &#224; toutes les fonctionnalit&#233;s de ce site, vous devez activer JavaScript. Voici les <a href="//www.enable-javascript.com/fr/" target="js">instructions pour activer JavaScript dans votre navigateur Web</a></p>
+    </noscript>
+    
+    <a class="skip-link" href="#content">Contenu</a>
+<a class="skip-link" href="#search">Recherche</a>   
+    <header class="main-header" role="banner">
+
+
+        <script type="application/ld+json">
+                {"@context":"https://schema.org","@type":"WebPage","name":"Collectivit\u00E9 europ\u00E9enne d\u0027Alsace","description":"CeA (Collectivit\u00E9 europ\u00E9enne d\u0027Alsace) toutes les informations, services, comp\u00E9tences, actualit\u00E9s, \u00E9v\u00E9nements, magazines, communiqu\u00E9s \u0026 dossiers de presse...","image":"https://www.alsace.eu/Images/logo.png","url":"https://www.alsace.eu/","author":{"@type":"Organization","name":"Collectivit\u00C3\u00A9 europ\u00C3\u00A9enne d\u0027Alsace","alternateName":"CeA","logo":"https://www.alsace.eu/images/logo-cea-cartouche-h.png"},"dateCreated":"2019-01-22","dateModified":"2025-10-15","publisher":{"@type":"Organization","name":"Collectivit\u00C3\u00A9 europ\u00C3\u00A9enne d\u0027Alsace","alternateName":"CeA","logo":"https://www.alsace.eu/images/logo-cea-cartouche-h.png"}}
+        </script>
+
+        
+        <aside class="main-header__aside block--wrapper-noP k-grid">
+                <ul class="nav-secondary">
+                                <li class="nav-secondary__item">
+            <a class="nav-secondary__link" href="https://www.alsace.eu/actualites/"><span class="nav-secondary__name">Actualit&#233;s</span></a>
+        </li>
+                                <li class="nav-secondary__item">
+            <a class="nav-secondary__link" href="https://www.alsace.eu/agenda/"><span class="nav-secondary__name">Agenda</span></a>
+        </li>
+                                <li class="nav-secondary__item">
+            <a class="nav-secondary__link" href="https://www.alsace.eu/presse/"><span class="nav-secondary__name">Presse</span></a>
+        </li>
+                                <li class="nav-secondary__item">
+            <a class="nav-secondary__link" href="https://www.alsace.eu/la-collectivite/les-publications-reglementaires/"><span class="nav-secondary__name">Publications r&#233;glementaires</span></a>
+        </li>
+                                <li class="nav-secondary__item">
+            <a class="nav-secondary__link" href="/contactez-nous/"><span class="nav-secondary__name">Contact</span></a>
+        </li>
+    </ul>
+
+
+
+
+        </aside>
+        
+
+
+
+        
+
+
+            <section class="block--wrapper-noP k-col-all">
+        <div class="hero theme">
+            <figure class="hero__figure" aria-hidden="true">
+                <picture>
+                    <source type="image/webp" srcset="/media/3075/cea-couverture-vignes.jpg?mode=crop&format=webp&quality=70&width=1256&height=360" media="(min-width:1366px)" >
+                    <source type="image/jpeg" srcset="/media/3075/cea-couverture-vignes.jpg?mode=crop&format=jpg&quality=70&width=1256&height=360" media="(min-width:1366px)" >
+                    <source type="image/webp" srcset="/media/3075/cea-couverture-vignes.jpg?mode=crop&format=webp&quality=70&width=956&height=360" media="(min-width:956px)" >
+                    <source type="image/jpeg" srcset="/media/3075/cea-couverture-vignes.jpg?mode=crop&format=jpg&quality=70&width=956&height=360" media="(min-width:956px)" >
+                    <source type="image/webp" srcset="/media/3075/cea-couverture-vignes.jpg?mode=crop&format=webp&quality=70&width=600&height=350" media="(min-width:580px)" >
+                    <source type="image/jpeg" srcset="/media/3075/cea-couverture-vignes.jpg?mode=crop&format=jpg&quality=70&width=600&height=350" media="(min-width:580px)" >
+                    <source type="image/webp" srcset="/media/3075/cea-couverture-vignes.jpg?mode=crop&format=webp&quality=70&width=400&height=350" media="(min-width:320px)" >
+                    <source type="image/jpeg" srcset="/media/3075/cea-couverture-vignes.jpg?mode=crop&format=jpg&quality=70&width=400&height=350" media="(min-width:320px)" >
+                    <img class="hero__img" src="/media/3075/cea-couverture-vignes.jpg?mode=crop&format=jpg&quality=70&width=1256&height=360" alt="" width="1256" height="360">
+                </picture>
+            </figure>
+            <h1 class="main-logo">    <a class="logo svg-container" href="/">
+        <img src="/assets/img/logo-cea-cartouche-h.svg" width="260" height="88" alt="Collectivité européenne d'Alsace">
+    </a>
+</h1>
+
+            <div class="search" id="search">
+                <form action="/recherche/" class="form-search">
+                    <label class="visually-hidden" for="searchInputR">Rechercher</label>
+                    <input list="jsondatalist" type="search" class="form-search__input form__control autocomplete" autocomplete="off" data-guid="178d3578-0121-4914-917e-d8b2d4512ce5" data-field="autocomplete" id="searchInputR" name="r_recherche" placeholder="Rechercher une information, un service…">
+                    <button type="submit" class="form__submit"><span class="visually-hidden">Rechercher dans le contenu</span><i class="fas fa-search" aria-hidden="true"></i></button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    </header>
+    
+
+
+    <main class="main" id="content" role="main" >
+
+        
+
+
+
+<script type="application/ld+json">
+    {
+    "@context" : "http://schema.org",
+    "@type" : "Organization",
+    "name" : "Collectivité européenne d'Alsace",
+    "alternateName" : "CeA",
+    "url" : "https://www.alsace.eu",
+    "logo": "https://www.alsace.eu/images/logo-cea-cartouche-h.png",
+    "sameAs" : [
+    "https://www.instagram.com/toutelalsace",
+    "https://twitter.com/toutelalsace",
+    "https://www.facebook.com/toutelalsace",
+    "https://www.youtube.com/channel/UC5YyadAyhp1MT4D-tl04rBw"
+    ],
+    "address": [{
+    "@type": "PostalAddress",
+    "streetAddress": "Place du Quartier Blanc",
+    "addressRegion": "Alsace",
+    "postalCode": "F-67964",
+    "addressCountry": "France",
+    "addressLocality": "Strasbourg cedex 9"
+    },
+    {
+    "@type": "PostalAddress",
+    "streetAddress": "100 Avenue d'Alsace",
+    "addressRegion": "Alsace",
+    "postalCode": "BP 20351 68006",
+    "addressCountry": "France",
+    "addressLocality": "Colmar cedex"
+    }],
+    "contactPoint": [{
+    "@type": "ContactPoint",
+    "telephone": "+33369493929",
+    "contactType": "customer service"
+    }]
+    }
+</script>
+<script type="application/ld+json">
+    {
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "url": "https://www.alsace.eu/",
+    "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.alsace.eu/recherche/?r_recherche={search_term_string}",
+    "query-input": "required name=search_term_string"
+    }
+    }
+</script>
+<div class="block k-grid-12 has-gutter-l grid--stretch">
+            <div class="k-col-all kie-full intro k-grid-2 has-gutter-l">
+                    
+        <h2 class="section-title">Aides et services</h2>
+    
+
+
+        </div>        <div class="k-col-3 kie-one-quarter">
+                
+        
+               
+<a href="https://www.alsace.eu/aides-et-services/personnes-agees/"
+   target="_self"
+   title="Personnes &#226;g&#233;es"
+   class="btn--secondary btn--block btn--lg self--stretch btn--icon">
+        <i class="btn__icon fas fas fa-blind" aria-hidden="true"></i>
+            <span class="btn__title">Personnes &#226;g&#233;es</span>
+    </a>
+
+   
+    
+
+
+        
+
+
+
+        </div>        <div class="k-col-3 kie-one-quarter">
+                
+        
+               
+<a href="https://www.alsace.eu/aides-et-services/personnes-handicapees/"
+   target="_self"
+   title="Personnes handicap&#233;es"
+   class="btn--secondary btn--block btn--lg self--stretch btn--icon">
+        <i class="btn__icon fas fas fa-wheelchair" aria-hidden="true"></i>
+            <span class="btn__title">Personnes handicap&#233;es</span>
+    </a>
+
+   
+    
+
+
+        
+
+
+
+        </div>        <div class="k-col-3 kie-one-quarter">
+                
+        
+               
+<a href="https://www.alsace.eu/aides-et-services/sante-action-sociale-et-insertion/"
+   target="_self"
+   title="Sant&#233;, action sociale et insertion"
+   class="btn--secondary btn--block btn--lg self--stretch btn--icon">
+        <i class="btn__icon fas fas fa-hands-helping" aria-hidden="true"></i>
+            <span class="btn__title">Sant&#233;, action sociale et insertion</span>
+    </a>
+
+   
+    
+
+
+        
+
+
+
+        </div>        <div class="k-col-3 kie-one-quarter">
+                
+        
+               
+<a href="https://www.alsace.eu/aides-et-services/enfance-et-famille/"
+   target="_self"
+   title="Enfance"
+   class="btn--secondary btn--block btn--lg self--stretch btn--icon">
+        <i class="btn__icon fas fas fa-baby" aria-hidden="true"></i>
+            <span class="btn__title">Enfance et famille</span>
+    </a>
+
+   
+    
+
+
+        
+
+
+
+        </div>        <div class="k-col-3 kie-one-quarter">
+                
+        
+               
+<a href="https://www.alsace.eu/aides-et-services/jeunesse-et-education/"
+   target="_self"
+   title="Jeunesse et &#233;ducation"
+   class="btn--secondary btn--block btn--lg self--stretch btn--icon">
+        <i class="btn__icon fas fa-solid fa-graduation-cap" aria-hidden="true"></i>
+            <span class="btn__title">Jeunesse et &#233;ducation</span>
+    </a>
+
+   
+    
+
+
+        
+
+
+
+        </div>        <div class="k-col-3 kie-one-quarter">
+                
+        
+               
+<a href="https://www.alsace.eu/aides-et-services/politique-sportive-et-ses-dispositifs-soutien/"
+   target="_self"
+   title="Sport"
+   class="btn--secondary btn--block btn--lg self--stretch btn--icon">
+        <i class="btn__icon fas fas fa-futbol" aria-hidden="true"></i>
+            <span class="btn__title">Sport</span>
+    </a>
+
+   
+    
+
+
+        
+
+
+
+        </div>        <div class="k-col-3 kie-one-quarter">
+                
+        
+               
+<a href="https://www.alsace.eu/aides-et-services/culture-patrimoine-et-tourisme/"
+   target="_self"
+   title="Culture, patrimoine et tourisme"
+   class="btn--secondary btn--block btn--lg self--stretch btn--icon">
+        <i class="btn__icon fas fab fa-fort-awesome" aria-hidden="true"></i>
+            <span class="btn__title">Culture, patrimoine et tourisme</span>
+    </a>
+
+   
+    
+
+
+        
+
+
+
+        </div>        <div class="k-col-3 kie-one-quarter">
+                
+        
+               
+<a href="https://www.alsace.eu/aides-et-services/bilinguisme/"
+   target="_self"
+   title="Bilinguisme"
+   class="btn--secondary btn--block btn--lg self--stretch btn--icon">
+        <i class="btn__icon fas fa-solid fa-comment-dots" aria-hidden="true"></i>
+            <span class="btn__title">Bilinguisme</span>
+    </a>
+
+   
+    
+
+
+        
+
+
+
+        </div>        <div class="k-col-3 kie-one-quarter">
+                
+        
+               
+<a href="https://www.alsace.eu/aides-et-services/environnement/"
+   target="_self"
+   title="Environnement"
+   class="btn--secondary btn--block btn--lg self--stretch btn--icon">
+        <i class="btn__icon fas fas fa-seedling" aria-hidden="true"></i>
+            <span class="btn__title">Environnement</span>
+    </a>
+
+   
+    
+
+
+        
+
+
+
+        </div>        <div class="k-col-3 kie-one-quarter">
+                
+        
+               
+<a href="https://www.alsace.eu/aides-et-services/mobilite-et-transport/"
+   target="_self"
+   title="Mobilit&#233; et transport"
+   class="btn--secondary btn--block btn--lg self--stretch btn--icon">
+        <i class="btn__icon fas fas fa-car" aria-hidden="true"></i>
+            <span class="btn__title">Mobilit&#233; et transport</span>
+    </a>
+
+   
+    
+
+
+        
+
+
+
+        </div>        <div class="k-col-3 kie-one-quarter">
+                
+        
+               
+<a href="https://www.alsace.eu/aides-et-services/europe-et-transfrontalier/"
+   target="_self"
+   title="Europe et transfrontalier"
+   class="btn--secondary btn--block btn--lg self--stretch btn--icon">
+        <i class="btn__icon fas fas fa-map-signs" aria-hidden="true"></i>
+            <span class="btn__title">Europe et transfrontalier</span>
+    </a>
+
+   
+    
+
+
+        
+
+
+
+        </div>        <div class="k-col-3 kie-one-quarter">
+                
+        
+               
+<a href="https://www.alsace.eu/aides-et-services/habitat/"
+   target="_self"
+   title="Habitat"
+   class="btn--secondary btn--block btn--lg self--stretch btn--icon">
+        <i class="btn__icon fas fas fa-home" aria-hidden="true"></i>
+            <span class="btn__title">Habitat</span>
+    </a>
+
+   
+    
+
+
+        
+
+
+
+        </div>        <div class="k-col-4 kie-one-third">
+                
+        
+               
+<a href="https://www.alsace.eu/aides-et-services/professionnels-collectivites-et-associations/"
+   target="_self"
+   title="Professionnels, collectivit&#233;s et associations"
+   class="btn--primary btn--block btn--icon">
+            <span class="btn__title">Professionnels, collectivit&#233;s et associations</span>
+            <i class="fas fa-chevron-right btn__icon-animate" aria-hidden="true"></i>
+</a>
+
+   
+    
+
+
+        
+
+
+
+        </div>        <div class="k-col-4 kie-one-third">
+                
+        
+               
+<a href="https://www.alsace.eu/la-collectivite/"
+   target="_self"
+   title="Ma collectivit&#233;"
+   class="btn--primary btn--block btn--icon">
+            <span class="btn__title">D&#233;couvrir ma collectivit&#233;, retrouver mes &#233;lus, les actes et d&#233;lib&#233;rations</span>
+            <i class="fas fa-chevron-right btn__icon-animate" aria-hidden="true"></i>
+</a>
+
+   
+    
+
+
+        
+
+
+
+        </div>        <div class="k-col-4 kie-one-third">
+                
+        
+               
+<a href="https://entre-vos-mains.alsace.eu/"
+   target=" _blank"
+   title="Citoyens, exprimez-vous ! (Ouverture dans une nouvelle fen&#234;tre)"
+   class="btn--primary btn--block btn--icon" rel=noopener>
+            <span class="btn__title">Citoyens, exprimez-vous : concertations, droit d&#39;interpellation citoyen, Conseil de D&#233;veloppement ...</span>
+            <i class="fas fa-chevron-right btn__icon-animate" aria-hidden="true"></i>
+</a>
+
+   
+    
+
+
+        
+
+
+
+        </div>
+
+
+</div>
+<div class="block--bg block--deco">
+    <div class="k-grid-12 has-gutter-l">
+                <div class="k-col-all kie-full">
+                    
+        <h2 class="section-title">Actualit&#233;s</h2>
+    
+
+
+                
+        
+               
+
+
+        <section class='search-results news k-grid-4 has-gutter-l grid--stretch'><article class="article--default article--primary">
+    
+<figure class="img-container">					
+        <a href="https://www.alsace.eu/actualites/budget-primitif-2026-retrouvez-derniere-seance-pleniere-en-replay/" title="Budget primitif 2026 : retrouvez la derni&#232;re s&#233;ance pl&#233;ni&#232;re en replay" aria-label="Budget primitif 2026 : retrouvez la derni&#232;re s&#233;ance pl&#233;ni&#232;re en replay" tabindex="-1" aria-hidden="true">
+            <picture class="banner__picture">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/2865/cea-seance-installation.jpg?width=590&height=295&format=webp&quality=70&mode=crop" media="(max-width:768px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/2865/cea-seance-installation.jpg?width=590&height=295&format=jpeg&quality=70&mode=crop" media="(max-width:768px)">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/2865/cea-seance-installation.jpg?width=230&height=115&format=webp&quality=70&mode=crop" media="(min-width:769px) and (max-width:996px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/2865/cea-seance-installation.jpg?width=230&height=115&format=jpeg&quality=70&mode=crop" media="(min-width:769px) and (max-width:996px)">			
+        <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/2865/cea-seance-installation.jpg?width=260&height=130&format=webp&quality=70&mode=crop" media="(min-width:997px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/2865/cea-seance-installation.jpg?width=260&height=130&format=jpeg&quality=70&mode=crop" media="(min-width:997px)">
+	<img src="/assets/img/1x1.png" data-src="/media/2865/cea-seance-installation.jpg?width=590&height=295&format=jpeg&quality=70&mode=crop" alt="" class="lazyload banner__image" loading="lazy" width="590" height="295">
+            </picture>
+        </a>
+    </figure>
+    <div class="article__content">
+   <ul class="tag-list"><li class="list__item"><a href="/actualites/?fq=p_tags_ss:%c3%89conomie+-+W%c3%acrtsch%c3%a0ft" class="tag--primary tag--sm" rel="nofollow">Économie - <span lang="gsw">Wìrtschàft</span></a></li>
+<li class="list__item"><a href="/actualites/?fq=p_territoire_ss:Eurom%c3%a9tropole+de+Strasbourg" class="tag--primary tag--sm" rel="nofollow">Eurom&#233;tropole de Strasbourg</a></li>
+    </ul>
+        <h3 class="article__title h2"><a href="https://www.alsace.eu/actualites/budget-primitif-2026-retrouvez-derniere-seance-pleniere-en-replay/">Budget primitif 2026 : retrouvez la derni&#232;re s&#233;ance pl&#233;ni&#232;re en replay</a></h3>
+        <p class="article__pubdate">Publié le 16/12/2025</p> 	
+        <p class="article__extract ">La derni&#232;re s&#233;ance pl&#233;ni&#232;re du Conseil de la Collectivit&#233; europ&#233;enne d'Alsace s'est tenue le 15 d&#233;cembre &#224; l'H&#244;tel d'Alsace de Strasbourg. Les conseillers d'Alsace ont notamment vot&#233; le budget primitif 2026 de la Collectivit&#233; europ&#233;enne d'Alsace. Retrouvez-la en int&#233;gralit&#233; sur notre cha&#238;ne YouTube.</p>
+    </div>
+		
+
+<script type="application/ld+json">
+{ "@context": "https://schema.org", 
+ "@type": "Article",
+ "headline": "Budget primitif 2026 : retrouvez la derni&#232;re s&#233;ance pl&#233;ni&#232;re en replay",
+ "image": "https://www.alsace.eu/media/2865/cea-seance-installation.jpg?width=730&format=jpeg&quality=75",
+ "author": "Collectivité européenne d'Alsace",
+ "editor": "Collectivité européenne d'Alsace",
+"publisher": {
+    "@type": "Organization",
+    "name": "Collectivité européenne d'Alsace",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.alsace.eu/media/1075/logo_quadri_courriera4.jpg?anchor=center&amp;amp;mode=crop&amp;amp;quality=75&amp;amp;width=300&amp;amp;height=300&amp;amp;rnd=132070774540000000"
+    }
+  },
+ "url": "https://www.alsace.eu/https://www.alsace.eu/actualites/budget-primitif-2026-retrouvez-derniere-seance-pleniere-en-replay/",
+   "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.alsace.eu/https://www.alsace.eu/actualites/budget-primitif-2026-retrouvez-derniere-seance-pleniere-en-replay/"
+  },
+ "datePublished": "11/12/2025 15:39:54",
+ "dateCreated": "12/11/2025 3:39:54 PM",
+ "dateModified": "12/16/2025 2:15:57 PM"
+ }
+</script>
+</article><article class="article--default article--primary">
+    
+<figure class="img-container">					
+        <a href="https://www.alsace.eu/actualites/solidarites-depot-dossiers-demande-subventions-2026/" title="Solidarit&#233;s : d&#233;p&#244;t des dossiers de demande de subventions 2026" aria-label="Solidarit&#233;s : d&#233;p&#244;t des dossiers de demande de subventions 2026" tabindex="-1" aria-hidden="true">
+            <picture class="banner__picture">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/7338/cea-solidarite.jpg?width=590&height=295&format=webp&quality=70&mode=crop" media="(max-width:768px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/7338/cea-solidarite.jpg?width=590&height=295&format=jpeg&quality=70&mode=crop" media="(max-width:768px)">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/7338/cea-solidarite.jpg?width=230&height=115&format=webp&quality=70&mode=crop" media="(min-width:769px) and (max-width:996px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/7338/cea-solidarite.jpg?width=230&height=115&format=jpeg&quality=70&mode=crop" media="(min-width:769px) and (max-width:996px)">			
+        <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/7338/cea-solidarite.jpg?width=260&height=130&format=webp&quality=70&mode=crop" media="(min-width:997px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/7338/cea-solidarite.jpg?width=260&height=130&format=jpeg&quality=70&mode=crop" media="(min-width:997px)">
+	<img src="/assets/img/1x1.png" data-src="/media/7338/cea-solidarite.jpg?width=590&height=295&format=jpeg&quality=70&mode=crop" alt="" class="lazyload banner__image" loading="lazy" width="590" height="295">
+            </picture>
+        </a>
+    </figure>
+    <div class="article__content">
+   <ul class="tag-list"><li class="list__item"><a href="/actualites/?fq=p_tags_ss:Solidarit%c3%a9+-+Solid%c3%a0rit%c3%a4t" class="tag--primary tag--sm" rel="nofollow">Solidarité - <span lang="gsw">Solidàrität</span></a></li>
+<li class="list__item"><a href="/actualites/?fq=p_territoire_ss:Toute+l%27Alsace" class="tag--primary tag--sm" rel="nofollow">Toute l'Alsace</a></li>
+    </ul>
+        <h3 class="article__title h2"><a href="https://www.alsace.eu/actualites/solidarites-depot-dossiers-demande-subventions-2026/">Solidarit&#233;s : d&#233;p&#244;t des dossiers de demande de subventions 2026</a></h3>
+        <p class="article__pubdate">Publié le 11/12/2025</p> 	
+        <p class="article__extract ">Dans le cadre de son soutien au tissu associatif et local alsacien engag&#233; aupr&#232;s des publics fragiles, la Collectivit&#233; europ&#233;enne d'Alsace (CeA) peut accorder des subventions destin&#233;es &#224; participer au financement des d&#233;penses de fonctionnement courantes de certaines structures ou au financement de projets sp&#233;cifiques.</p>
+    </div>
+		
+
+<script type="application/ld+json">
+{ "@context": "https://schema.org", 
+ "@type": "Article",
+ "headline": "Solidarit&#233;s : d&#233;p&#244;t des dossiers de demande de subventions 2026",
+ "image": "https://www.alsace.eu/media/7338/cea-solidarite.jpg?width=730&format=jpeg&quality=75",
+ "author": "Collectivité européenne d'Alsace",
+ "editor": "Collectivité européenne d'Alsace",
+"publisher": {
+    "@type": "Organization",
+    "name": "Collectivité européenne d'Alsace",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.alsace.eu/media/1075/logo_quadri_courriera4.jpg?anchor=center&amp;amp;mode=crop&amp;amp;quality=75&amp;amp;width=300&amp;amp;height=300&amp;amp;rnd=132070774540000000"
+    }
+  },
+ "url": "https://www.alsace.eu/https://www.alsace.eu/actualites/solidarites-depot-dossiers-demande-subventions-2026/",
+   "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.alsace.eu/https://www.alsace.eu/actualites/solidarites-depot-dossiers-demande-subventions-2026/"
+  },
+ "datePublished": "08/12/2025 08:33:29",
+ "dateCreated": "12/5/2025 10:50:00 AM",
+ "dateModified": "12/11/2025 4:16:31 PM"
+ }
+</script>
+</article><article class="article--default article--primary">
+    
+<figure class="img-container">					
+        <a href="https://www.alsace.eu/actualites/preserver-et-transmettre-l-opla-nouvelle-institution-en-faveur-langue-regionale/" title="Pr&#233;server et transmettre : l'OPLA, nouvelle institution en faveur de la langue r&#233;gionale" aria-label="Pr&#233;server et transmettre : l'OPLA, nouvelle institution en faveur de la langue r&#233;gionale" tabindex="-1" aria-hidden="true">
+            <picture class="banner__picture">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9122/cea-opla.jpg?width=590&height=295&format=webp&quality=70&mode=crop" media="(max-width:768px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9122/cea-opla.jpg?width=590&height=295&format=jpeg&quality=70&mode=crop" media="(max-width:768px)">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9122/cea-opla.jpg?width=230&height=115&format=webp&quality=70&mode=crop" media="(min-width:769px) and (max-width:996px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9122/cea-opla.jpg?width=230&height=115&format=jpeg&quality=70&mode=crop" media="(min-width:769px) and (max-width:996px)">			
+        <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9122/cea-opla.jpg?width=260&height=130&format=webp&quality=70&mode=crop" media="(min-width:997px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9122/cea-opla.jpg?width=260&height=130&format=jpeg&quality=70&mode=crop" media="(min-width:997px)">
+	<img src="/assets/img/1x1.png" data-src="/media/9122/cea-opla.jpg?width=590&height=295&format=jpeg&quality=70&mode=crop" alt="" class="lazyload banner__image" loading="lazy" width="590" height="295">
+            </picture>
+        </a>
+    </figure>
+    <div class="article__content">
+   <ul class="tag-list"><li class="list__item"><a href="/actualites/?fq=p_tags_ss:Bilinguisme+-+Zweisprochigkeit" class="tag--primary tag--sm" rel="nofollow">Bilinguisme - <span lang="gsw">Zweisprochigkeit</span></a></li>
+<li class="list__item"><a href="/actualites/?fq=p_territoire_ss:Eurom%c3%a9tropole+de+Strasbourg" class="tag--primary tag--sm" rel="nofollow">Eurom&#233;tropole de Strasbourg</a></li>
+    </ul>
+        <h3 class="article__title h2"><a href="https://www.alsace.eu/actualites/preserver-et-transmettre-l-opla-nouvelle-institution-en-faveur-langue-regionale/">Pr&#233;server et transmettre : l'OPLA, nouvelle institution en faveur de la langue r&#233;gionale</a></h3>
+        <p class="article__pubdate">Publié le 11/12/2025</p> 	
+        <p class="article__extract ">La Collectivit&#233; europ&#233;enne d'Alsace lance officiellement l'Office public de la langue r&#233;gionale d'Alsace (OPLA), une nouvelle institution d&#233;di&#233;e &#224; la promotion, &#224; la valorisation et &#224; la transmission de la langue r&#233;gionale sur l'ensemble du territoire. Avec ce dispositif in&#233;dit en Alsace, la CeA affirme son ambition de renforcer l'usage de la langue et d'en assurer la p&#233;rennit&#233; pour les g&#233;n&#233;rations futures.</p>
+    </div>
+		
+
+<script type="application/ld+json">
+{ "@context": "https://schema.org", 
+ "@type": "Article",
+ "headline": "Pr&#233;server et transmettre : l'OPLA, nouvelle institution en faveur de la langue r&#233;gionale",
+ "image": "https://www.alsace.eu/media/9122/cea-opla.jpg?width=730&format=jpeg&quality=75",
+ "author": "Collectivité européenne d'Alsace",
+ "editor": "Collectivité européenne d'Alsace",
+"publisher": {
+    "@type": "Organization",
+    "name": "Collectivité européenne d'Alsace",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.alsace.eu/media/1075/logo_quadri_courriera4.jpg?anchor=center&amp;amp;mode=crop&amp;amp;quality=75&amp;amp;width=300&amp;amp;height=300&amp;amp;rnd=132070774540000000"
+    }
+  },
+ "url": "https://www.alsace.eu/https://www.alsace.eu/actualites/preserver-et-transmettre-l-opla-nouvelle-institution-en-faveur-langue-regionale/",
+   "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.alsace.eu/https://www.alsace.eu/actualites/preserver-et-transmettre-l-opla-nouvelle-institution-en-faveur-langue-regionale/"
+  },
+ "datePublished": "03/12/2025 15:55:47",
+ "dateCreated": "12/3/2025 3:55:47 PM",
+ "dateModified": "12/11/2025 9:13:01 AM"
+ }
+</script>
+</article><article class="article--default article--primary">
+    
+<figure class="img-container">					
+        <a href="https://www.alsace.eu/actualites/l-alsace-s-engage-10-actions-pour-renforcer-l-engagement-citoyen-et-associatif/" title="L'Alsace s'engage : 10 actions pour renforcer l'engagement citoyen et associatif" aria-label="L'Alsace s'engage : 10 actions pour renforcer l'engagement citoyen et associatif" tabindex="-1" aria-hidden="true">
+            <picture class="banner__picture">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9124/cea-soiree-engages.jpg?width=590&height=295&format=webp&quality=70&mode=crop" media="(max-width:768px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9124/cea-soiree-engages.jpg?width=590&height=295&format=jpeg&quality=70&mode=crop" media="(max-width:768px)">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9124/cea-soiree-engages.jpg?width=230&height=115&format=webp&quality=70&mode=crop" media="(min-width:769px) and (max-width:996px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9124/cea-soiree-engages.jpg?width=230&height=115&format=jpeg&quality=70&mode=crop" media="(min-width:769px) and (max-width:996px)">			
+        <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9124/cea-soiree-engages.jpg?width=260&height=130&format=webp&quality=70&mode=crop" media="(min-width:997px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9124/cea-soiree-engages.jpg?width=260&height=130&format=jpeg&quality=70&mode=crop" media="(min-width:997px)">
+	<img src="/assets/img/1x1.png" data-src="/media/9124/cea-soiree-engages.jpg?width=590&height=295&format=jpeg&quality=70&mode=crop" alt="" class="lazyload banner__image" loading="lazy" width="590" height="295">
+            </picture>
+        </a>
+    </figure>
+    <div class="article__content">
+   <ul class="tag-list"><li class="list__item"><a href="/actualites/?fq=p_tags_ss:L%27Alsace+s%27engage+!" class="tag--primary tag--sm" rel="nofollow">L'Alsace s'engage !</a></li>
+<li class="list__item"><a href="/actualites/?fq=p_territoire_ss:Toute+l%27Alsace" class="tag--primary tag--sm" rel="nofollow">Toute l'Alsace</a></li>
+    </ul>
+        <h3 class="article__title h2"><a href="https://www.alsace.eu/actualites/l-alsace-s-engage-10-actions-pour-renforcer-l-engagement-citoyen-et-associatif/">L'Alsace s'engage : 10 actions pour renforcer l'engagement citoyen et associatif</a></h3>
+        <p class="article__pubdate">Publié le 11/12/2025</p> 	
+        <p class="article__extract ">Avec &quot;L'Alsace s'engage !&quot;, la Collectivit&#233; europ&#233;enne d'Alsace porte une d&#233;marche ambitieuse pour encourager, reconna&#238;tre et accompagner l'engagement sur tout le territoire. Issue d'un large travail de concertation dans le cadre du Tour d&#8217;Alsace 2025, cette dynamique se traduit aujourd&#8217;hui par 10 actions concr&#232;tes pour valoriser les b&#233;n&#233;voles, soutenir les associations et susciter de nouvelles formes d'implication citoyenne, notamment aupr&#232;s des jeunes.</p>
+    </div>
+		
+
+<script type="application/ld+json">
+{ "@context": "https://schema.org", 
+ "@type": "Article",
+ "headline": "L'Alsace s'engage : 10 actions pour renforcer l'engagement citoyen et associatif",
+ "image": "https://www.alsace.eu/media/9124/cea-soiree-engages.jpg?width=730&format=jpeg&quality=75",
+ "author": "Collectivité européenne d'Alsace",
+ "editor": "Collectivité européenne d'Alsace",
+"publisher": {
+    "@type": "Organization",
+    "name": "Collectivité européenne d'Alsace",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.alsace.eu/media/1075/logo_quadri_courriera4.jpg?anchor=center&amp;amp;mode=crop&amp;amp;quality=75&amp;amp;width=300&amp;amp;height=300&amp;amp;rnd=132070774540000000"
+    }
+  },
+ "url": "https://www.alsace.eu/https://www.alsace.eu/actualites/l-alsace-s-engage-10-actions-pour-renforcer-l-engagement-citoyen-et-associatif/",
+   "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.alsace.eu/https://www.alsace.eu/actualites/l-alsace-s-engage-10-actions-pour-renforcer-l-engagement-citoyen-et-associatif/"
+  },
+ "datePublished": "05/12/2025 09:39:15",
+ "dateCreated": "12/4/2025 5:03:49 PM",
+ "dateModified": "12/11/2025 9:12:18 AM"
+ }
+</script>
+</article><article class="article--default article--primary highlight">
+    
+<figure class="img-container">					
+        <a href="https://www.alsace.eu/actualites/5eme-rencontre-partenariale-sact-parlement-europeen/" title="5&#232;me rencontre partenariale du SACT au Parlement europ&#233;en" aria-label="5&#232;me rencontre partenariale du SACT au Parlement europ&#233;en" tabindex="-1" aria-hidden="true">
+            <picture class="banner__picture">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9139/cea-sact-parlement.jpg?width=590&height=295&format=webp&quality=70&mode=crop" media="(max-width:768px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9139/cea-sact-parlement.jpg?width=590&height=295&format=jpeg&quality=70&mode=crop" media="(max-width:768px)">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9139/cea-sact-parlement.jpg?width=468&format=webp&quality=70" media="(min-width:769px) and (max-width:996px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9139/cea-sact-parlement.jpg?width=468&format=jpeg&quality=70" media="(min-width:769px) and (max-width:996px)">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9139/cea-sact-parlement.jpg?width=522&format=webp&quality=70" media="(min-width:997px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9139/cea-sact-parlement.jpg?width=522&format=jpeg&quality=70" media="(min-width:997px)">		
+    <img src="/assets/img/1x1.png" data-src="/media/9139/cea-sact-parlement.jpg?width=590&format=jpeg&quality=70" alt="" class="lazyload banner__image" loading="lazy" width="590">
+            </picture>
+        </a>
+    </figure>
+    <div class="article__content">
+   <ul class="tag-list"><li class="list__item"><a href="/actualites/?fq=p_tags_ss:Transfrontalier+-+Grenz%c3%acwwerschr%c3%acttend" class="tag--primary tag--sm" rel="nofollow">Transfrontalier - <span lang="gsw">Grenzìwwerschrìttend</span></a></li>
+<li class="list__item"><a href="/actualites/?fq=p_territoire_ss:Toute+l%27Alsace" class="tag--primary tag--sm" rel="nofollow">Toute l'Alsace</a></li>
+    </ul>
+        <h3 class="article__title h2"><a href="https://www.alsace.eu/actualites/5eme-rencontre-partenariale-sact-parlement-europeen/">5&#232;me rencontre partenariale du SACT au Parlement europ&#233;en</a></h3>
+        <p class="article__pubdate">Publié le 11/12/2025</p> 	
+        <p class="article__extract ">La Collectivit&#233; europ&#233;enne d'Alsace a organis&#233;, le 3 d&#233;cembre, la 5&#232;me rencontre partenariale du Sch&#233;ma alsacien de coop&#233;ration transfrontali&#232;re (SACT) au Parlement europ&#233;en &#224; Strasbourg. Plus de 220 participants fran&#231;ais, allemands et suisses &#233;taient r&#233;unis pour renforcer les liens transfrontaliers et partager des perspectives communes pour l'avenir de l'espace du Rhin sup&#233;rieur.</p>
+    </div>
+		
+
+<script type="application/ld+json">
+{ "@context": "https://schema.org", 
+ "@type": "Article",
+ "headline": "5&#232;me rencontre partenariale du SACT au Parlement europ&#233;en",
+ "image": "https://www.alsace.eu/media/9139/cea-sact-parlement.jpg?width=730&format=jpeg&quality=75",
+ "author": "Collectivité européenne d'Alsace",
+ "editor": "Collectivité européenne d'Alsace",
+"publisher": {
+    "@type": "Organization",
+    "name": "Collectivité européenne d'Alsace",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.alsace.eu/media/1075/logo_quadri_courriera4.jpg?anchor=center&amp;amp;mode=crop&amp;amp;quality=75&amp;amp;width=300&amp;amp;height=300&amp;amp;rnd=132070774540000000"
+    }
+  },
+ "url": "https://www.alsace.eu/https://www.alsace.eu/actualites/5eme-rencontre-partenariale-sact-parlement-europeen/",
+   "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.alsace.eu/https://www.alsace.eu/actualites/5eme-rencontre-partenariale-sact-parlement-europeen/"
+  },
+ "datePublished": "10/12/2025 18:00:41",
+ "dateCreated": "12/10/2025 6:00:41 PM",
+ "dateModified": "12/11/2025 9:12:09 AM"
+ }
+</script>
+</article><article class="article--default article--primary">
+    
+<figure class="img-container">					
+        <a href="https://www.alsace.eu/actualites/foyer-l-enfance-pose-1ere-pierre/" title="Foyer de l'enfance : pose de la 1&#232;re pierre" aria-label="Foyer de l'enfance : pose de la 1&#232;re pierre" tabindex="-1" aria-hidden="true">
+            <picture class="banner__picture">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9116/cea-pose-pierre-fde.jpg?width=590&height=295&format=webp&quality=70&mode=crop" media="(max-width:768px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9116/cea-pose-pierre-fde.jpg?width=590&height=295&format=jpeg&quality=70&mode=crop" media="(max-width:768px)">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9116/cea-pose-pierre-fde.jpg?width=230&height=115&format=webp&quality=70&mode=crop" media="(min-width:769px) and (max-width:996px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9116/cea-pose-pierre-fde.jpg?width=230&height=115&format=jpeg&quality=70&mode=crop" media="(min-width:769px) and (max-width:996px)">			
+        <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9116/cea-pose-pierre-fde.jpg?width=260&height=130&format=webp&quality=70&mode=crop" media="(min-width:997px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9116/cea-pose-pierre-fde.jpg?width=260&height=130&format=jpeg&quality=70&mode=crop" media="(min-width:997px)">
+	<img src="/assets/img/1x1.png" data-src="/media/9116/cea-pose-pierre-fde.jpg?width=590&height=295&format=jpeg&quality=70&mode=crop" alt="" class="lazyload banner__image" loading="lazy" width="590" height="295">
+            </picture>
+        </a>
+    </figure>
+    <div class="article__content">
+   <ul class="tag-list"><li class="list__item"><a href="/actualites/?fq=p_tags_ss:Enfance+-+K%c3%acndheit" class="tag--primary tag--sm" rel="nofollow">Enfance - <span lang="gsw">Kìndheit</span></a></li>
+<li class="list__item"><a href="/actualites/?fq=p_territoire_ss:Eurom%c3%a9tropole+de+Strasbourg" class="tag--primary tag--sm" rel="nofollow">Eurom&#233;tropole de Strasbourg</a></li>
+    </ul>
+        <h3 class="article__title h2"><a href="https://www.alsace.eu/actualites/foyer-l-enfance-pose-1ere-pierre/">Foyer de l'enfance : pose de la 1&#232;re pierre</a></h3>
+        <p class="article__pubdate">Publié le 09/12/2025</p> 	
+        <p class="article__extract ">&#192; Strasbourg-Neuhof, la Collectivit&#233; europ&#233;enne d'Alsace lance officiellement la restructuration compl&#232;te du Foyer de l'Enfance avec la pose symbolique de la 1&#232;re pierre. Cet acte marque le commencement d'une op&#233;ration majeure pour la protection de l'enfance en Alsace, conciliant ambitions sociales, organisationnelles et environnementales.</p>
+    </div>
+		
+
+<script type="application/ld+json">
+{ "@context": "https://schema.org", 
+ "@type": "Article",
+ "headline": "Foyer de l'enfance : pose de la 1&#232;re pierre",
+ "image": "https://www.alsace.eu/media/9116/cea-pose-pierre-fde.jpg?width=730&format=jpeg&quality=75",
+ "author": "Collectivité européenne d'Alsace",
+ "editor": "Collectivité européenne d'Alsace",
+"publisher": {
+    "@type": "Organization",
+    "name": "Collectivité européenne d'Alsace",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.alsace.eu/media/1075/logo_quadri_courriera4.jpg?anchor=center&amp;amp;mode=crop&amp;amp;quality=75&amp;amp;width=300&amp;amp;height=300&amp;amp;rnd=132070774540000000"
+    }
+  },
+ "url": "https://www.alsace.eu/https://www.alsace.eu/actualites/foyer-l-enfance-pose-1ere-pierre/",
+   "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.alsace.eu/https://www.alsace.eu/actualites/foyer-l-enfance-pose-1ere-pierre/"
+  },
+ "datePublished": "03/12/2025 14:40:37",
+ "dateCreated": "12/3/2025 2:40:37 PM",
+ "dateModified": "12/9/2025 4:04:51 PM"
+ }
+</script>
+</article><article class="article--default article--primary">
+    
+<figure class="img-container">					
+        <a href="https://www.alsace.eu/actualites/alsace-fin-l-adsl-et-telephonie-fixe-a-partir-debut-2026/" title="Alsace : fin de l'ADSL et de la t&#233;l&#233;phonie fixe &#224; partir de d&#233;but 2026" aria-label="Alsace : fin de l'ADSL et de la t&#233;l&#233;phonie fixe &#224; partir de d&#233;but 2026" tabindex="-1" aria-hidden="true">
+            <picture class="banner__picture">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9081/cea-fibre-adsl.png?width=590&height=295&format=webp&quality=70&mode=crop" media="(max-width:768px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9081/cea-fibre-adsl.png?width=590&height=295&format=jpeg&quality=70&mode=crop" media="(max-width:768px)">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9081/cea-fibre-adsl.png?width=230&height=115&format=webp&quality=70&mode=crop" media="(min-width:769px) and (max-width:996px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9081/cea-fibre-adsl.png?width=230&height=115&format=jpeg&quality=70&mode=crop" media="(min-width:769px) and (max-width:996px)">			
+        <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9081/cea-fibre-adsl.png?width=260&height=130&format=webp&quality=70&mode=crop" media="(min-width:997px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9081/cea-fibre-adsl.png?width=260&height=130&format=jpeg&quality=70&mode=crop" media="(min-width:997px)">
+	<img src="/assets/img/1x1.png" data-src="/media/9081/cea-fibre-adsl.png?width=590&height=295&format=jpeg&quality=70&mode=crop" alt="" class="lazyload banner__image" loading="lazy" width="590" height="295">
+            </picture>
+        </a>
+    </figure>
+    <div class="article__content">
+   <ul class="tag-list">
+<li class="list__item"><a href="/actualites/?fq=p_territoire_ss:Toute+l%27Alsace" class="tag--primary tag--sm" rel="nofollow">Toute l'Alsace</a></li>
+    </ul>
+        <h3 class="article__title h2"><a href="https://www.alsace.eu/actualites/alsace-fin-l-adsl-et-telephonie-fixe-a-partir-debut-2026/">Alsace : fin de l'ADSL et de la t&#233;l&#233;phonie fixe &#224; partir de d&#233;but 2026</a></h3>
+        <p class="article__pubdate">Publié le 05/12/2025</p> 	
+        <p class="article__extract ">De d&#233;but 2026 &#224; 2030, le r&#233;seau cuivre historique, support de la t&#233;l&#233;phonie fixe et de l'ADSL, sera progressivement ferm&#233; en Alsace comme partout en France, commune par commune, et remplac&#233; par la fibre optique.</p>
+    </div>
+		
+
+<script type="application/ld+json">
+{ "@context": "https://schema.org", 
+ "@type": "Article",
+ "headline": "Alsace : fin de l'ADSL et de la t&#233;l&#233;phonie fixe &#224; partir de d&#233;but 2026",
+ "image": "https://www.alsace.eu/media/9081/cea-fibre-adsl.png?width=730&format=jpeg&quality=75",
+ "author": "Collectivité européenne d'Alsace",
+ "editor": "Collectivité européenne d'Alsace",
+"publisher": {
+    "@type": "Organization",
+    "name": "Collectivité européenne d'Alsace",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.alsace.eu/media/1075/logo_quadri_courriera4.jpg?anchor=center&amp;amp;mode=crop&amp;amp;quality=75&amp;amp;width=300&amp;amp;height=300&amp;amp;rnd=132070774540000000"
+    }
+  },
+ "url": "https://www.alsace.eu/https://www.alsace.eu/actualites/alsace-fin-l-adsl-et-telephonie-fixe-a-partir-debut-2026/",
+   "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.alsace.eu/https://www.alsace.eu/actualites/alsace-fin-l-adsl-et-telephonie-fixe-a-partir-debut-2026/"
+  },
+ "datePublished": "19/11/2025 11:12:59",
+ "dateCreated": "11/19/2025 11:12:59 AM",
+ "dateModified": "12/5/2025 9:41:42 AM"
+ }
+</script>
+</article></section>
+
+
+        
+
+
+
+                
+        
+               
+<a href="https://www.alsace.eu/actualites/"
+   target="_self"
+   title="Actualit&#233;s"
+   class="btn--multi btn--xl btn--block btn--icon">
+            <span class="btn__title">Toutes les actualit&#233;s</span>
+            <i class="fas fa-chevron-right btn__icon-animate" aria-hidden="true"></i>
+</a>
+
+   
+    
+
+
+        
+
+
+
+        </div>
+
+
+    </div>
+</div>
+<div class="block k-grid-12 has-gutter-l">
+            <div class="k-col-6 kie-one-half">
+                
+        
+               
+<a href="/magazines-toute-l-alsace/"
+   target="_self"
+   title="Magazines"
+   class="btn--secondary btn--block btn--lg self--stretch btn--icon">
+        <i class="btn__icon fas fa-book-open" aria-hidden="true"></i>
+            <span class="btn__title">Magazines</span>
+    </a>
+
+   
+    
+
+
+        
+
+
+
+        </div>        <div class="k-col-6 kie-one-half">
+                
+        
+               
+<a href="https://www.alsace.eu/la-collectivite/nous-rejoindre/"
+   target="_self"
+   title="Emploi"
+   class="btn--secondary btn--block btn--lg self--stretch btn--icon">
+        <i class="btn__icon fas fa-briefcase" aria-hidden="true"></i>
+            <span class="btn__title">Emploi</span>
+    </a>
+
+   
+    
+
+
+        
+
+
+
+        </div>        <div class="k-col-all kie-full">
+                    
+        <h2 class="section-title">Agenda</h2>
+    
+
+
+                
+        
+               
+
+
+        <section class='search-results events k-grid-2 has-gutter-l grid--stretch'><article  class="article--primary article--full highlight">
+    <div class="article__meta">
+      <div class="article__meta-item">
+        <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+        <p><span class="visually-hidden" >Date : </span><span><time datetime="2025-12-03">03/12/2025 </time> au <time datetime="2026-01-04">04/01/2026 </time></span></p>
+        
+      </div>
+      <div class="article__meta-item">
+        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+       <p><span class="visually-hidden" >Localisation : </span><span>Ch&#226;teau du Haut-Koenigsbourg, 67600 Orschwiller</span></p>
+        
+      </div>
+    </div>
+  <figure class="article__image--compact img-container">
+    <a href="https://www.alsace.eu/agenda/un-noel-hors-temps/" title="Un No&#235;l hors du temps" tabindex="-1" aria-hidden="true">
+      <picture>
+	<source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/6030/cea-hk-hiver.jpg?width=590&height=295&format=webp&quality=70&mode=crop" media="(max-width:768px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/6030/cea-hk-hiver.jpg?width=590&height=295&format=jpeg&quality=70&mode=crop" media="(max-width:768px)">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/6030/cea-hk-hiver.jpg?width=468&format=webp&quality=70" media="(min-width:769px) and (max-width:996px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/6030/cea-hk-hiver.jpg?width=468&format=jpeg&quality=70" media="(min-width:769px) and (max-width:996px)">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/6030/cea-hk-hiver.jpg?width=522&format=webp&quality=70" media="(min-width:997px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/6030/cea-hk-hiver.jpg?width=522&format=jpeg&quality=70" media="(min-width:997px)">		
+    <img src="/assets/img/1x1.png" data-src="/media/6030/cea-hk-hiver.jpg?width=590&format=jpeg&quality=70" alt="" class="lazyload banner__image" loading="lazy" width="590">
+        
+      </picture>
+    </a>
+  </figure>
+  <div class="article__content">
+    <ul class="tag-list"><li class="list__item"><a href="/agenda/?fq=p_tags_ss:Culture+-+K%c3%bclt%c3%bcr" class="tag--primary tag--sm" rel="nofollow">Culture - <span lang="gsw">Kültür</span></a></li>
+<li class="list__item"><a href="/agenda/?fq=p_territoire_ss:Centre+Alsace" class="tag--primary tag--sm" rel="nofollow">Centre Alsace</a></li>
+    </ul>
+    <h3 class="article__title h2"><a href="https://www.alsace.eu/agenda/un-noel-hors-temps/">Un No&#235;l hors du temps</a></h3>
+    <div class="article__extract"><p>Découvrez le château du Haut-Koenigsbourg au fil de Noël avec un programme diversifié qui ravira toute la famille. Ateliers, visites thématiques, atelier de confection de couronnes, déambulations de personnages de Noël et même théâtre de marionnettes sont organisés pour cette fin d'année.</p></div>
+  </div>
+</article><article  class="article--primary article--full k-grid-2 has-gutter">
+    <div class="article__meta">
+      <div class="article__meta-item">
+        <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+        <p><span class="visually-hidden" >Date : </span><span><time datetime="2025-12-18">18/12/2025 </time> au <time datetime="2026-01-04">04/01/2026 </time></span></p>
+        
+      </div>
+      <div class="article__meta-item">
+        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+       <p><span class="visually-hidden" >Localisation : </span><span>1 bis rue Philippe Dollinger 67100 Strasbourg</span></p>
+        
+      </div>
+    </div>
+  <figure class="article__image--compact img-container">
+    <a href="https://www.alsace.eu/agenda/la-science-joue-avec-vos-sens/" title="La science joue avec vos sens !" tabindex="-1" aria-hidden="true">
+      <picture>
+	<source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9137/cea-vso-noel.jpg?width=590&format=webp&quality=70" media="(max-width:768px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9137/cea-vso-noel.jpg?width=590&format=jpeg&quality=70" media="(max-width:768px)">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9137/cea-vso-noel.jpg?width=230&height=400&mode=crop&format=webp&quality=70" media="(min-width:769px) and (max-width:996px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9137/cea-vso-noel.jpg?width=230&height=400&mode=crop&format=jpeg&quality=70" media="(min-width:769px) and (max-width:996px)">			
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9137/cea-vso-noel.jpg?width=260&height=400&mode=crop&format=webp&quality=70" media="(min-width:997px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9137/cea-vso-noel.jpg?width=260&height=400&mode=crop&format=jpeg&quality=70" media="(min-width:997px)">
+	<img src="/assets/img/1x1.png" data-src="/media/9137/cea-vso-noel.jpg?width=590&format=jpeg&quality=70" alt="" class="lazyload banner__image" loading="lazy" width="590" height="295">
+        
+      </picture>
+    </a>
+  </figure>
+  <div class="article__content">
+    <ul class="tag-list"><li class="list__item"><a href="/agenda/?fq=p_tags_ss:Culture+-+K%c3%bclt%c3%bcr" class="tag--primary tag--sm" rel="nofollow">Culture - <span lang="gsw">Kültür</span></a></li>
+<li class="list__item"><a href="/agenda/?fq=p_territoire_ss:Eurom%c3%a9tropole+de+Strasbourg" class="tag--primary tag--sm" rel="nofollow">Eurom&#233;tropole de Strasbourg</a></li>
+    </ul>
+    <h3 class="article__title h2"><a href="https://www.alsace.eu/agenda/la-science-joue-avec-vos-sens/">La science joue avec vos sens !</a></h3>
+    <div class="article__extract"><p>Pour finir l'année en beauté, le Vaisseau vous invite à vivre un Noël magique à travers une programmation culturelle riche et variée. Au programme : des ateliers créatifs pour préparer les fêtes, des jeux pour célébrer les sciences et stimuler vos neurones, un spectacle inédit pour découvrir le monde fascinant des illusions et des animations scientifiques pour approfondir la thématique et agrémenter votre visite, sans oublier les expositions permanentes à (re)découvrir.</p></div>
+  </div>
+</article><article  class="article--primary article--full k-grid-2 has-gutter">
+    <div class="article__meta">
+      <div class="article__meta-item">
+        <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+        <p><span class="visually-hidden" >Date : </span><span><time datetime="2025-12-15">15/12/2025 </time> au <time datetime="2026-01-06">06/01/2026 </time></span></p>
+        
+      </div>
+      <div class="article__meta-item">
+        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+       <p><span class="visually-hidden" >Localisation : </span><span>1 place du Quartier Blanc 67000 Strasbourg</span></p>
+        
+      </div>
+    </div>
+  <figure class="article__image--compact img-container">
+    <a href="https://www.alsace.eu/agenda/&#224;-decouverte-agents-engages-collectivite-europeenne-d-alsace/" title="&#192; la d&#233;couverte des agents engag&#233;s de la Collectivit&#233; europ&#233;enne d'Alsace" tabindex="-1" aria-hidden="true">
+      <picture>
+	<source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9169/visuel-intranet-expo-agents-750x500px.jpg?width=590&format=webp&quality=70" media="(max-width:768px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9169/visuel-intranet-expo-agents-750x500px.jpg?width=590&format=jpeg&quality=70" media="(max-width:768px)">
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9169/visuel-intranet-expo-agents-750x500px.jpg?width=230&height=400&mode=crop&format=webp&quality=70" media="(min-width:769px) and (max-width:996px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9169/visuel-intranet-expo-agents-750x500px.jpg?width=230&height=400&mode=crop&format=jpeg&quality=70" media="(min-width:769px) and (max-width:996px)">			
+    <source type="image/webp" srcset="/assets/img/1x1.png" data-srcset="/media/9169/visuel-intranet-expo-agents-750x500px.jpg?width=260&height=400&mode=crop&format=webp&quality=70" media="(min-width:997px)">
+    <source type="image/jpeg" srcset="/assets/img/1x1.png" data-srcset="/media/9169/visuel-intranet-expo-agents-750x500px.jpg?width=260&height=400&mode=crop&format=jpeg&quality=70" media="(min-width:997px)">
+	<img src="/assets/img/1x1.png" data-src="/media/9169/visuel-intranet-expo-agents-750x500px.jpg?width=590&format=jpeg&quality=70" alt="" class="lazyload banner__image" loading="lazy" width="590" height="295">
+        
+      </picture>
+    </a>
+  </figure>
+  <div class="article__content">
+    <ul class="tag-list"><li class="list__item"><a href="/agenda/?fq=p_tags_ss:Alsace+-+Els%c3%a0ss" class="tag--primary tag--sm" rel="nofollow">Alsace - <span lang="gsw">Elsàss</span></a></li>
+<li class="list__item"><a href="/agenda/?fq=p_territoire_ss:Toute+l%27Alsace" class="tag--primary tag--sm" rel="nofollow">Toute l'Alsace</a></li>
+    </ul>
+    <h3 class="article__title h2"><a href="https://www.alsace.eu/agenda/&#224;-decouverte-agents-engages-collectivite-europeenne-d-alsace/">&#192; la d&#233;couverte des agents engag&#233;s de la Collectivit&#233; europ&#233;enne d'Alsace</a></h3>
+    <div class="article__extract"><p><span>La Collectivité européenne d'Alsace met à l’honneur ses agents engagés. À travers une exposition présentée à Strasbourg et Colmar, leurs parcours révèlent la diversité, la générosité et la richesse de celles et ceux qui s'investissent, en dehors de leur mission professionnelle, pour le bien-être des autres. Découvrez le visage et l'histoire de ces agents territoriaux sur les murs des Hôtels d'Alsace !</span></p></div>
+  </div>
+</article></section>
+
+
+        
+
+
+
+                
+        
+               
+<a href="https://www.alsace.eu/agenda/"
+   target="_self"
+   title="Agenda"
+   class="btn--multi btn--xl btn--block btn--icon">
+            <span class="btn__title">Tout l&#39;agenda</span>
+            <i class="fas fa-chevron-right btn__icon-animate" aria-hidden="true"></i>
+</a>
+
+   
+    
+
+
+        
+
+
+
+        </div>
+
+
+</div>
+
+    </main>
+    <div class="backtotop">
+    <a class="backtotop__link" href="#top">
+        <span class="backtotop__txt">Retour en haut de page</span>
+        <span class="backtotop__icon" aria-hidden="true"><i class="fas fa-chevron-up"></i></span>
+    </a>
+</div>
+
+
+
+    
+    <aside class="main-prefooter">
+        <div class="block--bg k-grid-6 has-gutter-l">
+            <div class="k-col-4">
+                <h2 class="section-title">S'inscrire à la newsletter</h2>
+                <button class="btn--primary btn--lg js__show-form" type="button">S'inscrire</button>
+                <form class="form-newsletter form-search js__form-newsletter" id="inscription-newsletter" name="theform" action="#" onsubmit="return false;" data-error="Une erreur s&#39;est produite" data-message="Votre abonnement &#224; la newsletter a &#233;t&#233; pris en compte, vous allez recevoir un email de confirmation sur votre bo&#238;te de messagerie ">
+                    
+                    <label class="visually-hidden" for="email">Votre adresse email</label>
+                    <input type="text" class="form__control dont-delete js__newsletter-name" name="name" id="name" aria-hidden="true" placeholder="Votre nom à ne pas remplir, pour les robots">
+                    <p class="form__group">
+                        <span class="js__input-container"></span>
+                        <button type="submit" class="newsletter-submit js__newsletter-submit form__submit hidden"><i class="fa fa-check"></i><span class="visually-hidden">S’inscrire à la newsletter</span></button>
+                    </p>
+                    <div class="newsletter-result hidden js__newsletter-result">
+                        <div class="view-messages js__newsletter-return" role="status"></div>
+                        <button class="newsletter-close js__newsletter-close" type="button"><i class="fas fa-times" aria-hidden="true"></i><span class="visually-hidden">Fermer</span></button>
+                    </div>
+                </form>
+
+            </div>
+            <div class="k-col-2">
+                    <div class="social-network">
+        <h2 class="section-title">La CeA et vous :</h2>
+
+        <ul class="list--socials-icon">
+            <li class="list__item">
+                
+                <a class="list__link" href="https://twitter.com/toutelalsace" title="Twitter de la Collectivit&#233; europ&#233;enne d&#39;Alsace (Ouverture dans une nouvelle fenêtre)" target="_blank" rel="noopener">
+                    
+                    <img src="/media/3811/twitter-square.svg" loading="lazy" class="social-item" alt="Logo Twitter de la Collectivit&#233; europ&#233;enne d&#39;Alsace" height="45" aria-hidden="true">
+                    <span class="visually-hidden">Twitter de la Collectivit&#233; europ&#233;enne d&#39;Alsace</span>
+                </a>
+            </li>
+            <li class="list__item">
+                
+                <a class="list__link" href="https://www.facebook.com/toutelalsace" title="Facebook de la Collectivit&#233; europ&#233;enne d&#39;Alsace (Ouverture dans une nouvelle fenêtre)" target="_blank" rel="noopener">
+                    
+                    <img src="/media/3549/facebook-square.svg" loading="lazy" class="social-item" alt="Logo Facebook de la Collectivit&#233; europ&#233;enne d&#39;Alsace" height="45" aria-hidden="true">
+                    <span class="visually-hidden">Facebook de la Collectivit&#233; europ&#233;enne d&#39;Alsace</span>
+                </a>
+            </li>
+            <li class="list__item">
+                
+                <a class="list__link" href="https://www.instagram.com/toutelalsace/" title="Instagram de la Collectivit&#233; europ&#233;enne d&#39;Alsace (Ouverture dans une nouvelle fenêtre)" target="_blank" rel="noopener">
+                    
+                    <img src="/media/3621/instagram.svg" loading="lazy" class="social-item" alt="Logo Instagram de la Collectivit&#233; europ&#233;enne d&#39;Alsace" height="45" aria-hidden="true">
+                    <span class="visually-hidden">Instagram de la Collectivit&#233; europ&#233;enne d&#39;Alsace</span>
+                </a>
+            </li>
+            <li class="list__item">
+                
+                <a class="list__link" href="https://www.youtube.com/c/ToutelAlsace" title="YouTube (Ouverture dans une nouvelle fenêtre)" target="_blank" rel="noopener">
+                    
+                    <img src="/media/3871/youtube-square.svg" loading="lazy" class="social-item" alt="Logo YouTube" height="45" aria-hidden="true">
+                    <span class="visually-hidden">YouTube</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+
+            </div>
+        </div>
+    </aside>
+
+    <footer class="main-footer block k-grid-12 has-gutter-xl kie-grid" role="contentinfo">
+            <div class="footer__left-content k-col-4">
+        <h1 class="main-logo">    <a class="logo svg-container" href="/">
+        <img src="/assets/img/logo-cea-cartouche-h.svg" width="260" height="88" alt="Collectivité européenne d'Alsace">
+    </a>
+</h1>
+
+        <div class="k-grid-2 has-gutter-l">
+            <p>Hôtel d'Alsace<br>Place du Quartier Blanc<br>F-67964 Strasbourg cedex<br><a href="tel:+33369493929">03 69 49 39 29</a></p>
+            <p>Hôtel d'Alsace<br>100 Avenue d'Alsace<br>BP 20351 68006 Colmar cedex<br><a href="tel:+33369493929">03 69 49 39 29</a></p>
+        </div>
+    </div>
+
+        <div class="footer__right-content k-col-8 k-grid-8 has-gutter-l">
+    <nav class="main-footer__nav k-col-5">
+          
+        <ul class="list--icon">
+                    <li class="list__item">
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        <a class="list__link" href="https://www.alsace.eu/la-collectivite/nous-rejoindre/" title="Nous rejoindre">
+                            Nous rejoindre
+                        </a>
+                    </li>
+                    <li class="list__item">
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        <a class="list__link" href="/offres-services-civiques/" title="Offres des services civiques">
+                            Offres services civiques
+                        </a>
+                    </li>
+                    <li class="list__item">
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        <a class="list__link" href="/nos-sites/" title="Nos sites">
+                            Nos sites
+                        </a>
+                    </li>
+                    <li class="list__item">
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        <a class="list__link" href="/logo-et-charte-d-utilisation/" title="Logo et charte d&#39;utilisation">
+                            Logo et charte d&#39;utilisation
+                        </a>
+                    </li>
+                    <li class="list__item">
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        <a class="list__link" href="https://www.alsace.eu/la-collectivite/les-publications-reglementaires/" title="Les publications r&#233;glementaires">
+                            Publications r&#233;glementaires
+                        </a>
+                    </li>
+                    <li class="list__item">
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        <a class="list__link" href="/procedure-recueil-alertes-ethiques/" title="Proc&#233;dure de recueil des alertes &#233;thiques">
+                            Proc&#233;dure de recueil des alertes &#233;thiques
+                        </a>
+                    </li>
+                    <li class="list__item">
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        <a class="list__link" href="/mentions-legales/" title="Mentions l&#233;gales">
+                            Mentions l&#233;gales
+                        </a>
+                    </li>
+                    <li class="list__item">
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        <a class="list__link" href="/plan-site/" title="Plan du site">
+                            Plan du site
+                        </a>
+                    </li>
+                    <li class="list__item">
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        <a class="list__link" href="/declaration-conformite-rgaa/" title="D&#233;claration de conformit&#233; RGAA">
+                            D&#233;claration de conformit&#233; RGAA
+                        </a>
+                    </li>
+
+                    <li class="list__item link__external">
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                        <a href="https://intranet.alsace.eu/" target=" _blank" class="external-link"  rel="nofollow noindex">
+                            Acc&#232;s agent CeA
+                        </a>
+                    </li>
+        </ul>
+    </nav>
+    <a class="btn--red btn--lg k-col-3" href="/contact">Contact</a>
+</div>
+
+
+
+
+        <div class="main-post-footer k-col-all kie-full">
+    
+    <p class="copyright">Tous droits réservés © 2025</p>
+    <a id="show-cookie-modal" role="button" tabindex="0" href="#">Accéder aux paramètres des cookies <i class="visually-hidden">(fenêtre modale)</i></a>
+</div>
+
+
+
+
+
+
+    </footer>
+    <datalist id="jsondatalist"></datalist>
+    <script src="/DependencyHandler.axd/843999347b07a1deb8ee3b372b9a62ed/1532767324/js" defer="defer"></script>
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/orejime@3.0.1/dist/orejime-standard-fr.js" fetchpriority="high"
+            integrity="sha512-Fp97/PwX4k5Etag1PGwZh4/hLwWNjhDzYbo1eYKr9eRXa14Wz5DWNrN6XT52r5eKlSrzbYv61x5g1cUcYcVf2A==" crossorigin="anonymous"
+        defer></script>
+</body>
+</html>

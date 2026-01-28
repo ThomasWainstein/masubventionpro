@@ -4,7 +4,6 @@ import {
   Calendar,
   Euro,
   MapPin,
-  Building,
   Bookmark,
   BookmarkCheck,
   ExternalLink,
@@ -14,6 +13,7 @@ import {
   Phone,
   Building2,
 } from 'lucide-react';
+import OrganizationLogo from '@/components/subsidy/OrganizationLogo';
 import { Button } from '@/components/ui/button';
 import {
   getAmountDisplay,
@@ -115,7 +115,11 @@ export function SubsidyCard({
           </h3>
           {subsidy.agency && (
             <div className="flex items-center gap-1.5 mt-1 text-sm text-slate-500">
-              <Building className="h-3.5 w-3.5" />
+              <OrganizationLogo
+                organizationName={subsidy.agency}
+                logoUrl={subsidy.logo_url}
+                size="sm"
+              />
               <span className="truncate">{subsidy.agency}</span>
             </div>
           )}

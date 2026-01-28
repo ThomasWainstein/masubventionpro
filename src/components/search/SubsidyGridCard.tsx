@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { Subsidy, getSubsidyTitle } from '@/types';
-import { MapPin, Building, Bookmark, BookmarkCheck, Users, Phone } from 'lucide-react';
+import { MapPin, Bookmark, BookmarkCheck, Users, Phone } from 'lucide-react';
 import { getAmountDisplay, getEntityTypeBadges, hasContacts } from '@/lib/subsidyUtils';
+import OrganizationLogo from '@/components/subsidy/OrganizationLogo';
 
 interface SubsidyGridCardProps {
   subsidy: Subsidy;
@@ -98,9 +99,12 @@ export function SubsidyGridCard({
       {/* Agency */}
       {agencyDisplay() && (
         <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-2">
-          <div className="w-5 h-5 bg-slate-100 rounded flex items-center justify-center flex-shrink-0">
-            <Building className="h-3 w-3 text-slate-400" />
-          </div>
+          <OrganizationLogo
+            organizationName={subsidy.agency || ''}
+            logoUrl={subsidy.logo_url}
+            size="sm"
+            className="flex-shrink-0"
+          />
           <span className="truncate">{agencyDisplay()}</span>
         </div>
       )}

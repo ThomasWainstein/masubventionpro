@@ -5,12 +5,12 @@ import { supabase } from '@/lib/supabase';
 import { Subsidy, getSubsidyTitle, getSubsidyDescription } from '@/types';
 import { useSavedSubsidies } from '@/hooks/useSavedSubsidies';
 import { Button } from '@/components/ui/button';
+import OrganizationLogo from '@/components/subsidy/OrganizationLogo';
 import {
   ArrowLeft,
   Calendar,
   Euro,
   MapPin,
-  Building,
   Building2,
   ExternalLink,
   Bookmark,
@@ -200,8 +200,12 @@ export function SubsidyDetailPage() {
             <div className="flex-1">
               <h1 className="text-2xl md:text-3xl font-bold text-slate-900">{title}</h1>
               {subsidy.agency && (
-                <div className="flex items-center gap-2 mt-3 text-slate-600">
-                  <Building className="h-5 w-5" />
+                <div className="flex items-center gap-3 mt-3 text-slate-600">
+                  <OrganizationLogo
+                    organizationName={subsidy.agency}
+                    logoUrl={subsidy.logo_url}
+                    size="lg"
+                  />
                   <span className="text-lg">{subsidy.agency}</span>
                 </div>
               )}
