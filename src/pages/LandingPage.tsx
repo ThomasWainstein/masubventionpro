@@ -1063,10 +1063,10 @@ const LandingPage = () => {
             </p>
           </div>
           <div className="grid lg:grid-cols-3 gap-8 mt-12">
-            {/* Découverte */}
+            {/* Starter */}
             <div className="bg-white border-[3px] border-slate-200 rounded-3xl p-10 relative hover:-translate-y-2 hover:shadow-xl transition-all">
-              <h3 className="text-2xl font-bold text-slate-900">Découverte</h3>
-              <p className="text-slate-500 mt-1">Idéal pour un premier diagnostic</p>
+              <h3 className="text-2xl font-bold text-slate-900">Starter</h3>
+              <p className="text-slate-500 mt-1">Pour découvrir pendant 1 mois</p>
               <div className="my-6">
                 <span className="text-6xl font-extrabold text-blue-800">49€</span>
                 <span className="text-lg text-slate-500 ml-1">HT</span>
@@ -1093,7 +1093,7 @@ const LandingPage = () => {
                 onClick={() => navigate("/signup?plan=decouverte")}
                 className="w-full mt-6 px-8 py-4 bg-white text-blue-800 border-2 border-blue-800 rounded-lg font-semibold text-lg hover:-translate-y-0.5 transition-all"
               >
-                Choisir Découverte
+                Choisir Starter
               </button>
             </div>
 
@@ -1126,7 +1126,7 @@ const LandingPage = () => {
                 ))}
               </ul>
               <div className="bg-blue-50 border-2 border-blue-200 p-3 rounded-xl mt-4 text-center">
-                <p className="text-blue-700 text-sm font-medium">Upgrade depuis Découverte : payez 140€ dans les 30 jours</p>
+                <p className="text-blue-700 text-sm font-medium">Upgrade depuis Starter : payez 140€ dans les 30 jours</p>
               </div>
               <div className="bg-emerald-50 border-2 border-emerald-200 p-4 rounded-xl mt-3 text-center">
                 <h4 className="text-emerald-700 font-bold">Vos données vous appartiennent</h4>
@@ -1170,7 +1170,7 @@ const LandingPage = () => {
                 ))}
               </ul>
               <div className="bg-blue-50 border-2 border-blue-200 p-3 rounded-xl mt-4 text-center text-sm">
-                <p className="text-blue-700 font-medium">Upgrade depuis Découverte : crédit 49€ → payez 500€</p>
+                <p className="text-blue-700 font-medium">Upgrade depuis Starter : crédit 49€ → payez 500€</p>
                 <p className="text-blue-700 font-medium">Upgrade depuis Business : crédit 189€ → payez 360€</p>
               </div>
               <div className="bg-emerald-50 border-2 border-emerald-200 p-4 rounded-xl mt-3 text-center">
@@ -1714,10 +1714,10 @@ const LandingPage = () => {
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-4">
-                      {/* Découverte Option */}
+                      {/* Starter Option */}
                       <div className="bg-white rounded-xl p-5 border-2 border-slate-200 hover:border-blue-400 transition-colors">
                         <div className="flex items-center justify-between mb-3">
-                          <h5 className="font-bold text-slate-900">Découverte</h5>
+                          <h5 className="font-bold text-slate-900">Starter</h5>
                           <span className="text-2xl font-extrabold text-blue-800">49€ <span className="text-sm font-normal text-slate-500">HT</span></span>
                         </div>
                         <ul className="space-y-2 text-sm text-slate-600 mb-4">
@@ -1738,7 +1738,7 @@ const LandingPage = () => {
                           onClick={() => handleUpgrade('decouverte')}
                           className="w-full py-2.5 border-2 border-blue-800 text-blue-800 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
                         >
-                          Choisir Découverte
+                          Choisir Starter
                         </button>
                       </div>
 
