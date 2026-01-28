@@ -16,6 +16,7 @@ const OnboardingWizard = lazy(() => import('./pages/OnboardingWizard'))
 const SuccessPage = lazy(() => import('./pages/SuccessPage'))
 const LoginPage = lazy(() => import('./pages/LoginPage'))
 const EmailConfirmationPage = lazy(() => import('./pages/EmailConfirmationPage'))
+const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const SubsidyDisplayDemo = lazy(() => import('./pages/SubsidyDisplayDemo'))
 
@@ -55,6 +56,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/connexion" element={<LoginPage />} />
         <Route path="/confirm-email" element={<EmailConfirmationPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/success" element={<SuccessPage />} />
         <Route path="/demo/display" element={<SubsidyDisplayDemo />} />
 

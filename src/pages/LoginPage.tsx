@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { supabase } from "@/lib/supabase"
-import { Loader2, ArrowRight, ArrowLeft } from "lucide-react"
+import { Loader2, ArrowRight, ArrowLeft, Eye, EyeOff } from "lucide-react"
 
 const LoginPage = () => {
   const navigate = useNavigate()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -141,13 +142,27 @@ const LoginPage = () => {
                   Mot de passe oublie ?
                 </button>
               </div>
-              <Input
-                type="password"
-                placeholder="Votre mot de passe"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Votre mot de passe"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4 text-slate-400" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-slate-400" />
+                  )}
+                </button>
+              </div>
             </div>
 
             {error && (
