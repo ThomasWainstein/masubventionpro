@@ -873,7 +873,7 @@ const LandingPage = () => {
               {/* Key Benefits - Added to match right side height */}
               <div className="grid grid-cols-2 gap-4 mt-auto">
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
-                  <div className="text-3xl font-bold text-amber-400 mb-1">10 000</div>
+                  <div className="text-3xl font-bold text-amber-400 mb-1">{subsidyCount}</div>
                   <div className="text-sm text-slate-300">Dispositifs d'aides référencés</div>
                 </div>
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
