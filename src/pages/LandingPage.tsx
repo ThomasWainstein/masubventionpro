@@ -809,7 +809,7 @@ const LandingPage = () => {
               to="/signup"
               className="px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-800/30 transition-all"
             >
-              S'inscrire
+              Ma simulation
             </Link>
           </nav>
 
@@ -839,7 +839,7 @@ const LandingPage = () => {
               to="/signup"
               className="block w-full text-center px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold"
             >
-              S'inscrire
+              Ma simulation
             </Link>
           </div>
         )}
@@ -1802,8 +1802,6 @@ const LandingPage = () => {
               {/* Type Selection */}
               {!profileType && !showResults && !isAnalyzing && (
                 <div className="space-y-4 max-w-lg mx-auto">
-                  <p className="text-center text-slate-500 mb-6">Choisissez votre situation</p>
-
                   {/* Option 1: Entreprise existante */}
                   <button
                     onClick={() => setProfileType('entreprise')}
