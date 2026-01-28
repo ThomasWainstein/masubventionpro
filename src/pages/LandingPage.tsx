@@ -894,6 +894,15 @@ const LandingPage = () => {
                   <div className="text-sm text-slate-300">Assistant IA expert</div>
                 </div>
               </div>
+
+              {/* CTA Button */}
+              <button
+                onClick={openProfileModal}
+                className="w-full mt-6 px-8 py-5 bg-gradient-to-br from-blue-600 to-blue-400 text-white rounded-xl font-semibold text-xl shadow-lg shadow-blue-600/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-600/40 transition-all flex items-center justify-center gap-3"
+              >
+                Lancer ma simulation
+                <ArrowRight className="w-6 h-6" />
+              </button>
             </div>
 
             {/* Profile Selector Cards */}
@@ -946,19 +955,6 @@ const LandingPage = () => {
               ))}
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Button */}
-      <section className="bg-white py-8 px-8">
-        <div className="max-w-3xl mx-auto">
-          <button
-            onClick={openProfileModal}
-            className="w-full px-8 py-5 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-xl font-semibold text-xl shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-800/30 transition-all flex items-center justify-center gap-3"
-          >
-            Lancer ma simulation
-            <ArrowRight className="w-6 h-6" />
-          </button>
         </div>
       </section>
 
