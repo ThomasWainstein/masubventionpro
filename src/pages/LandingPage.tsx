@@ -1156,9 +1156,9 @@ const LandingPage = () => {
                   "Assistant IA expert (x20 Starter)",
                   "Accès moteur recherche",
                   "Rapport PDF détaillé téléchargeable",
-                  "Multi-entités (5 sociétés incluses)",
                   "Actualisation automatique des aides éligibles",
                   "Alertes nouveaux dispositifs par email",
+                  "Multi-entités (5 sociétés incluses)",
                   "Dashboard consolidé groupe",
                   "2h accompagnement utilisation",
                   "Importation entités (Excel ou CSV)",
@@ -1210,7 +1210,7 @@ const LandingPage = () => {
               {
                 icon: <Shield className="w-6 h-6" />,
                 title: "100% conforme RGPD",
-                desc: "Respect total du règlement européen. DPO dédié. Hébergement UE exclusivement. Infrastructure certifiée SOC 2 Type 2.",
+                desc: "Respect total du règlement européen. Hébergement UE exclusivement. Infrastructure certifiée SOC 2 Type 2.",
               },
               {
                 icon: <Bot className="w-6 h-6" />,
@@ -1227,7 +1227,7 @@ const LandingPage = () => {
           <div className="mt-12 p-8 bg-white/15 rounded-xl text-center">
             <h3 className="text-2xl font-bold mb-4">VOS DONNÉES VOUS APPARTIENNENT</h3>
             <p className="text-lg opacity-95 leading-relaxed">
-              Aucune utilisation commerciale. Aucun partage. Aucune revente. Vos informations sont utilisées UNIQUEMENT pour vous fournir le service souscrit. Point final.
+              Aucune utilisation commerciale. Aucun partage. Aucune revente. Vos informations sont utilisées UNIQUEMENT pour vous fournir le service souscrit.
             </p>
           </div>
         </div>
@@ -1241,7 +1241,7 @@ const LandingPage = () => {
             <div className="lg:col-span-2">
               <h4 className="text-2xl font-bold mb-4">MaSubventionPro</h4>
               <p className="text-white/70 leading-relaxed mb-6">
-                La plateforme d'intelligence artificielle qui identifie toutes vos aides publiques. Propulsée par subvention360, la référence des professionnels du financement.
+                La plateforme d'intelligence artificielle qui identifie toutes vos aides publiques. Propulsée par subvention360.
               </p>
               <p className="font-semibold">
                 contact@masubventionpro.com<br />
@@ -1288,7 +1288,7 @@ const LandingPage = () => {
             <div>
               <h5 className="text-lg font-semibold mb-4">Professionnels</h5>
               <div className="space-y-3">
-                <a href="https://subvention360.com" target="_blank" rel="noopener noreferrer" className="block text-white/70 hover:text-white transition-colors">subvention360 Pro</a>
+                <a href="https://subvention360.com" target="_blank" rel="noopener noreferrer" className="block text-white/70 hover:text-white transition-colors">subvention360</a>
                 <a href="#" className="block text-white/70 hover:text-white transition-colors">Devenir partenaire</a>
               </div>
             </div>
@@ -1297,7 +1297,7 @@ const LandingPage = () => {
           {/* Disclaimer */}
           <div className="bg-white/5 p-6 rounded-xl mb-8 max-w-[900px] mx-auto">
             <p className="text-white/80 text-sm leading-relaxed">
-              <strong>Disclaimer important :</strong> MaSubventionPro est un outil d'identification et d'analyse des aides publiques disponibles. Nous ne garantissons pas l'obtention des aides identifiées. L'éligibilité effective, la constitution des dossiers de demande et l'attribution finale relèvent de votre responsabilité et des décisions souveraines des organismes attributeurs (État, Régions, Communes, Europe, BPI France, etc.). Les montants estimés sont indicatifs et basés sur des données historiques. MaSubventionPro ne se substitue pas à un expert-comptable, avocat ou conseil en financement pour la constitution de vos dossiers.
+              <strong>Mention légale :</strong> MaSubventionPro est un outil d'identification et d'analyse des aides publiques disponibles. Nous ne garantissons pas l'obtention des aides identifiées. L'éligibilité effective, la constitution des dossiers de demande et l'attribution finale relèvent de votre responsabilité et des décisions souveraines des organismes attributeurs (État, Régions, Communes, Europe, BPI France, etc.). Les montants estimés sont indicatifs et basés sur des données historiques. MaSubventionPro ne se substitue pas à un expert-comptable, avocat ou conseil en financement pour la constitution de vos dossiers.
             </p>
           </div>
 
