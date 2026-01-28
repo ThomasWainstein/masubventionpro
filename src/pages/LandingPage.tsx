@@ -1076,7 +1076,7 @@ const LandingPage = () => {
                 {[
                   "Identification toutes aides éligibles",
                   "Assistant IA expert",
-                  "Accès moteur recherche 10 000+ dispositifs",
+                  "Accès moteur recherche",
                   "Rapport PDF détaillé téléchargeable",
                 ].map((item, j, arr) => (
                   <li key={j} className={`py-3.5 flex items-start gap-3 text-sm ${j < arr.length - 1 ? 'border-b border-slate-200' : ''}`}>
@@ -1114,7 +1114,7 @@ const LandingPage = () => {
                 {[
                   "Identification toutes aides éligibles",
                   "Assistant IA expert (x10 Starter)",
-                  "Accès moteur recherche 10 000+ dispositifs",
+                  "Accès moteur recherche",
                   "Rapport PDF détaillé téléchargeable",
                   "Actualisation automatique des aides éligibles",
                   "Alertes nouveaux dispositifs par email",
@@ -1126,7 +1126,7 @@ const LandingPage = () => {
                 ))}
               </ul>
               <div className="bg-blue-50 border-2 border-blue-200 p-3 rounded-xl mt-4 text-center">
-                <p className="text-blue-700 text-sm font-medium">Upgrade depuis Starter : payez 140€ dans les 30 jours</p>
+                <p className="text-blue-700 text-sm font-medium">Upgrade depuis Starter :<br />payez 140€ dans les 30 jours</p>
               </div>
               <div className="bg-emerald-50 border-2 border-emerald-200 p-4 rounded-xl mt-3 text-center">
                 <h4 className="text-emerald-700 font-bold">Vos données vous appartiennent</h4>
@@ -1154,7 +1154,7 @@ const LandingPage = () => {
                 {[
                   "Identification toutes aides éligibles",
                   "Assistant IA expert (x20 Starter)",
-                  "Accès moteur recherche 10 000+ dispositifs",
+                  "Accès moteur recherche",
                   "Rapport PDF détaillé téléchargeable",
                   "Multi-entités (5 sociétés incluses)",
                   "Actualisation automatique des aides éligibles",
@@ -1170,8 +1170,9 @@ const LandingPage = () => {
                 ))}
               </ul>
               <div className="bg-blue-50 border-2 border-blue-200 p-3 rounded-xl mt-4 text-center text-sm">
-                <p className="text-blue-700 font-medium">Upgrade depuis Starter : crédit 49€ → payez 500€</p>
-                <p className="text-blue-700 font-medium">Upgrade depuis Business : crédit 189€ → payez 360€</p>
+                <p className="text-blue-700 font-medium">Upgrade depuis Starter : payez 500€</p>
+                <p className="text-blue-700 font-medium">Upgrade depuis Business : payez 360€</p>
+                <p className="text-blue-700 font-medium">dans les 30 jours</p>
               </div>
               <div className="bg-emerald-50 border-2 border-emerald-200 p-4 rounded-xl mt-3 text-center">
                 <h4 className="text-emerald-700 font-bold">Vos données vous appartiennent</h4>
