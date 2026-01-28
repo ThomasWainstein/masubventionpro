@@ -918,7 +918,7 @@ const LandingPage = () => {
                   id: 'creation',
                   icon: <Rocket className="w-10 h-10" />,
                   title: 'Créateur',
-                  desc: 'Vous lancez votre activité et avez besoin de capital',
+                  desc: 'Vous lancez votre activité',
                 },
                 {
                   id: 'groupe',
