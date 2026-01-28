@@ -892,7 +892,7 @@ const LandingPage = () => {
               onClick={openProfileModal}
               className="px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-800/30 transition-all"
             >
-              Ma simulation
+              Découvrir mes aides
             </button>
           </nav>
 
@@ -922,7 +922,7 @@ const LandingPage = () => {
               onClick={() => { setMobileMenuOpen(false); openProfileModal(); }}
               className="block w-full text-center px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold"
             >
-              Ma simulation
+              Découvrir mes aides
             </button>
           </div>
         )}
@@ -983,9 +983,27 @@ const LandingPage = () => {
                 onClick={openProfileModal}
                 className="w-full mt-6 px-8 py-5 bg-gradient-to-br from-blue-600 to-blue-400 text-white rounded-xl font-semibold text-xl shadow-lg shadow-blue-600/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-600/40 transition-all flex items-center justify-center gap-3"
               >
-                Lancer ma simulation
+                Découvrir mes aides gratuitement
                 <ArrowRight className="w-6 h-6" />
               </button>
+
+              {/* Trust Badges */}
+              <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
+                <span className="flex items-center gap-1.5 text-xs text-slate-300">
+                  <Shield className="w-3.5 h-3.5 text-emerald-400" />
+                  100% conforme RGPD
+                </span>
+                <span className="text-slate-500">|</span>
+                <span className="flex items-center gap-1.5 text-xs text-slate-300">
+                  <Lock className="w-3.5 h-3.5 text-emerald-400" />
+                  Données hébergées en UE
+                </span>
+                <span className="text-slate-500">|</span>
+                <span className="flex items-center gap-1.5 text-xs text-slate-300">
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  Sans engagement
+                </span>
+              </div>
             </div>
 
             {/* Profile Selector Cards */}
@@ -1134,8 +1152,130 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Why Choose Us - Comparison Table */}
+      <section className="bg-white py-20 px-8">
+        <div className="max-w-[1200px] mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-extrabold text-slate-900 mb-4">
+              Pourquoi MaSubventionPro ?
+            </h2>
+            <p className="text-xl text-slate-500">
+              Comparez notre solution aux alternatives gratuites
+            </p>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr>
+                  <th className="p-4 text-left bg-slate-100 rounded-tl-xl"></th>
+                  <th className="p-4 text-center bg-gradient-to-br from-blue-800 to-blue-600 text-white font-bold text-lg rounded-tr-xl md:rounded-tr-none">
+                    MaSubventionPro
+                  </th>
+                  <th className="p-4 text-center bg-slate-100 font-semibold text-slate-700 hidden md:table-cell">
+                    Portails gratuits
+                  </th>
+                  <th className="p-4 text-center bg-slate-100 font-semibold text-slate-700 rounded-tr-xl hidden md:table-cell">
+                    Recherche manuelle
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  {
+                    feature: "Nombre d'aides référencées",
+                    us: "10 000+ dispositifs",
+                    free: "500-2 000",
+                    manual: "Variable"
+                  },
+                  {
+                    feature: "Aides communales incluses",
+                    us: true,
+                    free: false,
+                    manual: "Difficile à trouver"
+                  },
+                  {
+                    feature: "Score d'éligibilité personnalisé",
+                    us: true,
+                    free: false,
+                    manual: false
+                  },
+                  {
+                    feature: "Assistant IA expert",
+                    us: true,
+                    free: false,
+                    manual: false
+                  },
+                  {
+                    feature: "Mise à jour quotidienne",
+                    us: true,
+                    free: "Mensuelle",
+                    manual: "Manuelle"
+                  },
+                  {
+                    feature: "Rapports PDF détaillés",
+                    us: true,
+                    free: false,
+                    manual: false
+                  },
+                  {
+                    feature: "Alertes nouveaux dispositifs",
+                    us: true,
+                    free: false,
+                    manual: false
+                  },
+                  {
+                    feature: "Temps de recherche",
+                    us: "5 minutes",
+                    free: "Plusieurs heures",
+                    manual: "Plusieurs jours"
+                  }
+                ].map((row, index) => (
+                  <tr key={index} className={index % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
+                    <td className="p-4 font-medium text-slate-900 border-b border-slate-200">
+                      {row.feature}
+                    </td>
+                    <td className="p-4 text-center border-b border-slate-200 bg-blue-50/50">
+                      {typeof row.us === 'boolean' ? (
+                        row.us ? <Check className="w-5 h-5 text-emerald-600 mx-auto" /> : <X className="w-5 h-5 text-slate-300 mx-auto" />
+                      ) : (
+                        <span className="font-semibold text-blue-800">{row.us}</span>
+                      )}
+                    </td>
+                    <td className="p-4 text-center border-b border-slate-200 hidden md:table-cell">
+                      {typeof row.free === 'boolean' ? (
+                        row.free ? <Check className="w-5 h-5 text-emerald-600 mx-auto" /> : <X className="w-5 h-5 text-slate-300 mx-auto" />
+                      ) : (
+                        <span className="text-slate-500">{row.free}</span>
+                      )}
+                    </td>
+                    <td className="p-4 text-center border-b border-slate-200 hidden md:table-cell">
+                      {typeof row.manual === 'boolean' ? (
+                        row.manual ? <Check className="w-5 h-5 text-emerald-600 mx-auto" /> : <X className="w-5 h-5 text-slate-300 mx-auto" />
+                      ) : (
+                        <span className="text-slate-500">{row.manual}</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="text-center mt-10">
+            <button
+              onClick={openProfileModal}
+              className="px-8 py-4 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold text-lg shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl transition-all inline-flex items-center gap-2"
+            >
+              Découvrir mes aides gratuitement
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing Section */}
-      <section id="tarifs" className="bg-white pt-12 pb-20 px-8">
+      <section id="tarifs" className="bg-slate-50 pt-12 pb-20 px-8">
         <div className="max-w-[1400px] mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-extrabold text-slate-900 mb-4">
@@ -1312,6 +1452,75 @@ const LandingPage = () => {
             <p className="text-lg opacity-95 leading-relaxed">
               Aucune utilisation commerciale. Aucun partage. Aucune revente. Vos informations sont utilisées UNIQUEMENT pour vous fournir le service souscrit.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section id="faq" className="bg-slate-50 py-20 px-8">
+        <div className="max-w-[1000px] mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-extrabold text-slate-900 mb-4">
+              Questions fréquentes
+            </h2>
+            <p className="text-xl text-slate-500">
+              Tout ce que vous devez savoir sur MaSubventionPro
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {[
+              {
+                question: "Qu'est-ce que MaSubventionPro ?",
+                answer: "MaSubventionPro est une plateforme d'intelligence artificielle qui analyse plus de 10 000 dispositifs d'aides publiques (État, Régions, Communes, Europe) pour identifier les subventions, prêts, garanties et exonérations fiscales éligibles à votre entreprise."
+              },
+              {
+                question: "Comment fonctionne le calcul d'éligibilité ?",
+                answer: "Notre IA analyse votre profil d'entreprise (secteur, taille, localisation, projet) et le compare aux critères de plus de 10 000 aides publiques pour calculer un score d'éligibilité personnalisé pour chaque dispositif."
+              },
+              {
+                question: "Faut-il avoir un SIRET pour utiliser la plateforme ?",
+                answer: "Non. Les créateurs d'entreprise peuvent utiliser la plateforme avec les détails de leur projet, même avant l'immatriculation. Nous proposons un parcours dédié aux projets en création."
+              },
+              {
+                question: "Quels types d'aides puis-je trouver ?",
+                answer: "Subventions, prêts à taux zéro, garanties bancaires, exonérations fiscales, crédits d'impôt, et autres aides publiques de l'Europe, de l'État, des Régions, Départements et Communes."
+              },
+              {
+                question: "MaSubventionPro constitue-t-il mes dossiers de demande ?",
+                answer: "Actuellement, MaSubventionPro identifie les aides pertinentes et fournit les informations pour démarrer vos démarches. L'accompagnement à la création de dossiers assisté par IA est prévu pour 2027."
+              },
+              {
+                question: "Mes données sont-elles sécurisées ?",
+                answer: "Oui. Vos données sont hébergées en Union Européenne, nous sommes 100% conformes RGPD et certifiés SOC 2 Type 2. Vos données ne sont jamais revendues ni partagées."
+              }
+            ].map((faq, index) => (
+              <div
+                key={index}
+                className="bg-white border-2 border-slate-200 rounded-xl p-6 hover:border-blue-300 transition-colors"
+              >
+                <h3 className="text-lg font-bold text-slate-900 mb-3 flex items-start gap-3">
+                  <span className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-800 rounded-lg flex items-center justify-center text-sm font-bold">
+                    {index + 1}
+                  </span>
+                  {faq.question}
+                </h3>
+                <p className="text-slate-600 leading-relaxed pl-11">
+                  {faq.answer}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-10">
+            <p className="text-slate-500 mb-4">Vous avez d'autres questions ?</p>
+            <a
+              href="mailto:support@masubventionpro.com"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-800 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            >
+              Contactez-nous
+              <ArrowRight className="w-4 h-4" />
+            </a>
           </div>
         </div>
       </section>
