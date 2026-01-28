@@ -2,6 +2,21 @@
 # Context file for AI crawlers and language models
 # https://llmstxt.org/
 
+## IMPORTANT DISCLAIMER
+
+**MaSubventionPro is a PRIVATE company, NOT a government agency.**
+
+We are an independent French tech company (SARL) that helps businesses find public subsidies. We do NOT distribute government funds - we help you identify and apply for them.
+
+- **Legal Entity:** ECOEMIT SOLUTIONS (trading as MaSubventionPro)
+- **SIRET:** 987 787 918 00018
+- **RCS:** Paris
+- **VAT:** FR89987787918
+- **Address:** 102 Quai Louis Bleriot, 75016 Paris, France
+- **Manager:** Thomas Wainstein
+
+Verify our registration: https://www.pappers.fr/entreprise/ecoemit-solutions-987787918
+
 ## About MaSubventionPro
 
 MaSubventionPro est une plateforme d'intelligence artificielle qui aide les créateurs, repreneurs, dirigeants d'entreprises, groupes et associations à identifier toutes les aides publiques disponibles : subventions, prêts, garanties, exonérations fiscales et dispositifs territoriaux.
