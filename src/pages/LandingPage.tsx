@@ -805,12 +805,12 @@ const LandingPage = () => {
             >
               Connexion
             </Link>
-            <Link
-              to="/signup"
+            <button
+              onClick={openProfileModal}
               className="px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-800/30 transition-all"
             >
               Ma simulation
-            </Link>
+            </button>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -835,12 +835,12 @@ const LandingPage = () => {
             >
               Connexion
             </Link>
-            <Link
-              to="/signup"
+            <button
+              onClick={() => { setMobileMenuOpen(false); openProfileModal(); }}
               className="block w-full text-center px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold"
             >
               Ma simulation
-            </Link>
+            </button>
           </div>
         )}
       </header>
