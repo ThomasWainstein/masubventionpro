@@ -870,21 +870,6 @@ const LandingPage = () => {
                 Identifiez <strong>TOUTES VOS OPPORTUNITÉS</strong> en quelques minutes. Notre IA analyse plus de 10 000 dispositifs en temps réel pour vous révéler les aides publiques auxquelles votre entreprise pourrait être éligible.
               </p>
 
-              <div className="flex flex-wrap gap-4 mb-8">
-                <span className="bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full text-sm font-semibold border border-white/20">
-                  {subsidyCount} dispositifs
-                </span>
-                <span className="bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full text-sm font-semibold border border-white/20">
-                  Actualisé quotidiennement
-                </span>
-                <span className="bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full text-sm font-semibold border border-white/20">
-                  Commune - Europe
-                </span>
-                <span className="bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full text-sm font-semibold border border-white/20">
-                  Assistant IA personnalisé
-                </span>
-              </div>
-
               {/* Key Benefits - Added to match right side height */}
               <div className="grid grid-cols-2 gap-4 mt-auto">
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
