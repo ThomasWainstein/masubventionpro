@@ -959,7 +959,7 @@ const LandingPage = () => {
       </section>
 
       {/* Trust Bar - Two Column Layout */}
-      <section className="bg-white py-16 px-8">
+      <section className="bg-white pt-16 pb-8 px-8">
         <div className="max-w-[1200px] mx-auto">
           <div className="grid md:grid-cols-2 gap-8 mb-10">
             {/* Column 1 - Qu'est-ce qui nous rend unique ? */}
@@ -981,21 +981,18 @@ const LandingPage = () => {
 
           {/* Propulsé par subvention360 */}
           <p className="text-slate-500 text-center flex items-center justify-center gap-2">
-            Propulsé par <img src="/logo-subvention360.png" alt="subvention360" className="h-7 inline-block" /><span className="text-2xl font-bold text-blue-800">subvention360</span>
+            Propulsé par <img src="/logo-subvention360.png" alt="subvention360" className="h-7 inline-block" /><span className="text-2xl font-bold text-black">subvention360</span>
           </p>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="fonctionnalites" className="bg-slate-50 py-20 px-8">
+      <section id="fonctionnalites" className="bg-slate-50 pt-10 pb-20 px-8">
         <div className="max-w-[1400px] mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-extrabold text-slate-900 mb-4">
               Une technologie sans équivalent
             </h2>
-            <p className="text-xl text-slate-500">
-              Propulsée par subvention360, la base de données de référence en France
-            </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
             {[
