@@ -32,11 +32,5 @@
         { "key": "Cache-Control", "value": "public, max-age=3600" }
       ]
     }
-  ],
-  "functions": {
-    "api/prerender.ts": {
-      "memory": 256,
-      "maxDuration": 10
-    }
-  }
+  ]
 }
