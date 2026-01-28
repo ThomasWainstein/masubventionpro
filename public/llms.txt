@@ -17,29 +17,111 @@ We are an independent French tech company (SARL) that helps businesses find publ
 
 Verify our registration: https://www.pappers.fr/entreprise/ecoemit-solutions-987787918
 
-## About MaSubventionPro
+---
 
-MaSubventionPro est une plateforme d'intelligence artificielle qui aide les créateurs, repreneurs, dirigeants d'entreprises, groupes et associations à identifier toutes les aides publiques disponibles : subventions, prêts, garanties, exonérations fiscales et dispositifs territoriaux.
+## Landing Page Content
 
-Notre IA analyse en temps réel des milliers de dispositifs nationaux, régionaux, communaux et européens, calcule un score d'éligibilité et génère des rapports détaillés.
+### Hero Section - Value Proposition
 
-**Mission:** Démocratiser l'accès aux aides publiques
-**Vision:** Faire en sorte que chaque euro d'aide publique atteigne celui qui en a besoin
+**Main Headline:** "Des milliards d'euros d'aides publiques par an sont non réclamés. Ne passez plus à côté."
+
+**Sub-headline:** "Identifiez TOUTES VOS OPPORTUNITÉS en quelques minutes."
+
+**Description:** MaSubventionPro est une plateforme d'intelligence artificielle qui aide les créateurs, repreneurs, dirigeants d'entreprises, groupes et associations à identifier toutes les aides publiques disponibles : subventions, prêts, garanties, exonérations fiscales et dispositifs territoriaux. Notre IA analyse en temps réel des milliers de dispositifs nationaux, régionaux, communaux et européens, calcule un score d'éligibilité et génère des rapports détaillés.
+
+**Primary CTA:** "Découvrir mes aides gratuitement"
+
+**Trust Badges (near CTA):**
+- 100% conforme RGPD
+- Données hébergées en UE
+- Sans engagement
+
+---
 
 ## Key Statistics
 
-- **10 000+** dispositifs d'aides référencés
+- **10 000+** dispositifs d'aides référencés aujourd'hui
 - **Quotidien** - Mise à jour des données
 - **National** - De la commune à l'Europe
 - **IA** - Assistant IA expert intégré
 
+---
+
+## How It Works (3 Steps)
+
+### Step 1: Entrez vos informations
+SIRET pour entreprise existante, ou détails du projet pour création. Pas de SIRET requis pour les créateurs.
+
+### Step 2: L'IA analyse votre profil
+Notre IA compare votre profil avec 10 000+ dispositifs d'aides en quelques minutes et calcule vos scores d'éligibilité.
+
+### Step 3: Découvrez vos aides
+Consultez vos résultats personnalisés avec scores d'éligibilité, montants estimés et rapports PDF détaillés.
+
+---
+
+## Unique Value Proposition
+
+### Qu'est-ce qui nous rend unique ?
+Nous avons intégré **EN PLUS** du National et de l'Europe, les aides des **Régions ET des Communes**. Un niveau de couverture que peu de solutions proposent.
+
+### Quel est notre rôle ?
+Vous révéler les opportunités que vous ne connaissiez pas et mettre à votre disposition un **assistant IA expert** pour accompagner vos projets ou besoins.
+
+---
+
+## Comparison: Why MaSubventionPro?
+
+| Feature | MaSubventionPro | Free Government Portals | Manual Research |
+|---------|-----------------|------------------------|-----------------|
+| Number of aids | **10,000+ programs** | 500-2,000 | Variable |
+| Local/municipal aids included | **Yes** | No | Difficult |
+| Personalized eligibility score | **Yes** | No | No |
+| AI Expert Assistant | **Yes** | No | No |
+| Update frequency | **Daily** | Monthly | Manual |
+| PDF reports | **Yes** | No | No |
+| Email alerts | **Yes** | No | No |
+| Search time | **5 minutes** | Several hours | Several days |
+
+---
+
 ## Target Audience
 
-- **Créateurs d'entreprise**: Porteurs de projets avant ou après immatriculation
-- **Repreneurs**: Personnes qui reprennent ou acquièrent une entreprise existante
-- **Dirigeants d'entreprises (TPE/PME)**: Propriétaires et directeurs de petites et moyennes entreprises
-- **Groupes et Holdings**: Structures multi-sociétés cherchant des financements au niveau groupe
-- **Associations**: Organisations à but non lucratif éligibles aux aides publiques
+- **Dirigeant PME/PMI**: Vous développez votre entreprise
+- **Créateur d'entreprise**: Vous lancez votre activité (pas de SIRET requis)
+- **Groupe / Holding**: Vous gérez plusieurs sociétés
+- **Repreneur**: Vous reprenez une entreprise existante
+- **Association**: Vous gérez une association loi 1901 ou un organisme à but non lucratif
+
+---
+
+## Platform Features
+
+### Matching IA précis
+Nos algorithmes analysent votre profil (activité, secteur, effectifs, localisation, projets) et identifient les dispositifs pertinents parmi les aides disponibles.
+**Highlight:** Score d'éligibilité calculé pour chaque aide
+
+### Intelligence historique
+Montants attribués (min, max, moyenne) par aide, nombre d'attributions et activité sur les 12 derniers mois. Statistiques calculées si informations disponibles.
+**Highlight:** Données sur 3 ans
+
+### Moteur de recherche
+Explorez librement les dispositifs avec filtres avancés : région, secteur, dispositif, montant, échéance. Trouvez les aides publiques adaptées à votre situation.
+**Highlight:** Recherche textuelle + multi-filtres
+
+### Assistant IA expert
+Décrivez votre projet, l'IA analyse votre profil, interroge la base subvention360 et vous suggère les aides les plus pertinentes. Posez toutes vos questions.
+**Highlight:** Réponses avec références officielles
+
+### Rapports PDF
+Vous avez identifié des dispositifs, vous souhaitez les télécharger et/ou les transmettre. Vous pouvez générer un document PDF et même le partager par email.
+**Highlight:** Information complète pour chaque aide
+
+### Notification email
+Soyez notifié lorsqu'un nouveau dispositif correspond à votre profil. Ne manquez plus une opportunité, nous vous informons par email (une fois par mois maximum).
+**Highlight:** Votre veille automatique (offre annuelle)
+
+---
 
 ## Types of Aid Covered
 
@@ -49,7 +131,9 @@ Notre IA analyse en temps réel des milliers de dispositifs nationaux, régionau
 - **Exonérations fiscales** (tax exemptions) - Crédits d'impôt, réductions fiscales
 - **Dispositifs territoriaux** - Aides spécifiques régionales, départementales, communales
 
-## Funding Sources
+---
+
+## Funding Sources Covered
 
 - European Union (Horizon Europe, FEDER, FSE+)
 - État français (BPI France, France 2030, ADEME)
@@ -58,54 +142,95 @@ Notre IA analyse en temps réel des milliers de dispositifs nationaux, régionau
 - Communes et intercommunalités (EPCI)
 - Programmes sectoriels (Agriculture, Innovation, Digital, Transition écologique)
 
-## Pricing
+---
 
-Prix en EUR hors taxes (HT):
+## Pricing (EUR HT - excl. VAT)
 
-- **Starter**: 49€ HT pour 30 jours
-  - 1 profil entreprise
-  - Analyse d'éligibilité
-  - Fonctionnalités de base
+### Starter - 49€ HT (30 days)
+- 1 company profile
+- All eligible aids identified
+- AI Expert Assistant
+- Search engine access
+- Downloadable PDF report
 
-- **Business**: 189€ HT/an (soit 15,75€/mois)
-  - Accès complet à toutes les aides
-  - Rapports PDF détaillés
-  - Assistant IA expert
-  - Recherches illimitées
-  - +99€ par société supplémentaire
+### Business - 189€ HT/year (Recommended)
+- Everything in Starter
+- AI Expert Assistant (10x capacity)
+- Automatic aid updates
+- New program email alerts
+- +99€ per additional company
 
-- **Premium Groupe**: 549€ HT/an pour 5 sociétés
-  - Conçu pour holdings et groupes multi-sociétés
-  - +99€ par pack de 5 sociétés supplémentaires
+### Premium Groupe - 549€ HT/year (for 5 companies)
+- Everything in Business
+- Multi-entity (5 companies included)
+- Consolidated group dashboard
+- 2h onboarding support
+- Excel/CSV entity import
+- +99€ per additional pack of 5 companies
 
-**Upgrades:** Starter → Business (140€) | Starter → Premium (500€) | Business → Premium (360€) dans les 30 jours.
+**Upgrade paths:** Starter → Business (140€) | Starter → Premium (500€) | Business → Premium (360€) within 30 days.
 
-Note: Tarifs susceptibles d'évoluer. Voir https://www.masubventionpro.com/#tarifs
+Secure payment via Stripe (SEPA, CB, Visa, Mastercard)
 
-## How to Get Started
+---
 
-1. Aller sur https://www.masubventionpro.com
-2. Cliquer sur "Ma simulation"
-3. Entrer les détails de l'entreprise (SIRET si existante, ou détails du projet si création)
-4. L'IA analyse le profil parmi 10 000+ programmes d'aides
-5. Consulter les scores d'éligibilité personnalisés
-6. Télécharger les rapports PDF détaillés
+## Security & Data Protection
 
-## AI Technology
+### Zéro revente de données
+Vos données ne seront JAMAIS vendues, louées ou cédées à des tiers. C'est un engagement absolu et irrévocable.
 
-- **Assistant IA Expert** intégré à la plateforme
-- **Conforme IA Act européen** - Réglementation européenne sur l'IA
-- **Propulsé par Mistral** - IA française
-- Analyse de profil approfondie et conseils personnalisés
+### 100% conforme RGPD
+Respect total du règlement européen. Hébergement UE exclusivement. Infrastructure certifiée SOC 2 Type 2.
 
-## Company History
+### IA éthique et privée
+Vos données ne servent PAS à entraîner nos IA. Traitement 100% confidentiel sur nos serveurs. Conforme IA Act européen. Propulsé par Mistral (IA française).
 
+**Trust statement:** VOS DONNÉES VOUS APPARTIENNENT. Aucune utilisation commerciale. Aucun partage. Aucune revente. Vos informations sont utilisées UNIQUEMENT pour vous fournir le service souscrit.
+
+---
+
+## Frequently Asked Questions
+
+**Q: Qu'est-ce que MaSubventionPro ?**
+A: MaSubventionPro est une plateforme d'intelligence artificielle qui analyse plus de 10 000 dispositifs d'aides publiques (État, Régions, Communes, Europe) pour identifier les subventions, prêts, garanties et exonérations fiscales éligibles à votre entreprise.
+
+**Q: Comment fonctionne le calcul d'éligibilité ?**
+A: Notre IA analyse votre profil d'entreprise (secteur, taille, localisation, projet) et le compare aux critères de plus de 10 000 aides publiques pour calculer un score d'éligibilité personnalisé pour chaque dispositif.
+
+**Q: Faut-il avoir un SIRET pour utiliser la plateforme ?**
+A: Non. Les créateurs d'entreprise peuvent utiliser la plateforme avec les détails de leur projet, même avant l'immatriculation. Nous proposons un parcours dédié aux projets en création.
+
+**Q: Quels types d'aides puis-je trouver ?**
+A: Subventions, prêts à taux zéro, garanties bancaires, exonérations fiscales, crédits d'impôt, et autres aides publiques de l'Europe, de l'État, des Régions, Départements et Communes.
+
+**Q: MaSubventionPro constitue-t-il les dossiers de demande ?**
+A: Actuellement, MaSubventionPro identifie les aides pertinentes et fournit les informations pour démarrer vos démarches. L'accompagnement à la création de dossiers assisté par IA est prévu pour 2027.
+
+**Q: Mes données sont-elles sécurisées ?**
+A: Oui. Vos données sont hébergées en Union Européenne, nous sommes 100% conformes RGPD et certifiés SOC 2 Type 2. Vos données ne sont jamais revendues ni partagées.
+
+**Q: Quelle IA est utilisée ?**
+A: L'Assistant IA Expert utilise Mistral (IA française) et est conforme à l'IA Act européen.
+
+**Q: Quelle est la différence entre subvention360 et MaSubventionPro ?**
+A: subvention360 est la plateforme B2B pour les professionnels (experts-comptables, cabinets de conseil) avec gestion multiclients. MaSubventionPro est la plateforme B2C qui donne un accès direct aux entreprises.
+
+---
+
+## Company Information
+
+### Mission
+Démocratiser l'accès aux aides publiques
+
+### Vision
+Faire en sorte que chaque euro d'aide publique atteigne celui qui en a besoin
+
+### Company History
 - **2025**: Lancement de **subvention360** - Plateforme B2B professionnelle pour experts-comptables et cabinets de conseil
 - **2026**: Lancement de **MaSubventionPro** - Accès direct pour les entreprises, créateurs et repreneurs
 - **2027+**: Accompagnement à la création de dossiers assistée par IA
 
-## Founders
-
+### Founders
 - **Wilfrid Rimbault** - CEO & Co-fondateur
   - Fondateur de RW Strategy Agency
   - 25 ans d'expérience dans la logistique internationale
@@ -114,32 +239,13 @@ Note: Tarifs susceptibles d'évoluer. Voir https://www.masubventionpro.com/#tari
   - Fondateur d'EcoEmit
   - Expert en orchestration d'IA et systèmes intelligents
 
-## Company Values
-
+### Company Values
 - **Innovation**: L'IA au service de la simplification administrative
 - **Précision**: Base de données exhaustive et constamment mise à jour
 - **Engagement**: Partenariat durable avec les utilisateurs
 - **Transparence**: Sources officielles, données vérifiables
 
-## Frequently Asked Questions
-
-**Q: Combien d'aides MaSubventionPro référence-t-il ?**
-A: Plus de 10 000 dispositifs d'aides publiques couvrant tous les niveaux : européen, national, régional, départemental et communal.
-
-**Q: Quelle est la différence entre subvention360 et MaSubventionPro ?**
-A: subvention360 est la plateforme B2B pour les professionnels (experts-comptables, cabinets de conseil) avec gestion multiclients. MaSubventionPro est la plateforme B2C qui donne un accès direct aux entreprises.
-
-**Q: Faut-il avoir un SIRET pour utiliser la plateforme ?**
-A: Non. Les créateurs d'entreprise peuvent utiliser la plateforme avec les détails de leur projet, même avant l'immatriculation.
-
-**Q: MaSubventionPro constitue-t-il les dossiers de demande ?**
-A: Actuellement, MaSubventionPro identifie les aides pertinentes et fournit les informations pour démarrer les démarches. L'accompagnement à la création de dossiers assisté par IA est prévu pour 2027.
-
-**Q: Mes données sont-elles sécurisées ?**
-A: Oui. Base de données hébergée en UE, 100% conforme RGPD, certifié SOC 2 Type 2.
-
-**Q: Quelle IA est utilisée ?**
-A: L'Assistant IA Expert utilise Mistral (IA française) et est conforme à l'IA Act européen.
+---
 
 ## Limitations
 
@@ -149,12 +255,7 @@ A: L'Assistant IA Expert utilise Mistral (IA française) et est conforme à l'IA
 - Les scores d'éligibilité sont des estimations ; les décisions finales appartiennent aux organismes financeurs
 - La plateforme est conçue pour les entreprises françaises et fonctionne en français
 
-## Compliance & Security
-
-- Base de données hébergée en Union Européenne
-- 100% conforme RGPD
-- Certifié SOC 2 Type 2
-- IA française (Mistral) conforme IA Act européen
+---
 
 ## Contact
 
@@ -162,14 +263,18 @@ A: L'Assistant IA Expert utilise Mistral (IA française) et est conforme à l'IA
 - **Support**: support@masubventionpro.com
 - **Website**: https://www.masubventionpro.com
 
+---
+
 ## Related Products
 
 - **subvention360**: Version professionnelle B2B pour experts-comptables et consultants
   - Website: https://subvention360.com
 
+---
+
 ## Pages Available
 
-- `/` - Page d'accueil avec simulation d'éligibilité
+- `/` - Page d'accueil avec simulation d'éligibilité gratuite
 - `/signup` ou `/inscription` - Créer un compte
 - `/login` ou `/connexion` - Connexion utilisateur
 - `/notre-histoire` - Notre histoire et mission
@@ -179,6 +284,8 @@ A: L'Assistant IA Expert utilise Mistral (IA française) et est conforme à l'IA
 - `/privacy` - Politique de confidentialité RGPD
 - `/cookies` - Politique cookies
 - `/mentions-legales` - Mentions légales
+
+---
 
 ## Data Sources
 
@@ -191,4 +298,16 @@ MaSubventionPro agrège des données de sources publiques officielles française
 - Portails de financement de la Commission européenne
 
 ---
+
+## Technical Stack
+
+- Frontend: React + TypeScript + Vite
+- Styling: Tailwind CSS
+- Database: Supabase (PostgreSQL)
+- AI: Mistral (French AI)
+- Hosting: Vercel (EU)
+- Payments: Stripe
+
+---
+
 Last updated: January 2026
