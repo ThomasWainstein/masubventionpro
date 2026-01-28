@@ -902,13 +902,13 @@ const LandingPage = () => {
                   id: 'pme',
                   icon: <TrendingUp className="w-10 h-10" />,
                   title: 'Dirigeant PME/PMI',
-                  desc: 'Vous développez votre entreprise établie',
+                  desc: 'Vous développez votre entreprise',
                 },
                 {
                   id: 'creation',
                   icon: <Rocket className="w-10 h-10" />,
                   title: 'Créateur',
-                  desc: 'Vous lancez votre activité et avez besoin de capital de départ',
+                  desc: 'Vous lancez votre activité et avez besoin de capital',
                 },
                 {
                   id: 'groupe',
@@ -920,7 +920,7 @@ const LandingPage = () => {
                   id: 'repreneur',
                   icon: <RefreshCw className="w-10 h-10" />,
                   title: 'Repreneur',
-                  desc: 'Vous reprenez une entreprise existante',
+                  desc: 'Vous reprenez une entreprise',
                 },
                 {
                   id: 'association',
