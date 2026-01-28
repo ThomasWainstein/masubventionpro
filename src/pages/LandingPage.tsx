@@ -987,7 +987,7 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section id="fonctionnalites" className="bg-slate-50 pt-10 pb-20 px-8">
+      <section id="fonctionnalites" className="bg-slate-50 pt-10 pb-12 px-8">
         <div className="max-w-[1400px] mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-extrabold text-slate-900 mb-4">
@@ -1052,7 +1052,7 @@ const LandingPage = () => {
       </section>
 
       {/* Pricing Section */}
-      <section id="tarifs" className="bg-white py-20 px-8">
+      <section id="tarifs" className="bg-white pt-12 pb-20 px-8">
         <div className="max-w-[1400px] mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-extrabold text-slate-900 mb-4">
