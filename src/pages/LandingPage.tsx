@@ -851,7 +851,7 @@ const LandingPage = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(59,130,246,0.1)_0%,transparent_50%),radial-gradient(circle_at_80%_80%,rgba(5,150,105,0.1)_0%,transparent_50%)]" />
 
         <div className="max-w-[1400px] mx-auto relative z-10">
-          <div className="grid lg:grid-cols-[7fr_3fr] gap-16 items-stretch">
+          <div className="grid lg:grid-cols-[8fr_2fr] gap-16 items-stretch">
             {/* Hero Text */}
             <div className="flex flex-col">
               <h1 className="text-4xl lg:text-[3.75rem] font-extrabold leading-[1.1] mb-6">
