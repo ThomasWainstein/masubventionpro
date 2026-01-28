@@ -1070,12 +1070,12 @@ const LandingPage = () => {
               <div className="my-6">
                 <span className="text-6xl font-extrabold text-blue-800">49€</span>
                 <span className="text-lg text-slate-500 ml-1">HT</span>
-                <div className="text-lg text-slate-500">30 jours</div>
+                <div className="text-sm text-blue-600 mt-1">30 jours</div>
               </div>
               <ul className="space-y-0">
                 {[
                   "Identification toutes aides éligibles",
-                  "Assistant IA expert (30 questions)",
+                  "Assistant IA expert",
                   "Accès moteur recherche 10 000+ dispositifs",
                   "Rapport PDF détaillé téléchargeable",
                 ].map((item, j, arr) => (
@@ -1107,13 +1107,13 @@ const LandingPage = () => {
               <div className="my-6">
                 <span className="text-6xl font-extrabold text-blue-800">189€</span>
                 <span className="text-lg text-slate-500 ml-1">HT/an</span>
-                <div className="text-sm text-slate-400">15,75€/mois</div>
+                <span className="text-sm text-slate-400 ml-2">15,75€/mois</span>
                 <div className="text-sm text-blue-600 mt-1">+ 99€ par société supplémentaire</div>
               </div>
               <ul className="space-y-0">
                 {[
                   "Identification toutes aides éligibles",
-                  "Assistant IA expert (360 questions)",
+                  "Assistant IA expert (x10 Starter)",
                   "Accès moteur recherche 10 000+ dispositifs",
                   "Rapport PDF détaillé téléchargeable",
                   "Actualisation automatique des aides éligibles",
@@ -1147,13 +1147,13 @@ const LandingPage = () => {
               <div className="my-6">
                 <span className="text-6xl font-extrabold text-blue-800">549€</span>
                 <span className="text-lg text-slate-500 ml-1">HT/an</span>
-                <div className="text-sm text-slate-400">pour 5 sociétés</div>
+                <span className="text-sm text-slate-400 ml-2">pour 5 sociétés</span>
                 <div className="text-sm text-blue-600 mt-1">+ 99€ par pack de 5 sociétés supplémentaires</div>
               </div>
               <ul className="space-y-0">
                 {[
                   "Identification toutes aides éligibles",
-                  "Assistant IA expert (360 questions)",
+                  "Assistant IA expert (x20 Starter)",
                   "Accès moteur recherche 10 000+ dispositifs",
                   "Rapport PDF détaillé téléchargeable",
                   "Multi-entités (5 sociétés incluses)",
@@ -1727,7 +1727,7 @@ const LandingPage = () => {
                           </li>
                           <li className="flex items-center gap-2">
                             <Check className="w-4 h-4 text-emerald-600" />
-                            Assistant IA (30 questions)
+                            Assistant IA expert
                           </li>
                           <li className="flex items-center gap-2">
                             <Check className="w-4 h-4 text-emerald-600" />
@@ -1754,7 +1754,7 @@ const LandingPage = () => {
                         <ul className="space-y-2 text-sm text-slate-600 mb-4">
                           <li className="flex items-center gap-2">
                             <Check className="w-4 h-4 text-emerald-600" />
-                            Assistant IA (360 questions)
+                            Assistant IA expert (x10 Starter)
                           </li>
                           <li className="flex items-center gap-2">
                             <Check className="w-4 h-4 text-emerald-600" />

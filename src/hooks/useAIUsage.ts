@@ -11,26 +11,11 @@ import type {
   AIPricing,
 } from '@/types/ai-usage';
 
-// Plan-based usage limits in EUR
-// Base: €1/month, Business 10x, Premium 30x
-// Découverte: 30-day plan (monthly = their total period)
-// Business/Premium: Annual subscriptions
+// Plan-based usage limits in EUR (total for subscription period)
 const PLAN_LIMITS: Record<string, AIUsageLimits> = {
-  decouverte: {
-    daily: 0.03,    // €1/30 days (~60 Q&A/day)
-    weekly: 0.25,   // €1/4 weeks (~500 Q&A/week)
-    yearly: 1.00,   // €1 total for 30-day period (~2,000 Q&A)
-  },
-  business: {
-    daily: 0.33,    // €10/30 days (~660 Q&A/day)
-    weekly: 2.50,   // €10/4 weeks (~5,000 Q&A/week)
-    yearly: 120.00, // €10/month × 12 (~240,000 Q&A/year)
-  },
-  premium: {
-    daily: 1.00,    // €30/30 days (~2,000 Q&A/day)
-    weekly: 7.50,   // €30/4 weeks (~15,000 Q&A/week)
-    yearly: 360.00, // €30/month × 12 (~720,000 Q&A/year)
-  },
+  decouverte: { total: 1.00 },   // Starter: €1
+  business: { total: 10.00 },   // Business: €10
+  premium: { total: 20.00 },    // Premium: €20
 };
 
 /**
@@ -151,45 +136,22 @@ export function useAIUsage(): UseAIUsageReturn {
         summary: null,
         limits,
         isBlocked: false,
-        remainingDaily: limits.daily,
-        remainingWeekly: limits.weekly,
-        remainingYearly: limits.yearly,
-        percentages: { daily: 0, weekly: 0, yearly: 0 },
+        remaining: limits.total,
+        percentage: 0,
       };
     }
 
-    const remainingDaily = Math.max(0, limits.daily - summary.daily_cost_eur);
-    const remainingWeekly = Math.max(0, limits.weekly - summary.weekly_cost_eur);
-    const remainingYearly = Math.max(0, limits.yearly - summary.yearly_cost_eur);
-
-    // Check which cap is hit (priority: daily > weekly > yearly)
-    let isBlocked = false;
-    let blockedReason: 'daily' | 'weekly' | 'yearly' | undefined;
-
-    if (summary.daily_cost_eur >= limits.daily) {
-      isBlocked = true;
-      blockedReason = 'daily';
-    } else if (summary.weekly_cost_eur >= limits.weekly) {
-      isBlocked = true;
-      blockedReason = 'weekly';
-    } else if (summary.yearly_cost_eur >= limits.yearly) {
-      isBlocked = true;
-      blockedReason = 'yearly';
-    }
+    // Use yearly_cost_eur as the total usage tracker
+    const totalUsed = summary.yearly_cost_eur;
+    const remaining = Math.max(0, limits.total - totalUsed);
+    const isBlocked = totalUsed >= limits.total;
 
     return {
       summary,
       limits,
       isBlocked,
-      blockedReason,
-      remainingDaily,
-      remainingWeekly,
-      remainingYearly,
-      percentages: {
-        daily: Math.min(100, (summary.daily_cost_eur / limits.daily) * 100),
-        weekly: Math.min(100, (summary.weekly_cost_eur / limits.weekly) * 100),
-        yearly: Math.min(100, (summary.yearly_cost_eur / limits.yearly) * 100),
-      },
+      remaining,
+      percentage: Math.min(100, (totalUsed / limits.total) * 100),
     };
   }, [user]);
 
@@ -231,11 +193,7 @@ export function useAIUsage(): UseAIUsageReturn {
 
     let errorMessage: string | undefined;
     if (currentStatus.isBlocked) {
-      const limitType = currentStatus.blockedReason === 'daily' ? 'quotidienne' :
-        currentStatus.blockedReason === 'weekly' ? 'hebdomadaire' : 'annuelle';
-      const retryTime = currentStatus.blockedReason === 'daily' ? 'Reessayez demain.' :
-        currentStatus.blockedReason === 'weekly' ? 'Reessayez lundi prochain.' : 'Contactez le support.';
-      errorMessage = `Limite ${limitType} atteinte. ${retryTime}`;
+      errorMessage = 'Limite d\'utilisation IA atteinte. Passez a un forfait superieur pour continuer.';
     }
 
     return {

@@ -34,9 +34,7 @@ export interface AIUsageLog {
  * Usage limits configuration (in EUR)
  */
 export interface AIUsageLimits {
-  daily: number;   // 0.50 EUR
-  weekly: number;  // 2.00 EUR
-  yearly: number;  // 10.00 EUR
+  total: number; // Total limit in EUR for the subscription period
 }
 
 /**
@@ -59,15 +57,8 @@ export interface AIUsageStatus {
   summary: AIUsageSummary | null;
   limits: AIUsageLimits;
   isBlocked: boolean;
-  blockedReason?: 'daily' | 'weekly' | 'yearly';
-  remainingDaily: number;
-  remainingWeekly: number;
-  remainingYearly: number;
-  percentages: {
-    daily: number;
-    weekly: number;
-    yearly: number;
-  };
+  remaining: number;
+  percentage: number;
 }
 
 /**

@@ -275,15 +275,12 @@ export function ProfileEnrichmentSection({ onEnrichmentComplete }: ProfileEnrich
                 </Button>
                 {usageStatus?.isBlocked && (
                   <p className="text-xs text-red-600 text-center">
-                    Limite {usageStatus.blockedReason === 'daily' ? 'quotidienne' : usageStatus.blockedReason === 'weekly' ? 'hebdomadaire' : 'annuelle'} atteinte.
-                    {usageStatus.blockedReason === 'daily' && ' Reessayez demain.'}
-                    {usageStatus.blockedReason === 'weekly' && ' Reessayez lundi prochain.'}
-                    {usageStatus.blockedReason === 'yearly' && ' Contactez le support.'}
+                    Limite d'utilisation atteinte. Passez a un forfait superieur pour continuer.
                   </p>
                 )}
-                {!usageStatus?.isBlocked && usageStatus?.percentages.daily && usageStatus.percentages.daily > 80 && (
+                {!usageStatus?.isBlocked && usageStatus?.percentage && usageStatus.percentage > 80 && (
                   <p className="text-xs text-amber-600 text-center">
-                    Attention: Vous approchez de votre limite quotidienne
+                    Attention: Vous approchez de votre limite d'utilisation IA
                   </p>
                 )}
               </div>
