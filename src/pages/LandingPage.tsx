@@ -888,20 +888,20 @@ const LandingPage = () => {
               {/* Key Benefits - Added to match right side height */}
               <div className="grid grid-cols-2 gap-4 mt-auto">
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
-                  <div className="text-3xl font-bold text-amber-400 mb-1">97%</div>
-                  <div className="text-sm text-slate-300">des entreprises éligibles à au moins une aide</div>
+                  <div className="text-3xl font-bold text-amber-400 mb-1">10 000</div>
+                  <div className="text-sm text-slate-300">Dispositifs d'aides référencés</div>
                 </div>
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
-                  <div className="text-3xl font-bold text-emerald-400 mb-1">15 min</div>
-                  <div className="text-sm text-slate-300">pour identifier vos opportunités</div>
+                  <div className="text-3xl font-bold text-emerald-400 mb-1">Quotidien</div>
+                  <div className="text-sm text-slate-300">Mise à jour des données</div>
                 </div>
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
-                  <div className="text-3xl font-bold text-blue-400 mb-1">100%</div>
-                  <div className="text-sm text-slate-300">gratuit pour commencer</div>
+                  <div className="text-3xl font-bold text-blue-400 mb-1">National</div>
+                  <div className="text-sm text-slate-300">Commune - Europe</div>
                 </div>
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
                   <div className="text-3xl font-bold text-purple-400 mb-1">IA</div>
-                  <div className="text-sm text-slate-300">matching personnalisé</div>
+                  <div className="text-sm text-slate-300">Assistant IA expert</div>
                 </div>
               </div>
             </div>
@@ -984,32 +984,6 @@ const LandingPage = () => {
           <p className="text-slate-500 mb-8 text-center">
             Propulsé par <span className="text-2xl font-bold text-blue-800">subvention360</span>
           </p>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="p-6 bg-slate-50 rounded-xl">
-              <span className="text-4xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
-                {subsidyCount}
-              </span>
-              <p className="text-slate-500 font-semibold text-sm">Dispositifs d'aides référencés</p>
-            </div>
-            <div className="p-6 bg-slate-50 rounded-xl">
-              <span className="text-4xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
-                Quotidien
-              </span>
-              <p className="text-slate-500 font-semibold text-sm">Mise à jour des données</p>
-            </div>
-            <div className="p-6 bg-slate-50 rounded-xl">
-              <span className="text-4xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
-                National
-              </span>
-              <p className="text-slate-500 font-semibold text-sm">Commune - Europe</p>
-            </div>
-            <div className="p-6 bg-slate-50 rounded-xl">
-              <span className="text-4xl font-extrabold bg-gradient-to-br from-blue-800 to-emerald-600 bg-clip-text text-transparent block mb-2">
-                IA
-              </span>
-              <p className="text-slate-500 font-semibold text-sm">Assistant IA expert</p>
-            </div>
-          </div>
 
           {/* Pourquoi nous sommes uniques - Section déplacée */}
           <div className="mt-12 bg-gradient-to-br from-amber-50 to-amber-100/50 border-2 border-amber-300 px-8 py-8 rounded-2xl max-w-4xl mx-auto">
