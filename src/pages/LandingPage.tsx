@@ -783,7 +783,7 @@ const LandingPage = () => {
       {/* Header */}
       <header className="bg-white shadow-sm fixed w-full top-0 z-[1000]">
         <div className="max-w-[1400px] mx-auto px-8 py-4 flex justify-between items-center">
-          <img src="/logo.svg" alt="MaSubventionPro" className="h-8" />
+          <img src="/logo.svg" alt="MaSubventionPro" className="h-12" />
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-10">
