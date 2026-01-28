@@ -13,7 +13,7 @@ import { MaSubventionProProfile, Subsidy } from "@/types"
 const LandingPage = () => {
   const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [subsidyCount, setSubsidyCount] = useState<string>("10 000+")
+  const [subsidyCount, setSubsidyCount] = useState<string>("...")
   const [activeSegment, setActiveSegment] = useState<string | null>(null)
 
   // Profile creation modal state
@@ -526,18 +526,19 @@ const LandingPage = () => {
   const totalPotentialAmount = "485 000 EUR"
   const categories = ["Emploi", "Innovation", "Environnement", "Financement", "International", "Digital"]
 
-  // Fetch real subsidy count from database
+  // Fetch real subsidy count from database (only active subsidies with valid deadlines)
   useEffect(() => {
     const fetchSubsidyCount = async () => {
       try {
+        const today = new Date().toISOString().split('T')[0]
         const { count, error } = await supabase
           .from("subsidies")
           .select("*", { count: "exact", head: true })
+          .eq('is_active', true)
+          .or(`deadline.is.null,deadline.gte.${today}`)
 
         if (!error && count) {
-          // Round to nearest thousand
-          const roundedCount = Math.round(count / 1000) * 1000
-          setSubsidyCount(roundedCount.toLocaleString("fr-FR"))
+          setSubsidyCount(count.toLocaleString("fr-FR"))
         }
       } catch (err) {
         console.error("Error fetching subsidy count:", err)
@@ -867,7 +868,7 @@ const LandingPage = () => {
               </p>
 
               <p className="text-xl opacity-95 leading-relaxed mb-6">
-                Notre IA analyse en temps réel plus de 10 000 dispositifs nationaux, régionaux, communaux et européens, calcule un score d'éligibilité et génère des rapports détaillés.
+                Notre IA analyse en temps réel des milliers de dispositifs nationaux, régionaux, communaux et européens, calcule un score d'éligibilité et génère des rapports détaillés.
               </p>
 
               <p className="text-xl opacity-95 leading-relaxed mb-6 font-medium">
@@ -878,7 +879,7 @@ const LandingPage = () => {
               <div className="grid grid-cols-2 gap-4 mt-auto">
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
                   <div className="text-3xl font-bold text-amber-400 mb-1">{subsidyCount}</div>
-                  <div className="text-sm text-slate-300">Dispositifs d'aides référencés</div>
+                  <div className="text-sm text-slate-300">Dispositifs d'aides référencés aujourd'hui</div>
                 </div>
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
                   <div className="text-3xl font-bold text-emerald-400 mb-1">Quotidien</div>
@@ -926,7 +927,7 @@ const LandingPage = () => {
                   id: 'association',
                   icon: <Heart className="w-10 h-10" />,
                   title: 'Association',
-                  desc: 'Vous gérez une association loi 1901 ou un organisme à but non lucratif',
+                  desc: <>Vous gérez une association loi 1901<br />ou un organisme à but non lucratif</>,
                 },
               ].map((segment) => (
                 <div
