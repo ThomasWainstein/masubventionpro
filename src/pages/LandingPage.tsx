@@ -980,8 +980,8 @@ const LandingPage = () => {
           </div>
 
           {/* Propulsé par subvention360 */}
-          <p className="text-slate-500 text-center">
-            Propulsé par <span className="text-2xl font-bold text-blue-800">subvention360</span>
+          <p className="text-slate-500 text-center flex items-center justify-center gap-2">
+            Propulsé par <img src="/logo-subvention360.png" alt="subvention360" className="h-7 inline-block" /><span className="text-2xl font-bold text-blue-800">subvention360</span>
           </p>
         </div>
       </section>
