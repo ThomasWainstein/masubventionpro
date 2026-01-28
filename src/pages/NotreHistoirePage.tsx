@@ -200,10 +200,10 @@ export default function NotreHistoirePage() {
                 <div className="w-[70px] h-[70px] bg-gradient-to-br from-blue-800 to-emerald-600 rounded-xl flex items-center justify-center mb-6">
                   <Rocket className="w-8 h-8 text-white" />
                 </div>
-                <div className="text-blue-800 font-semibold text-sm uppercase tracking-wider mb-2">2027 et Au-delà</div>
+                <div className="text-blue-800 font-semibold text-sm uppercase tracking-wider mb-2">2026 et Au-delà</div>
                 <h3 className="text-2xl font-bold text-slate-900 mb-4">L'Accompagnement Complet</h3>
                 <p className="text-slate-500 leading-relaxed">
-                  Extension aux collectivités et associations. Création de dossiers soutenue par l'IA : contrôle de complétude, affinage de la motivation. L'IA au service de votre réussite.
+                  Extension aux collectivités. Création de dossiers soutenue par l'IA : contrôle de complétude, affinage de la motivation. L'IA au service de votre réussite.
                 </p>
                 <div className="bg-slate-50 p-4 rounded-lg mt-4 text-sm font-semibold text-blue-800">
                   Démocratisation pour tous les acteurs
