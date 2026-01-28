@@ -297,32 +297,22 @@ export function DashboardPage() {
           {/* Search Action */}
           <Link
             to="/app/search"
-            className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white hover:from-blue-700 hover:to-blue-800 transition-all group"
+            className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-5 text-white hover:from-blue-700 hover:to-blue-800 transition-all group"
           >
             <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-semibold text-lg">Rechercher des aides</h3>
-                <p className="text-blue-100 text-sm mt-1">
-                  Explorez les subventions disponibles pour votre entreprise
-                </p>
-              </div>
-              <Search className="h-10 w-10 text-blue-300 group-hover:scale-110 transition-transform" />
+              <h3 className="font-semibold text-lg">Rechercher des aides</h3>
+              <Search className="h-8 w-8 text-blue-300 group-hover:scale-110 transition-transform" />
             </div>
           </Link>
 
           {/* AI Assistant */}
           <Link
             to="/app/ai"
-            className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl p-6 text-white hover:from-purple-700 hover:to-purple-800 transition-all group"
+            className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl p-5 text-white hover:from-purple-700 hover:to-purple-800 transition-all group"
           >
             <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-semibold text-lg">Assistant IA</h3>
-                <p className="text-purple-100 text-sm mt-1">
-                  Discutez avec votre conseiller en subventions
-                </p>
-              </div>
-              <Sparkles className="h-10 w-10 text-purple-300 group-hover:scale-110 transition-transform" />
+              <h3 className="font-semibold text-lg">Assistant IA</h3>
+              <Sparkles className="h-8 w-8 text-purple-300 group-hover:scale-110 transition-transform" />
             </div>
           </Link>
         </div>

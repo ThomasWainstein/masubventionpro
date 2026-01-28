@@ -10,8 +10,20 @@ import {
   ExternalLink,
   Sparkles,
   Check,
+  Users,
+  Phone,
+  Building2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  getAmountDisplay,
+  getDaysUntilDeadline,
+  getDeadlineStatus,
+  getEntityTypeBadges,
+  hasContacts,
+  hasProjectTypes,
+  getProjectTypeLabels,
+} from '@/lib/subsidyUtils';
 
 interface SubsidyCardProps {
   subsidy: Subsidy;
@@ -47,46 +59,21 @@ export function SubsidyCard({
     }
   };
 
-  // Calculate days until deadline
-  const getDaysUntilDeadline = () => {
-    if (!subsidy.deadline) return null;
-    const deadline = new Date(subsidy.deadline);
-    const today = new Date();
-    const diffTime = deadline.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  };
+  // Use shared utilities for deadline
+  const daysUntil = getDaysUntilDeadline(subsidy.deadline);
+  const deadlineStatus = getDeadlineStatus(subsidy.deadline);
+  const isExpired = deadlineStatus === 'expired';
+  const isUrgent = deadlineStatus === 'urgent' || deadlineStatus === 'soon';
 
-  const daysUntil = getDaysUntilDeadline();
-  const isExpired = daysUntil !== null && daysUntil < 0;
-  const isUrgent = daysUntil !== null && daysUntil >= 0 && daysUntil <= 30;
+  // Use shared utility for amount display
+  const amountDisplay = getAmountDisplay(subsidy.amount_min, subsidy.amount_max, 'abbreviated');
 
-  // Format amount display
-  const formatAmount = (amount: number | null) => {
-    if (amount === null) return null;
-    if (amount >= 1000000) {
-      return `${(amount / 1000000).toFixed(1)}M€`;
-    }
-    if (amount >= 1000) {
-      return `${(amount / 1000).toFixed(0)}K€`;
-    }
-    return `${amount}€`;
-  };
+  // Get entity type badges
+  const entityBadges = getEntityTypeBadges(subsidy);
 
-  const amountDisplay = () => {
-    const min = formatAmount(subsidy.amount_min);
-    const max = formatAmount(subsidy.amount_max);
-    if (max && min && min !== max) {
-      return `${min} - ${max}`;
-    }
-    if (max) {
-      return `Jusqu'a ${max}`;
-    }
-    if (min) {
-      return `A partir de ${min}`;
-    }
-    return null;
-  };
+  // Get project type labels (max 3)
+  const projectLabels = hasProjectTypes(subsidy) ? getProjectTypeLabels(subsidy, 3) : [];
+  const hasMoreProjects = subsidy.decoded_projets && subsidy.decoded_projets.length > 3;
 
   // Get region display
   const regionDisplay = () => {
@@ -130,6 +117,21 @@ export function SubsidyCard({
             <div className="flex items-center gap-1.5 mt-1 text-sm text-slate-500">
               <Building className="h-3.5 w-3.5" />
               <span className="truncate">{subsidy.agency}</span>
+            </div>
+          )}
+          {/* Entity Type Badges */}
+          {entityBadges.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {entityBadges.slice(0, 2).map((badge, idx) => (
+                <span
+                  key={idx}
+                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs border ${badge.colorClasses}`}
+                >
+                  {badge.type === 'association' && <Users className="h-3 w-3" />}
+                  {badge.type === 'entreprise' && <Building2 className="h-3 w-3" />}
+                  {badge.label}
+                </span>
+              ))}
             </div>
           )}
         </div>
@@ -181,13 +183,32 @@ export function SubsidyCard({
         </div>
       )}
 
+      {/* Project Types */}
+      {projectLabels.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {projectLabels.map((label, idx) => (
+            <span
+              key={idx}
+              className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded"
+            >
+              {label}
+            </span>
+          ))}
+          {hasMoreProjects && (
+            <span className="text-xs text-slate-400">
+              +{subsidy.decoded_projets!.length - 3}
+            </span>
+          )}
+        </div>
+      )}
+
       {/* Meta Info */}
       <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
         {/* Amount */}
-        {amountDisplay() && (
+        {amountDisplay && (
           <div className="flex items-center gap-1.5 text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md">
             <Euro className="h-3.5 w-3.5" />
-            <span className="font-medium">{amountDisplay()}</span>
+            <span className="font-medium">{amountDisplay}</span>
           </div>
         )}
 
@@ -205,7 +226,7 @@ export function SubsidyCard({
             <Calendar className="h-3.5 w-3.5" />
             <span className="font-medium">
               {isExpired
-                ? 'Expire'
+                ? 'Expiré'
                 : isUrgent
                 ? `${daysUntil}j restants`
                 : new Date(subsidy.deadline).toLocaleDateString('fr-FR', {
@@ -229,6 +250,14 @@ export function SubsidyCard({
           <span className="text-slate-500 bg-slate-100 px-2 py-1 rounded-md text-xs">
             {subsidy.funding_type}
           </span>
+        )}
+
+        {/* Contact Indicator */}
+        {hasContacts(subsidy) && (
+          <div className="flex items-center gap-1.5 text-slate-600 bg-slate-100 px-2 py-1 rounded-md">
+            <Phone className="h-3.5 w-3.5" />
+            <span className="text-xs">Contact</span>
+          </div>
         )}
       </div>
 

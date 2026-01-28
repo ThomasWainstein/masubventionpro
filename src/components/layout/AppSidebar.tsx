@@ -26,7 +26,7 @@ const navItems = [
     icon: LayoutDashboard,
   },
   {
-    title: 'Rechercher',
+    title: 'Moteur de recherche',
     href: '/app/search',
     icon: Search,
   },

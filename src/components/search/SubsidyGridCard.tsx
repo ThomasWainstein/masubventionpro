@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Subsidy, getSubsidyTitle } from '@/types';
-import { MapPin, Building, Bookmark, BookmarkCheck } from 'lucide-react';
+import { MapPin, Building, Bookmark, BookmarkCheck, Users, Phone } from 'lucide-react';
+import { getAmountDisplay, getEntityTypeBadges, hasContacts } from '@/lib/subsidyUtils';
 
 interface SubsidyGridCardProps {
   subsidy: Subsidy;
@@ -20,27 +21,13 @@ export function SubsidyGridCard({
     navigate(`/app/subsidy/${subsidy.id}`);
   };
 
-  // Format amount display
-  const formatAmount = (amount: number | null) => {
-    if (amount === null) return null;
-    return new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'EUR',
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
+  // Use shared utility for amount display
+  const amountDisplay = getAmountDisplay(subsidy.amount_min, subsidy.amount_max, 'full')
+    || 'Contacter pour les détails';
 
-  const amountDisplay = () => {
-    const max = formatAmount(subsidy.amount_max);
-    const min = formatAmount(subsidy.amount_min);
-    if (max) {
-      return `Jusqu'à ${max}`;
-    }
-    if (min) {
-      return `À partir de ${min}`;
-    }
-    return 'Contacter pour les détails du financement';
-  };
+  // Get entity type badge (first one only for compact view)
+  const entityBadges = getEntityTypeBadges(subsidy);
+  const primaryBadge = entityBadges[0];
 
   // Get region display
   const regionDisplay = () => {
@@ -88,6 +75,14 @@ export function SubsidyGridCard({
         </div>
       )}
 
+      {/* Entity Type Badge */}
+      {primaryBadge && (
+        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs ${primaryBadge.colorClasses} mb-2 self-start`}>
+          {primaryBadge.type === 'association' && <Users className="h-3 w-3" />}
+          {primaryBadge.label}
+        </span>
+      )}
+
       {/* Title */}
       <div className="flex-1">
         <h3 className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2 text-sm leading-snug mb-3">
@@ -97,7 +92,7 @@ export function SubsidyGridCard({
 
       {/* Amount */}
       <p className="text-base font-semibold text-slate-900 mb-3">
-        {amountDisplay()}
+        {amountDisplay}
       </p>
 
       {/* Agency */}
@@ -110,10 +105,18 @@ export function SubsidyGridCard({
         </div>
       )}
 
-      {/* Region */}
-      <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-auto pt-2">
-        <MapPin className="h-3.5 w-3.5 text-slate-400" />
-        <span>{regionDisplay()}</span>
+      {/* Region & Contact */}
+      <div className="flex items-center justify-between gap-2 mt-auto pt-2">
+        <div className="flex items-center gap-1.5 text-xs text-slate-500">
+          <MapPin className="h-3.5 w-3.5 text-slate-400" />
+          <span>{regionDisplay()}</span>
+        </div>
+        {hasContacts(subsidy) && (
+          <div className="flex items-center gap-1 text-xs text-emerald-600">
+            <Phone className="h-3 w-3" />
+            <span>Contact</span>
+          </div>
+        )}
       </div>
     </div>
   );

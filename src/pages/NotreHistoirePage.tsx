@@ -25,7 +25,7 @@ export default function NotreHistoirePage() {
         <header className="bg-white shadow-sm fixed w-full top-0 z-[1000]">
           <div className="max-w-[1400px] mx-auto px-8 py-4 flex justify-between items-center">
             <Link to="/">
-              <img src="/logo.svg" alt="MaSubventionPro" className="h-8" />
+              <img src="/logo.svg" alt="MaSubventionPro" className="h-12" />
             </Link>
 
             {/* Desktop Nav */}
@@ -34,7 +34,7 @@ export default function NotreHistoirePage() {
                 Pour qui ?
               </Link>
               <Link to="/#fonctionnalites" className="text-slate-900 font-medium hover:text-blue-800 transition-colors">
-                Fonctionnalités
+                Fonctionnalites
               </Link>
               <Link to="/#tarifs" className="text-slate-900 font-medium hover:text-blue-800 transition-colors">
                 Tarifs
@@ -52,7 +52,7 @@ export default function NotreHistoirePage() {
                 to="/signup"
                 className="px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-800/30 transition-all"
               >
-                S'inscrire
+                Ma simulation
               </Link>
             </nav>
 
@@ -69,7 +69,7 @@ export default function NotreHistoirePage() {
           {mobileMenuOpen && (
             <div className="md:hidden bg-white border-b px-4 py-4 space-y-4">
               <Link to="/#profils" className="block text-slate-900 font-medium">Pour qui ?</Link>
-              <Link to="/#fonctionnalites" className="block text-slate-900 font-medium">Fonctionnalités</Link>
+              <Link to="/#fonctionnalites" className="block text-slate-900 font-medium">Fonctionnalites</Link>
               <Link to="/#tarifs" className="block text-slate-900 font-medium">Tarifs</Link>
               <Link to="/notre-histoire" className="block text-blue-800 font-medium">Notre histoire</Link>
               <Link
@@ -82,7 +82,7 @@ export default function NotreHistoirePage() {
                 to="/signup"
                 className="block w-full text-center px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold"
               >
-                S'inscrire
+                Ma simulation
               </Link>
             </div>
           )}

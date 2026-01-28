@@ -11,6 +11,7 @@ import {
   Euro,
   MapPin,
   Building,
+  Building2,
   ExternalLink,
   Bookmark,
   BookmarkCheck,
@@ -27,8 +28,24 @@ import {
   Briefcase,
   FileText,
   Banknote,
+  Phone,
+  Mail,
+  FileDown,
+  Link as LinkIcon,
+  Target,
+  PiggyBank,
+  FolderOpen,
 } from 'lucide-react';
 import { exportSubsidyToPDF } from '@/lib/pdfExport';
+import {
+  getEntityTypeBadges,
+  hasContacts,
+  hasProjectTypes,
+  hasFundingAgencies,
+  hasComplementaryForms,
+  hasComplementarySources,
+  hasAidObjective,
+} from '@/lib/subsidyUtils';
 
 export function SubsidyDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -188,6 +205,25 @@ export function SubsidyDetailPage() {
                   <span className="text-lg">{subsidy.agency}</span>
                 </div>
               )}
+              {/* Entity Type Eligibility Badges */}
+              {(() => {
+                const badges = getEntityTypeBadges(subsidy);
+                if (badges.length === 0) return null;
+                return (
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {badges.map((badge, idx) => (
+                      <span
+                        key={idx}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border ${badge.colorClasses}`}
+                      >
+                        {badge.type === 'association' && <Users className="h-4 w-4" />}
+                        {badge.type === 'entreprise' && <Building2 className="h-4 w-4" />}
+                        {badge.label}
+                      </span>
+                    ))}
+                  </div>
+                );
+              })()}
             </div>
             <Button
               variant="outline"
@@ -262,6 +298,19 @@ export function SubsidyDetailPage() {
             <p className="text-slate-500 italic">Aucune description disponible</p>
           )}
         </div>
+
+        {/* Aid Objective */}
+        {hasAidObjective(subsidy) && subsidy.aid_objet?.trim() !== description && (
+          <div className="p-6 md:p-8 border-t border-slate-100">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+              <Target className="h-5 w-5 text-blue-600" />
+              Objectif de l'aide
+            </h2>
+            <p className="text-slate-600 whitespace-pre-wrap bg-blue-50 p-4 rounded-lg border border-blue-100">
+              {subsidy.aid_objet!.trim()}
+            </p>
+          </div>
+        )}
 
         {/* Eligibility Section */}
         {(subsidy.aid_conditions?.trim() || subsidy.aid_benef?.trim() || subsidy.decoded_profils?.length || subsidy.effectif?.trim() || subsidy.age_entreprise?.trim() || subsidy.jeunes || subsidy.femmes || subsidy.seniors || subsidy.handicapes) && (
@@ -360,6 +409,26 @@ export function SubsidyDetailPage() {
                   </div>
                 </div>
               )}
+
+              {/* Project Types */}
+              {hasProjectTypes(subsidy) && (
+                <div>
+                  <h3 className="text-sm font-medium text-slate-700 mb-2 flex items-center gap-1">
+                    <FolderOpen className="h-4 w-4 text-indigo-600" />
+                    Types de projets éligibles
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {subsidy.decoded_projets!.map((projet, i) => (
+                      <span
+                        key={i}
+                        className="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-sm"
+                      >
+                        {projet.label || projet.code}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -404,6 +473,26 @@ export function SubsidyDetailPage() {
                 <div className="bg-slate-50 px-4 py-2 rounded-lg inline-block">
                   <span className="text-sm text-slate-500">Durée du projet: </span>
                   <span className="font-medium text-slate-700">{subsidy.duree_projet.trim()}</span>
+                </div>
+              )}
+
+              {/* Funding Agencies */}
+              {hasFundingAgencies(subsidy) && (
+                <div>
+                  <h3 className="text-sm font-medium text-slate-700 mb-2 flex items-center gap-1">
+                    <PiggyBank className="h-4 w-4 text-emerald-600" />
+                    Financeurs
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {subsidy.decoded_financeurs!.map((financeur, i) => (
+                      <span
+                        key={i}
+                        className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-sm border border-emerald-200"
+                      >
+                        {financeur.label || financeur.code}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -469,6 +558,78 @@ export function SubsidyDetailPage() {
             )}
           </dl>
         </div>
+
+        {/* Contacts Section */}
+        {hasContacts(subsidy) && (
+          <div className="p-6 md:p-8 border-t border-slate-100">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+              <Phone className="h-5 w-5 text-blue-600" />
+              Contacts
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {subsidy.contacts!.map((contact, index) => (
+                <div
+                  key={index}
+                  className="bg-slate-50 rounded-lg p-4 border border-slate-200"
+                >
+                  {contact.nom && (
+                    <h3 className="font-medium text-slate-900 mb-2">{contact.nom}</h3>
+                  )}
+                  <div className="space-y-2">
+                    {contact.email && (
+                      <a
+                        href={`mailto:${contact.email}`}
+                        className="flex items-center gap-2 text-sm text-blue-600 hover:underline"
+                      >
+                        <Mail className="h-4 w-4" />
+                        {contact.email}
+                      </a>
+                    )}
+                    {contact.telephone && (
+                      <a
+                        href={`tel:${contact.telephone}`}
+                        className="flex items-center gap-2 text-sm text-blue-600 hover:underline"
+                      >
+                        <Phone className="h-4 w-4" />
+                        {contact.telephone}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Documents & Formulaires */}
+        {hasComplementaryForms(subsidy) && (
+          <div className="p-6 md:p-8 border-t border-slate-100">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+              <FileDown className="h-5 w-5 text-emerald-600" />
+              Documents et Formulaires
+            </h2>
+            <div className="bg-emerald-50 rounded-lg p-4 border border-emerald-200">
+              <p className="text-slate-700 whitespace-pre-wrap">
+                {subsidy.complements_formulaires!.trim()}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Ressources Complementaires */}
+        {hasComplementarySources(subsidy) && (
+          <div className="p-6 md:p-8 border-t border-slate-100">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+              <LinkIcon className="h-5 w-5 text-blue-600" />
+              Ressources complémentaires
+            </h2>
+            <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+              <p className="text-slate-700 whitespace-pre-wrap">
+                {subsidy.complements_sources!.trim()}
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Broken Link Warning */}
         {isLinkBroken && (
