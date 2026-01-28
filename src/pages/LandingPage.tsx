@@ -1027,7 +1027,7 @@ const LandingPage = () => {
 
           {/* Propulsé par subvention360 */}
           <p className="text-slate-500 text-center flex items-center justify-center gap-2">
-            Propulsé par <img src="/logo-subvention360.png" alt="subvention360" className="h-7 inline-block" /><span className="text-2xl font-bold text-black">subvention360</span>
+            Propulsé par <picture><source srcSet="/logo-subvention360.webp" type="image/webp" /><img src="/logo-subvention360.png" alt="subvention360" className="h-7 inline-block" width="28" height="28" /></picture><span className="text-2xl font-bold text-black">subvention360</span>
           </p>
         </div>
       </section>
