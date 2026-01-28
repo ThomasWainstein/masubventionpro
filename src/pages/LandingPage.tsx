@@ -820,6 +820,43 @@ const LandingPage = () => {
                 "name": "MaSubventionPro",
                 "publisher": { "@id": "https://www.masubventionpro.com/#organization" },
                 "inLanguage": "fr-FR"
+              },
+              {
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "Qu'est-ce que MaSubventionPro ?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "MaSubventionPro est une plateforme d'intelligence artificielle qui analyse plus de 10 000 dispositifs d'aides publiques (État, Régions, Communes, Europe) pour identifier les subventions, prêts, garanties et exonérations fiscales éligibles à votre entreprise."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Comment fonctionne le calcul d'éligibilité ?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Notre IA analyse votre profil d'entreprise (secteur, taille, localisation, projet) et le compare aux critères de plus de 10 000 aides publiques pour calculer un score d'éligibilité personnalisé pour chaque dispositif."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Faut-il avoir un SIRET pour utiliser la plateforme ?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Non. Les créateurs d'entreprise peuvent utiliser la plateforme avec les détails de leur projet, même avant l'immatriculation."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Quels types d'aides puis-je trouver ?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Subventions, prêts à taux zéro, garanties bancaires, exonérations fiscales, crédits d'impôt, et autres aides publiques de l'Europe, de l'État, des Régions, Départements et Communes."
+                    }
+                  }
+                ]
               }
             ]
           })}

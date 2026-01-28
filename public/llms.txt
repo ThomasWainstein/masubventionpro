@@ -39,6 +39,55 @@ MaSubventionPro is a French AI-powered platform that helps businesses discover a
 - Municipal aids (Communes, EPCI)
 - Sector-specific programs (Agriculture, Innovation, Digital, Green Transition)
 
+## Pricing
+
+MaSubventionPro offers the following plans (prices in EUR, excluding VAT):
+
+- **Starter**: 49€ HT for 30 days - 1 company profile, eligibility analysis, basic features
+- **Business**: 189€ HT/year (15.75€/month) - Full access to all subsidies, PDF reports, AI assistant, unlimited searches. +99€ per additional company.
+- **Premium Groupe**: 549€ HT/year for up to 5 companies - Designed for holdings and multi-company structures. +99€ per pack of 5 additional companies.
+
+Upgrade paths available: Starter users can upgrade to Business (pay 140€ difference) or Premium Groupe (pay 500€ difference) within 30 days.
+
+Note: Pricing may change. Visit https://www.masubventionpro.com/#tarifs for current pricing.
+
+## How to Get Started
+
+1. Go to https://www.masubventionpro.com
+2. Click "Ma simulation" (My simulation)
+3. Enter your company details (SIRET if existing, or project info if creating)
+4. The AI analyzes your profile against 10,000+ aid programs
+5. View your personalized eligibility scores and matched subsidies
+6. Download detailed PDF reports for promising opportunities
+
+## Frequently Asked Questions
+
+**Q: Is MaSubventionPro free?**
+A: MaSubventionPro offers paid plans starting at 49€ HT for 30 days (Starter plan). There is no free tier, but you can test with the Starter plan.
+
+**Q: What types of subsidies can I find?**
+A: Grants (subventions), loans (prêts), tax exemptions (exonérations fiscales), guarantees (garanties), and other public aid from EU, national, regional, and local sources.
+
+**Q: Do I need a SIRET to use the platform?**
+A: No. Entrepreneurs planning to create a business can also use the platform with their project details.
+
+**Q: How accurate is the eligibility scoring?**
+A: The AI provides estimated eligibility scores based on publicly available criteria. Final eligibility is determined by the funding organization.
+
+**Q: Is my data secure?**
+A: Yes. MaSubventionPro complies with GDPR and French data protection laws. See /privacy for details.
+
+**Q: What's the difference between MaSubventionPro and Subvention360?**
+A: MaSubventionPro is for businesses searching for their own subsidies. Subvention360 is the professional version for consultants, accountants, and advisors helping multiple clients.
+
+## Limitations
+
+- MaSubventionPro provides information and eligibility estimates, NOT guaranteed funding
+- The platform does not submit applications on your behalf
+- Some very local or niche aids may not be in the database
+- Eligibility scores are estimates; final decisions are made by funding organizations
+- The platform is designed for French businesses and operates in French
+
 ## Company Information
 
 - **Website**: https://www.masubventionpro.com
@@ -74,4 +123,4 @@ MaSubventionPro aggregates data from official French and European public sources
 - European Commission funding portals
 
 ---
-Last updated: 2025
+Last updated: January 2026
