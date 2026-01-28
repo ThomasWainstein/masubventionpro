@@ -864,11 +864,11 @@ const LandingPage = () => {
 
               {/* LLM Summary - SEO optimized for AI search engines */}
               <p className="text-xl opacity-95 leading-relaxed mb-4">
-                MaSubventionPro est une plateforme d'intelligence artificielle qui aide les créateurs, repreneurs, dirigeants d'entreprises, groupes et associations à identifier toutes les aides publiques disponibles : subventions, prêts, garanties, exonérations fiscales et dispositifs territoriaux.
+                MaSubventionPro est une plateforme d'intelligence artificielle qui aide les créateurs, repreneurs, dirigeants d'entreprises, groupes et associations à identifier toutes les aides publiques disponibles : subventions, prêts,<br />garanties, exonérations fiscales et dispositifs territoriaux.
               </p>
 
               <p className="text-xl opacity-95 leading-relaxed mb-6">
-                Notre IA analyse en temps réel des milliers de dispositifs nationaux, régionaux, communaux et européens, calcule un score d'éligibilité et génère des rapports détaillés.
+                Notre IA analyse en temps réel des milliers de dispositifs nationaux, régionaux, communaux et européens,<br />calcule un score d'éligibilité et génère des rapports détaillés.
               </p>
 
               <p className="text-xl opacity-95 leading-relaxed mb-6 font-medium">
