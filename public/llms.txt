@@ -1,126 +1,179 @@
 # MaSubventionPro - LLMs.txt
-# This file provides context for AI crawlers and language models about this website.
-# Learn more: https://llmstxt.org/
+# Context file for AI crawlers and language models
+# https://llmstxt.org/
 
 ## About MaSubventionPro
 
-MaSubventionPro is a French AI-powered platform that helps businesses discover and access public subsidies, grants, and financial aid programs. The platform analyzes over 10,000 public aid programs from European, national, regional, and local sources to match businesses with eligible funding opportunities.
+MaSubventionPro est une plateforme d'intelligence artificielle qui aide les créateurs, repreneurs, dirigeants d'entreprises, groupes et associations à identifier toutes les aides publiques disponibles : subventions, prêts, garanties, exonérations fiscales et dispositifs territoriaux.
 
-## What We Do
+Notre IA analyse en temps réel des milliers de dispositifs nationaux, régionaux, communaux et européens, calcule un score d'éligibilité et génère des rapports détaillés.
 
-- **Subsidy Search**: Search and filter through 10,000+ public aid programs (subventions, grants, loans, tax exemptions, guarantees)
-- **Eligibility Scoring**: AI-powered analysis to calculate eligibility scores for each funding program
-- **Profile Matching**: Automatic matching based on company profile (sector, size, location, project type)
-- **PDF Reports**: Detailed reports on matched subsidies with eligibility analysis
-- **Expert Search Engine**: Advanced search with filters for funding type, region, sector, and deadlines
+**Mission:** Démocratiser l'accès aux aides publiques
+**Vision:** Faire en sorte que chaque euro d'aide publique atteigne celui qui en a besoin
+
+## Key Statistics
+
+- **10 000+** dispositifs d'aides référencés
+- **Quotidien** - Mise à jour des données
+- **National** - De la commune à l'Europe
+- **IA** - Assistant IA expert intégré
 
 ## Target Audience
 
-- **Entrepreneurs and Startups** (Createurs d'entreprise): People planning to start a business in France
-- **SME/PME Leaders**: Owners and directors of small and medium enterprises
-- **Holdings and Investment Structures**: Multi-company structures seeking group-level funding
-- **Associations**: Non-profit organizations eligible for public funding
+- **Créateurs d'entreprise**: Porteurs de projets avant ou après immatriculation
+- **Repreneurs**: Personnes qui reprennent ou acquièrent une entreprise existante
+- **Dirigeants d'entreprises (TPE/PME)**: Propriétaires et directeurs de petites et moyennes entreprises
+- **Groupes et Holdings**: Structures multi-sociétés cherchant des financements au niveau groupe
+- **Associations**: Organisations à but non lucratif éligibles aux aides publiques
 
-## Key Features
+## Types of Aid Covered
 
-1. Real-time analysis of public aid databases
-2. Automatic SIRET/SIREN verification via French government API
-3. Sector-based matching using NAF codes
-4. Regional filtering (all French regions including DOM-TOM)
-5. Deadline tracking and alerts
-6. AI assistant for personalized guidance
+- **Subventions** (grants) - Aides non remboursables
+- **Prêts** (loans) - Prêts à taux zéro ou bonifiés
+- **Garanties** (guarantees) - Garanties bancaires publiques
+- **Exonérations fiscales** (tax exemptions) - Crédits d'impôt, réductions fiscales
+- **Dispositifs territoriaux** - Aides spécifiques régionales, départementales, communales
 
-## Funding Sources Covered
+## Funding Sources
 
-- European Union programs (Horizon Europe, FEDER, FSE+)
-- French national programs (BPI France, France 2030, ADEME)
-- Regional aids (Conseils Regionaux)
-- Departmental aids (Conseils Departementaux)
-- Municipal aids (Communes, EPCI)
-- Sector-specific programs (Agriculture, Innovation, Digital, Green Transition)
+- European Union (Horizon Europe, FEDER, FSE+)
+- État français (BPI France, France 2030, ADEME)
+- Régions (Conseils Régionaux)
+- Départements (Conseils Départementaux)
+- Communes et intercommunalités (EPCI)
+- Programmes sectoriels (Agriculture, Innovation, Digital, Transition écologique)
 
 ## Pricing
 
-MaSubventionPro offers the following plans (prices in EUR, excluding VAT):
+Prix en EUR hors taxes (HT):
 
-- **Starter**: 49€ HT for 30 days - 1 company profile, eligibility analysis, basic features
-- **Business**: 189€ HT/year (15.75€/month) - Full access to all subsidies, PDF reports, AI assistant, unlimited searches. +99€ per additional company.
-- **Premium Groupe**: 549€ HT/year for up to 5 companies - Designed for holdings and multi-company structures. +99€ per pack of 5 additional companies.
+- **Starter**: 49€ HT pour 30 jours
+  - 1 profil entreprise
+  - Analyse d'éligibilité
+  - Fonctionnalités de base
 
-Upgrade paths available: Starter users can upgrade to Business (pay 140€ difference) or Premium Groupe (pay 500€ difference) within 30 days.
+- **Business**: 189€ HT/an (soit 15,75€/mois)
+  - Accès complet à toutes les aides
+  - Rapports PDF détaillés
+  - Assistant IA expert
+  - Recherches illimitées
+  - +99€ par société supplémentaire
 
-Note: Pricing may change. Visit https://www.masubventionpro.com/#tarifs for current pricing.
+- **Premium Groupe**: 549€ HT/an pour 5 sociétés
+  - Conçu pour holdings et groupes multi-sociétés
+  - +99€ par pack de 5 sociétés supplémentaires
+
+**Upgrades:** Starter → Business (140€) | Starter → Premium (500€) | Business → Premium (360€) dans les 30 jours.
+
+Note: Tarifs susceptibles d'évoluer. Voir https://www.masubventionpro.com/#tarifs
 
 ## How to Get Started
 
-1. Go to https://www.masubventionpro.com
-2. Click "Ma simulation" (My simulation)
-3. Enter your company details (SIRET if existing, or project info if creating)
-4. The AI analyzes your profile against 10,000+ aid programs
-5. View your personalized eligibility scores and matched subsidies
-6. Download detailed PDF reports for promising opportunities
+1. Aller sur https://www.masubventionpro.com
+2. Cliquer sur "Ma simulation"
+3. Entrer les détails de l'entreprise (SIRET si existante, ou détails du projet si création)
+4. L'IA analyse le profil parmi 10 000+ programmes d'aides
+5. Consulter les scores d'éligibilité personnalisés
+6. Télécharger les rapports PDF détaillés
+
+## AI Technology
+
+- **Assistant IA Expert** intégré à la plateforme
+- **Conforme IA Act européen** - Réglementation européenne sur l'IA
+- **Propulsé par Mistral** - IA française
+- Analyse de profil approfondie et conseils personnalisés
+
+## Company History
+
+- **2025**: Lancement de **subvention360** - Plateforme B2B professionnelle pour experts-comptables et cabinets de conseil
+- **2026**: Lancement de **MaSubventionPro** - Accès direct pour les entreprises, créateurs et repreneurs
+- **2027+**: Accompagnement à la création de dossiers assistée par IA
+
+## Founders
+
+- **Wilfrid Rimbault** - CEO & Co-fondateur
+  - Fondateur de RW Strategy Agency
+  - 25 ans d'expérience dans la logistique internationale
+
+- **Thomas Wainstein** - CTO & Co-fondateur
+  - Fondateur d'EcoEmit
+  - Expert en orchestration d'IA et systèmes intelligents
+
+## Company Values
+
+- **Innovation**: L'IA au service de la simplification administrative
+- **Précision**: Base de données exhaustive et constamment mise à jour
+- **Engagement**: Partenariat durable avec les utilisateurs
+- **Transparence**: Sources officielles, données vérifiables
 
 ## Frequently Asked Questions
 
-**Q: Is MaSubventionPro free?**
-A: MaSubventionPro offers paid plans starting at 49€ HT for 30 days (Starter plan). There is no free tier, but you can test with the Starter plan.
+**Q: Combien d'aides MaSubventionPro référence-t-il ?**
+A: Plus de 10 000 dispositifs d'aides publiques couvrant tous les niveaux : européen, national, régional, départemental et communal.
 
-**Q: What types of subsidies can I find?**
-A: Grants (subventions), loans (prêts), tax exemptions (exonérations fiscales), guarantees (garanties), and other public aid from EU, national, regional, and local sources.
+**Q: Quelle est la différence entre subvention360 et MaSubventionPro ?**
+A: subvention360 est la plateforme B2B pour les professionnels (experts-comptables, cabinets de conseil) avec gestion multiclients. MaSubventionPro est la plateforme B2C qui donne un accès direct aux entreprises.
 
-**Q: Do I need a SIRET to use the platform?**
-A: No. Entrepreneurs planning to create a business can also use the platform with their project details.
+**Q: Faut-il avoir un SIRET pour utiliser la plateforme ?**
+A: Non. Les créateurs d'entreprise peuvent utiliser la plateforme avec les détails de leur projet, même avant l'immatriculation.
 
-**Q: How accurate is the eligibility scoring?**
-A: The AI provides estimated eligibility scores based on publicly available criteria. Final eligibility is determined by the funding organization.
+**Q: MaSubventionPro constitue-t-il les dossiers de demande ?**
+A: Actuellement, MaSubventionPro identifie les aides pertinentes et fournit les informations pour démarrer les démarches. L'accompagnement à la création de dossiers assisté par IA est prévu pour 2027.
 
-**Q: Is my data secure?**
-A: Yes. MaSubventionPro complies with GDPR and French data protection laws. See /privacy for details.
+**Q: Mes données sont-elles sécurisées ?**
+A: Oui. Base de données hébergée en UE, 100% conforme RGPD, certifié SOC 2 Type 2.
 
-**Q: What's the difference between MaSubventionPro and Subvention360?**
-A: MaSubventionPro is for businesses searching for their own subsidies. Subvention360 is the professional version for consultants, accountants, and advisors helping multiple clients.
+**Q: Quelle IA est utilisée ?**
+A: L'Assistant IA Expert utilise Mistral (IA française) et est conforme à l'IA Act européen.
 
 ## Limitations
 
-- MaSubventionPro provides information and eligibility estimates, NOT guaranteed funding
-- The platform does not submit applications on your behalf
-- Some very local or niche aids may not be in the database
-- Eligibility scores are estimates; final decisions are made by funding organizations
-- The platform is designed for French businesses and operates in French
+- MaSubventionPro fournit des informations et des estimations d'éligibilité, PAS de financement garanti
+- La plateforme ne soumet pas les demandes à votre place (actuellement)
+- Certaines aides très locales ou de niche peuvent ne pas être référencées
+- Les scores d'éligibilité sont des estimations ; les décisions finales appartiennent aux organismes financeurs
+- La plateforme est conçue pour les entreprises françaises et fonctionne en français
 
-## Company Information
+## Compliance & Security
 
-- **Website**: https://www.masubventionpro.com
-- **Service Area**: France (Metropolitan and Overseas Territories)
-- **Language**: French
-- **Related Product**: Subvention360 (professional version for consultants and experts)
-
-## Pages Available
-
-- `/` - Homepage with subsidy search and eligibility simulation
-- `/signup` or `/inscription` - Create an account and run eligibility analysis
-- `/login` or `/connexion` - User login
-- `/notre-histoire` - Our story and mission
-- `/ai-transparency` - AI transparency and methodology
-- `/cgu` - Terms of service (Conditions Generales d'Utilisation)
-- `/cgv` - Sales terms (Conditions Generales de Vente)
-- `/privacy` - Privacy policy
-- `/cookies` - Cookie policy
-- `/mentions-legales` - Legal notices
+- Base de données hébergée en Union Européenne
+- 100% conforme RGPD
+- Certifié SOC 2 Type 2
+- IA française (Mistral) conforme IA Act européen
 
 ## Contact
 
-For questions about MaSubventionPro or partnership inquiries, please visit our website.
+- **Email**: contact@masubventionpro.com
+- **Support**: support@masubventionpro.com
+- **Website**: https://www.masubventionpro.com
+
+## Related Products
+
+- **subvention360**: Version professionnelle B2B pour experts-comptables et consultants
+  - Website: https://subvention360.com
+
+## Pages Available
+
+- `/` - Page d'accueil avec simulation d'éligibilité
+- `/signup` ou `/inscription` - Créer un compte
+- `/login` ou `/connexion` - Connexion utilisateur
+- `/notre-histoire` - Notre histoire et mission
+- `/ai-transparency` - Transparence IA et méthodologie
+- `/cgu` - Conditions Générales d'Utilisation
+- `/cgv` - Conditions Générales de Vente
+- `/privacy` - Politique de confidentialité RGPD
+- `/cookies` - Politique cookies
+- `/mentions-legales` - Mentions légales
 
 ## Data Sources
 
-MaSubventionPro aggregates data from official French and European public sources including:
+MaSubventionPro agrège des données de sources publiques officielles françaises et européennes :
 - Aides-entreprises.fr
 - Les-aides.fr
 - BPI France
 - ADEME
-- Regional council websites
-- European Commission funding portals
+- Sites des conseils régionaux
+- Portails de financement de la Commission européenne
 
 ---
 Last updated: January 2026
