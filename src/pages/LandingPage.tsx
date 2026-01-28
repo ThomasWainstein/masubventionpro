@@ -886,7 +886,7 @@ const LandingPage = () => {
                 </div>
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
                   <div className="text-3xl font-bold text-blue-400 mb-1">National</div>
-                  <div className="text-sm text-slate-300">Commune - Europe</div>
+                  <div className="text-sm text-slate-300">de la Commune à l'Europe</div>
                 </div>
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
                   <div className="text-3xl font-bold text-purple-400 mb-1">IA</div>
