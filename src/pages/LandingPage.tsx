@@ -1056,10 +1056,10 @@ const LandingPage = () => {
         <div className="max-w-[1400px] mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-extrabold text-slate-900 mb-4">
-              Choisissez votre offre
+              Après votre simulation, choisissez votre offre
             </h2>
             <p className="text-xl text-slate-500">
-              Transparence totale. Paiement sécurisé Stripe. Résiliable à tout moment.
+              Paiement 100% sécurisé par Stripe (SEPA, CB, Visa, Mastercard)
             </p>
           </div>
           <div className="grid lg:grid-cols-3 gap-8 mt-12">
@@ -1184,12 +1184,6 @@ const LandingPage = () => {
                 Choisir Premium Groupe
               </button>
             </div>
-          </div>
-
-          <div className="text-center mt-12">
-            <p className="text-slate-500 text-lg mb-4">
-              Paiement 100% sécurisé par Stripe (SEPA, CB, Visa, Mastercard)
-            </p>
           </div>
         </div>
       </section>
