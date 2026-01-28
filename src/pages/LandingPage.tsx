@@ -1023,7 +1023,7 @@ const LandingPage = () => {
               {
                 icon: <FileText className="w-8 h-8 text-white" />,
                 title: "Rapports PDF",
-                desc: "Vous avez identifié des dispositifs et souhaitez les télécharger ou les transmettre. Générez un document PDF complet, partageable par email.",
+                desc: "Vous avez identifié des dispositifs, vous souhaitez les télécharger et/ou les transmettre. Vous pouvez générer un document PDF et même le partager par email.",
                 highlight: "Information complète pour chaque aide",
               },
               {
