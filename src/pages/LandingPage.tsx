@@ -958,26 +958,31 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Trust Bar */}
-      <section className="bg-white py-12 px-8 text-center">
-        <div className="max-w-[1400px] mx-auto">
-          <h3 className="text-2xl font-bold text-slate-900 mb-2">
-            La base de données la plus complète du marché
-          </h3>
-          <p className="text-slate-500 text-lg mb-2">
-            Notre rôle : vous révéler les opportunités que vous ne connaissiez pas.
-          </p>
-          <p className="text-slate-500 mb-8 text-center">
+      {/* Trust Bar - Two Column Layout */}
+      <section className="bg-white py-16 px-8">
+        <div className="max-w-[1200px] mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 mb-10">
+            {/* Column 1 - Qu'est-ce qui nous rend unique ? */}
+            <div className="bg-gradient-to-br from-slate-100 to-slate-50 border-2 border-slate-200 px-8 py-8 rounded-2xl">
+              <h3 className="text-2xl font-bold text-blue-800 mb-4">Qu'est-ce qui nous rend unique ?</h3>
+              <p className="text-lg text-slate-700 leading-relaxed">
+                Nous avons intégré <strong className="text-blue-800">EN PLUS</strong> du National et de l'Europe, les aides des <strong className="text-blue-800">Régions ET des Communes</strong>. Un niveau de couverture que peu de solutions proposent.
+              </p>
+            </div>
+
+            {/* Column 2 - Quel est notre rôle ? */}
+            <div className="bg-gradient-to-br from-blue-800 to-blue-900 border-2 border-blue-700 px-8 py-8 rounded-2xl">
+              <h3 className="text-2xl font-bold text-white mb-4">Quel est notre rôle ?</h3>
+              <p className="text-lg text-blue-100 leading-relaxed">
+                Vous révéler les opportunités que vous ne connaissiez pas et mettre à votre disposition un <strong className="bg-gradient-to-br from-amber-400 to-amber-300 bg-clip-text text-transparent">assistant IA expert</strong> pour accompagner vos projets ou besoins.
+              </p>
+            </div>
+          </div>
+
+          {/* Propulsé par subvention360 */}
+          <p className="text-slate-500 text-center">
             Propulsé par <span className="text-2xl font-bold text-blue-800">subvention360</span>
           </p>
-
-          {/* Pourquoi nous sommes uniques - Section déplacée */}
-          <div className="mt-12 bg-gradient-to-br from-amber-50 to-amber-100/50 border-2 border-amber-300 px-8 py-8 rounded-2xl max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold text-amber-700 mb-4 text-center">Pourquoi sommes-nous uniques ?</h3>
-            <p className="text-lg text-slate-700 leading-relaxed text-center">
-              Nous avons intégré <strong className="text-amber-700">EN PLUS</strong> du National et de l'Europe, les aides des <strong className="text-amber-700">Régions ET des Communes</strong>. Un niveau de couverture que peu d'autres solutions proposent.
-            </p>
-          </div>
         </div>
       </section>
 
