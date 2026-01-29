@@ -144,10 +144,11 @@ interface V5Match {
  */
 async function fetchAIRecommendations(
   profileId: string,
-  accessToken: string
+  accessToken: string,
+  limit: number = 50
 ): Promise<ScoredSubsidy[] | null> {
   try {
-    console.log('[V5 Matcher] Calling edge function for profile:', profileId);
+    console.log('[V5 Matcher] Calling edge function for profile:', profileId, 'limit:', limit);
 
     const response = await fetch(V5_MATCHER_URL, {
       method: 'POST',
@@ -163,6 +164,7 @@ async function fetchAIRecommendations(
         skip_llm: false, // Enable DeepSeek LLM scoring for better match quality
         trigger_async_llm: false, // Don't queue for background LLM
         force_refresh: false,
+        limit: limit, // Pass limit to edge function
       }),
     });
 
@@ -731,7 +733,7 @@ export function useRecommendedSubsidies(
 
           if (accessToken) {
             console.log('[Recommendations] Trying AI scoring for profile:', profile.id);
-            const aiRecommendations = await fetchAIRecommendations(profile.id, accessToken);
+            const aiRecommendations = await fetchAIRecommendations(profile.id, accessToken, limit);
 
             if (aiRecommendations && aiRecommendations.length > 0) {
               console.log('[Recommendations] AI scoring succeeded with', aiRecommendations.length, 'results');
@@ -779,11 +781,11 @@ export function useRecommendedSubsidies(
                 const todayStr = new Date().toISOString().split('T')[0];
 
                 // Fetch more subsidies for client-side scoring
+                // Note: Deadline filtering is done client-side to avoid PostgREST 500 error with or() filter
                 let supplementQuery = supabase
                   .from('subsidies')
                   .select(SUBSIDY_COLUMNS)
-                  .eq('is_active', true)
-                  .or(`deadline.is.null,deadline.gte.${todayStr}`); // Filter out expired subsidies
+                  .eq('is_active', true);
 
                 if (profile.region) {
                   supplementQuery = supplementQuery.or(`region.cs.{${profile.region}},region.cs.{National}`);
@@ -791,9 +793,13 @@ export function useRecommendedSubsidies(
 
                 supplementQuery = supplementQuery
                   .order('deadline', { ascending: true, nullsFirst: false })
-                  .limit(100);
+                  .limit(150); // Fetch more to account for expired subsidies filtered out client-side
 
-                const { data: supplementData } = await supplementQuery;
+                const { data: rawSupplementData } = await supplementQuery;
+                // Filter out expired subsidies client-side
+                const supplementData = (rawSupplementData || []).filter((s: any) =>
+                  s.deadline === null || s.deadline >= todayStr
+                ).slice(0, 100);
 
                 console.log('[Recommendations] Supplement query returned', supplementData?.length || 0, 'subsidies');
 
@@ -848,12 +854,12 @@ export function useRecommendedSubsidies(
       }
 
       // Fallback to client-side scoring
+      // Note: Deadline filtering is done client-side to avoid PostgREST 500 error with or() filter
       const today = new Date().toISOString().split('T')[0];
       let query = supabase
         .from('subsidies')
         .select(SUBSIDY_COLUMNS)
-        .eq('is_active', true)
-        .or(`deadline.is.null,deadline.gte.${today}`); // Filter out expired subsidies
+        .eq('is_active', true);
 
       // Build region filter (user's region OR National)
       if (profile.region) {
@@ -864,15 +870,18 @@ export function useRecommendedSubsidies(
       query = query
         .order('deadline', { ascending: true, nullsFirst: false })
         .order('amount_max', { ascending: false, nullsFirst: true })
-        .limit(enableScoring ? 100 : limit);
+        .limit(enableScoring ? 150 : limit + 50); // Fetch more to account for expired subsidies filtered out client-side
 
-      const { data, error: queryError } = await query;
+      const { data: rawData, error: queryError } = await query;
 
       if (queryError) {
         throw queryError;
       }
 
-      let subsidies = (data || []) as Subsidy[];
+      // Filter out expired subsidies client-side
+      let subsidies = ((rawData || []) as Subsidy[]).filter(s =>
+        s.deadline === null || s.deadline >= today
+      ).slice(0, enableScoring ? 100 : limit);
 
       if (enableScoring && subsidies.length > 0) {
         // Score and rank subsidies

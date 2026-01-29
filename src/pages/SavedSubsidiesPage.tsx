@@ -90,7 +90,7 @@ export function SavedSubsidiesPage() {
     recommendations,
     loading: loadingRecommendations,
     isAIScored,
-  } = useRecommendedSubsidies(hasProfile ? profile : null, { limit: 25, useAIScoring: true });
+  } = useRecommendedSubsidies(hasProfile ? profile : null, { limit: 50, useAIScoring: true });
 
   const [expandedNotes, setExpandedNotes] = useState<Set<string>>(new Set());
   const [editingNotes, setEditingNotes] = useState<Record<string, string>>({});

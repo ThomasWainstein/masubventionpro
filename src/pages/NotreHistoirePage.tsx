@@ -30,9 +30,6 @@ export default function NotreHistoirePage() {
 
             {/* Desktop Nav */}
             <nav className="hidden md:flex items-center gap-10">
-              <Link to="/#profils" className="text-slate-900 font-medium hover:text-blue-800 transition-colors">
-                Pour qui ?
-              </Link>
               <Link to="/#fonctionnalites" className="text-slate-900 font-medium hover:text-blue-800 transition-colors">
                 Fonctionnalites
               </Link>
@@ -49,7 +46,7 @@ export default function NotreHistoirePage() {
                 Connexion
               </Link>
               <Link
-                to="/signup"
+                to="/#simulation"
                 className="px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-800/30 transition-all"
               >
                 Ma simulation
@@ -68,7 +65,6 @@ export default function NotreHistoirePage() {
           {/* Mobile Menu */}
           {mobileMenuOpen && (
             <div className="md:hidden bg-white border-b px-4 py-4 space-y-4">
-              <Link to="/#profils" className="block text-slate-900 font-medium">Pour qui ?</Link>
               <Link to="/#fonctionnalites" className="block text-slate-900 font-medium">Fonctionnalites</Link>
               <Link to="/#tarifs" className="block text-slate-900 font-medium">Tarifs</Link>
               <Link to="/notre-histoire" className="block text-blue-800 font-medium">Notre histoire</Link>
@@ -79,7 +75,7 @@ export default function NotreHistoirePage() {
                 Connexion
               </Link>
               <Link
-                to="/signup"
+                to="/#simulation"
                 className="block w-full text-center px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold"
               >
                 Ma simulation

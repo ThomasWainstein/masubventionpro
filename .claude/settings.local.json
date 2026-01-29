@@ -19,7 +19,45 @@
       "Bash(xxd:*)",
       "Bash(python -c:*)",
       "Bash(npm run dev:*)",
-      "Read(//d/**)"
+      "Read(//d/**)",
+      "Skill(db-stats)",
+      "Skill(db-stats:*)",
+      "Bash(SUPABASE_URL=\"https://gvfgvbztagafjykncwto.supabase.co\" SUPABASE_SERVICE_ROLE_KEY=\"$SUPABASE_SECRET_KEY_DATA_PROCESSING\" node:*)",
+      "Bash(npm install:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npx vite build)",
+      "Bash(./node_modules/.bin/tsc:*)",
+      "Bash(tree:*)",
+      "Bash(npx create-next-app@latest masubventionpro-next --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --yes)",
+      "Bash(copy \"d:\\\\GitHub\\\\masubventionpro\\\\public\\\\logo.svg\" \"d:\\\\GitHub\\\\masubventionpro-next\\\\public\"\" && copy \"d:GitHubmasubventionpropublicfavicon.svg\" \"d:GitHubmasubventionpro-nextpublic\"\")",
+      "Bash(copy \"d:\\\\GitHub\\\\masubventionpro\\\\public\\\\logo-subvention360.webp\" \"d:\\\\GitHub\\\\masubventionpro-next\\\\public\"\" && copy \"d:GitHubmasubventionpropubliclogo-subvention360.png\" \"d:GitHubmasubventionpro-nextpublic\"\")",
+      "Bash(copy \"d:\\\\GitHub\\\\masubventionpro\\\\public\\\\robots.txt\" \"d:\\\\GitHub\\\\masubventionpro-next\\\\public\"\" && copy \"d:GitHubmasubventionpropublicsitemap.xml\" \"d:GitHubmasubventionpro-nextpublic\"\")",
+      "Bash(copy \"d:\\\\GitHub\\\\masubventionpro\\\\public\\\\llms.txt\" \"d:\\\\GitHub\\\\masubventionpro-next\\\\public\"\")",
+      "Bash(xcopy:*)",
+      "Bash(npm run lint:*)",
+      "Bash(timeout:*)",
+      "Bash(tasklist:*)",
+      "Bash(findstr:*)",
+      "Bash(dir:*)",
+      "Bash(ls:*)",
+      "Bash(supabase functions deploy:*)",
+      "Bash(supabase functions list:*)",
+      "Bash(supabase secrets:*)",
+      "Bash(npx tsx:*)",
+      "Bash( comm -23 /tmp/s360-logos.txt /tmp/msp-logos.txt)",
+      "mcp__supabase__query",
+      "Read(//c/Users/thoma/.claude/**)",
+      "Read(//d/ClaudeData/.claude/**)"
     ]
+  },
+  "mcpServers": {
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://postgres.gvfgvbztagafjykncwto:z42917XNAxzOog7m@aws-0-eu-central-1.pooler.supabase.com:6543/postgres"
+      ]
+    }
   }
 }

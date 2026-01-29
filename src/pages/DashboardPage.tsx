@@ -37,7 +37,7 @@ export function DashboardPage() {
     recommendations: recommendedSubsidies,
     loading: loadingRecommendations,
     isAIScored,
-  } = useRecommendedSubsidies(hasProfile ? profile : null, { limit: 5, useAIScoring: true });
+  } = useRecommendedSubsidies(hasProfile ? profile : null, { limit: 15, useAIScoring: true });
 
   const userName = user?.user_metadata?.first_name || user?.email?.split('@')[0] || 'Utilisateur';
 
@@ -422,7 +422,7 @@ export function DashboardPage() {
               />
             ))}
             <div className="text-center pt-2">
-              <Link to="/app/search">
+              <Link to="/app/saved">
                 <Button variant="outline">
                   Voir plus d'aides
                   <ArrowRight className="ml-2 h-4 w-4" />

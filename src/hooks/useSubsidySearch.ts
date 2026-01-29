@@ -69,10 +69,7 @@ export function useSubsidySearch(): UseSubsidySearchReturn {
       .select(SUBSIDY_COLUMNS, { count: 'exact' })
       .eq('is_active', true);
 
-    // Filter out expired subsidies (deadline in the past)
-    // Use ISO date format for comparison
-    const today = new Date().toISOString().split('T')[0];
-    query = query.or(`deadline.is.null,deadline.gte.${today}`);
+    // Note: Deadline filtering is done client-side to avoid PostgREST 500 error with or() filter
 
     // Text search on title and description
     if (filters.query && filters.query.trim()) {
@@ -174,8 +171,26 @@ export function useSubsidySearch(): UseSubsidySearchReturn {
         throw queryError;
       }
 
-      const subsidies = (data || []) as Subsidy[];
-      const totalCount = count || 0;
+      // Filter out expired subsidies client-side (deadline in the past)
+      const today = new Date().toISOString().split('T')[0];
+      const subsidies = ((data || []) as Subsidy[]).filter(s =>
+        s.deadline === null || s.deadline >= today
+      );
+
+      // Get accurate count with separate queries (same approach as landing page)
+      const [nullDeadlineCount, futureDeadlineCount] = await Promise.all([
+        supabase
+          .from('subsidies')
+          .select('id', { count: 'exact', head: true })
+          .eq('is_active', true)
+          .is('deadline', null),
+        supabase
+          .from('subsidies')
+          .select('id', { count: 'exact', head: true })
+          .eq('is_active', true)
+          .gte('deadline', today)
+      ]);
+      const totalCount = (nullDeadlineCount.count || 0) + (futureDeadlineCount.count || 0);
 
       if (page === 0) {
         setResults(subsidies);

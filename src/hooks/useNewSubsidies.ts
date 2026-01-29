@@ -34,20 +34,36 @@ export function useNewSubsidies() {
       setLoading(true);
       try {
         // Filter out expired subsidies (deadline in the past)
+        // Use two separate queries to avoid PostgREST 500 error with complex or() filter
         const today = new Date().toISOString().split('T')[0];
-        const { count, error } = await supabase
-          .from('subsidies')
-          .select('id', { count: 'exact', head: true })
-          .eq('is_active', true)
-          .gt('created_at', lastViewed)
-          .or(`deadline.is.null,deadline.gte.${today}`);
+        const [nullDeadlineResult, futureDeadlineResult] = await Promise.all([
+          // Count new subsidies with no deadline
+          supabase
+            .from('subsidies')
+            .select('id', { count: 'exact', head: true })
+            .eq('is_active', true)
+            .gt('created_at', lastViewed)
+            .is('deadline', null),
+          // Count new subsidies with future deadline
+          supabase
+            .from('subsidies')
+            .select('id', { count: 'exact', head: true })
+            .eq('is_active', true)
+            .gt('created_at', lastViewed)
+            .gte('deadline', today)
+        ]);
 
-        if (error) {
-          console.error('Error fetching new subsidies count:', error);
+        if (nullDeadlineResult.error) {
+          console.error('Error fetching new subsidies count (null deadline):', nullDeadlineResult.error);
+          return;
+        }
+        if (futureDeadlineResult.error) {
+          console.error('Error fetching new subsidies count (future deadline):', futureDeadlineResult.error);
           return;
         }
 
-        setNewCount(count || 0);
+        const totalCount = (nullDeadlineResult.count || 0) + (futureDeadlineResult.count || 0);
+        setNewCount(totalCount);
       } catch (err) {
         console.error('Error fetching new subsidies:', err);
       } finally {

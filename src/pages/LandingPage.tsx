@@ -531,20 +531,43 @@ const LandingPage = () => {
     const fetchSubsidyCount = async () => {
       try {
         const today = new Date().toISOString().split('T')[0]
-        const { count, error } = await supabase
-          .from("subsidies")
-          .select("*", { count: "exact", head: true })
-          .eq('is_active', true)
-          .or(`deadline.is.null,deadline.gte.${today}`)
+        // Use two separate queries to avoid PostgREST 500 error with complex or() filter
+        const [nullDeadlineResult, futureDeadlineResult] = await Promise.all([
+          // Count subsidies with no deadline
+          supabase
+            .from("subsidies")
+            .select("*", { count: "exact", head: true })
+            .eq('is_active', true)
+            .is('deadline', null),
+          // Count subsidies with future deadline
+          supabase
+            .from("subsidies")
+            .select("*", { count: "exact", head: true })
+            .eq('is_active', true)
+            .gte('deadline', today)
+        ])
 
-        if (!error && count) {
-          setSubsidyCount(count.toLocaleString("fr-FR"))
+        const nullCount = nullDeadlineResult.count || 0
+        const futureCount = futureDeadlineResult.count || 0
+        const totalCount = nullCount + futureCount
+
+        if (totalCount > 0) {
+          setSubsidyCount(totalCount.toLocaleString("fr-FR"))
         }
       } catch (err) {
         console.error("Error fetching subsidy count:", err)
       }
     }
     fetchSubsidyCount()
+  }, [])
+
+  // Open simulation modal if URL hash is #simulation
+  useEffect(() => {
+    if (window.location.hash === '#simulation') {
+      setShowProfileModal(true)
+      // Clean up the hash from URL
+      window.history.replaceState(null, '', window.location.pathname)
+    }
   }, [])
 
   // Company search function
@@ -870,9 +893,6 @@ const LandingPage = () => {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-10">
-            <a href="#profils" className="text-slate-900 font-medium hover:text-blue-800 transition-colors">
-              Pour qui ?
-            </a>
             <a href="#fonctionnalites" className="text-slate-900 font-medium hover:text-blue-800 transition-colors">
               Fonctionnalites
             </a>
@@ -908,7 +928,6 @@ const LandingPage = () => {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-white border-b px-4 py-4 space-y-4">
-            <a href="#profils" className="block text-slate-900 font-medium">Pour qui ?</a>
             <a href="#fonctionnalites" className="block text-slate-900 font-medium">Fonctionnalites</a>
             <a href="#tarifs" className="block text-slate-900 font-medium">Tarifs</a>
             <Link to="/notre-histoire" className="block text-slate-900 font-medium">Notre histoire</Link>
@@ -1198,12 +1217,9 @@ const LandingPage = () => {
               </button>
             </div>
 
-            {/* Business - Featured */}
-            <div className="bg-white border-[3px] border-blue-800 rounded-3xl p-10 relative shadow-xl shadow-blue-800/15">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-amber-400 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-amber-500/30">
-                RECOMMANDÉ
-              </div>
-              <h3 className="text-2xl font-bold text-slate-900 mt-4">Business</h3>
+            {/* Business */}
+            <div className="bg-white border-[3px] border-slate-200 rounded-3xl p-10 relative hover:-translate-y-2 hover:shadow-xl transition-all">
+              <h3 className="text-2xl font-bold text-slate-900">Business</h3>
               <p className="text-slate-500 mt-1">Pour un suivi optimal toute l'année</p>
               <div className="my-6">
                 <span className="text-6xl font-extrabold text-blue-800">189€</span>
@@ -1235,7 +1251,7 @@ const LandingPage = () => {
               </div>
               <button
                 onClick={() => navigate("/signup?plan=business")}
-                className="w-full mt-6 px-8 py-4 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold text-lg shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl transition-all"
+                className="w-full mt-6 px-8 py-4 bg-white text-blue-800 border-2 border-blue-800 rounded-lg font-semibold text-lg hover:-translate-y-0.5 transition-all"
               >
                 Choisir Business
               </button>
@@ -1311,7 +1327,7 @@ const LandingPage = () => {
               {
                 icon: <Shield className="w-6 h-6" />,
                 title: "100% conforme RGPD",
-                desc: "Respect total du règlement européen. Hébergement UE exclusivement. Infrastructure certifiée SOC 2 Type 2.",
+                desc: "Respect total du règlement européen. Hébergement UE exclusivement.\nInfrastructure certifiée SOC 2 Type 2.",
               },
               {
                 icon: <Bot className="w-6 h-6" />,
@@ -1321,7 +1337,7 @@ const LandingPage = () => {
             ].map((card, i) => (
               <div key={i} className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20">
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2">{card.icon} {card.title}</h3>
-                <p className="opacity-90 leading-relaxed">{card.desc}</p>
+                <p className="opacity-90 leading-relaxed whitespace-pre-line">{card.desc}</p>
               </div>
             ))}
           </div>
@@ -1884,10 +1900,10 @@ const LandingPage = () => {
                       </p>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <div className="grid md:grid-cols-3 gap-4">
                       {/* Starter Option */}
                       <div className="bg-white rounded-xl p-5 border-2 border-slate-200 hover:border-blue-400 transition-colors">
-                        <div className="flex items-center justify-between mb-3">
+                        <div className="mb-3">
                           <h5 className="font-bold text-slate-900">Starter</h5>
                           <span className="text-2xl font-extrabold text-blue-800">49€ <span className="text-sm font-normal text-slate-500">HT</span></span>
                         </div>
@@ -1914,11 +1930,8 @@ const LandingPage = () => {
                       </div>
 
                       {/* Business Option */}
-                      <div className="bg-white rounded-xl p-5 border-2 border-blue-800 shadow-lg shadow-blue-800/10 relative">
-                        <div className="absolute -top-3 right-4 bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                          RECOMMANDÉ
-                        </div>
-                        <div className="flex items-center justify-between mb-3">
+                      <div className="bg-white rounded-xl p-5 border-2 border-slate-200 hover:border-blue-400 transition-colors">
+                        <div className="mb-3">
                           <h5 className="font-bold text-slate-900">Business</h5>
                           <span className="text-2xl font-extrabold text-blue-800">189€ <span className="text-sm font-normal text-slate-500">HT/an</span></span>
                         </div>
@@ -1938,9 +1951,37 @@ const LandingPage = () => {
                         </ul>
                         <button
                           onClick={() => handleUpgrade('business')}
-                          className="w-full py-2.5 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 transition-all"
+                          className="w-full py-2.5 border-2 border-blue-800 text-blue-800 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
                         >
                           Choisir Business
+                        </button>
+                      </div>
+
+                      {/* Premium Groupe Option */}
+                      <div className="bg-white rounded-xl p-5 border-2 border-slate-200 hover:border-blue-400 transition-colors">
+                        <div className="mb-3">
+                          <h5 className="font-bold text-slate-900">Premium Groupe</h5>
+                          <span className="text-2xl font-extrabold text-blue-800">549€ <span className="text-sm font-normal text-slate-500">HT/an</span></span>
+                        </div>
+                        <ul className="space-y-2 text-sm text-slate-600 mb-4">
+                          <li className="flex items-center gap-2">
+                            <Check className="w-4 h-4 text-emerald-600" />
+                            5 sociétés incluses
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <Check className="w-4 h-4 text-emerald-600" />
+                            Assistant IA expert (x20 Starter)
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <Check className="w-4 h-4 text-emerald-600" />
+                            Dashboard consolidé groupe
+                          </li>
+                        </ul>
+                        <button
+                          onClick={() => handleUpgrade('premium')}
+                          className="w-full py-2.5 border-2 border-blue-800 text-blue-800 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+                        >
+                          Choisir Premium
                         </button>
                       </div>
                     </div>
@@ -1964,30 +2005,26 @@ const LandingPage = () => {
 
               {/* Type Selection - Two Column Layout */}
               {!profileType && !showResults && !isAnalyzing && (
-                <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto py-6">
-                  {/* Left: Value Proposition */}
-                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-10 flex flex-col justify-center min-h-[380px]">
-                    <Sparkles className="w-14 h-14 text-blue-600 mb-6" />
-                    <h3 className="text-3xl font-bold text-slate-900 mb-4">
-                      Trouvez vos aides publiques
+                <div className="grid md:grid-cols-[7fr_3fr] gap-10 items-center max-w-6xl mx-auto py-6">
+                  {/* Left: Storytelling explanation */}
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-10 flex flex-col justify-center min-h-[420px]">
+                    <h3 className="text-2xl font-bold text-slate-900 mb-6">
+                      Votre simulation en quelques minutes
                     </h3>
-                    <p className="text-slate-600 mb-6 text-xl leading-relaxed">
-                      Notre IA analyse des milliers de dispositifs pour identifier les subventions qui correspondent à votre profil. Analyse complète en 5 à 10 minutes.
-                    </p>
-                    <ul className="space-y-4 text-lg text-slate-700">
-                      <li className="flex items-center gap-3">
-                        <Check className="w-6 h-6 text-emerald-600" />
-                        Analyse personnalisée
-                      </li>
-                      <li className="flex items-center gap-3">
-                        <Check className="w-6 h-6 text-emerald-600" />
-                        Scores d'éligibilité
-                      </li>
-                      <li className="flex items-center gap-3">
-                        <Check className="w-6 h-6 text-emerald-600" />
-                        100% gratuit
-                      </li>
-                    </ul>
+                    <div className="space-y-5 text-slate-700 text-base leading-relaxed">
+                      <p>
+                        Commencez par nous indiquer votre situation : êtes-vous une entreprise existante, un porteur de projet en création, ou une association ? Cette première étape nous permet d'orienter l'analyse vers les dispositifs adaptés à votre structure.
+                      </p>
+                      <p>
+                        Ensuite, vous renseignez quelques informations sur votre activité. Pour une entreprise, votre numéro SIRET suffit : nous récupérons automatiquement votre secteur, votre localisation et votre taille depuis les bases officielles. Pour un projet en création, vous décrivez simplement votre future activité.
+                      </p>
+                      <p>
+                        Notre système croise ensuite votre profil avec des milliers de dispositifs d'aides publiques — subventions de l'État, aides régionales, fonds européens, prêts à taux zéro, exonérations fiscales. Cette analyse prend entre 5 et 10 minutes.
+                      </p>
+                      <p>
+                        À la fin, vous découvrez <span className="font-semibold">combien d'aides correspondent à votre profil</span>, leur <span className="font-semibold">montant potentiel total</span>, et un aperçu des principaux dispositifs identifiés — le tout gratuitement et sans engagement.
+                      </p>
+                    </div>
                   </div>
 
                   {/* Right: Selection Options */}
