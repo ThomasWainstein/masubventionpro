@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { Helmet } from "react-helmet-async"
 import { supabase } from "@/lib/supabase"
-import { Menu, X, Building2, ArrowRight, Check, Upload, FileText, Trash2, Lock, Star, TrendingUp, Search, BarChart3, Factory, MapPin, Bot, Coins, ClipboardList, Rocket, RefreshCw, Target, Clock, Shield, Circle, Heart } from "lucide-react"
+import { Menu, X, Building2, ArrowRight, Check, Upload, FileText, Trash2, Lock, Star, TrendingUp, Search, BarChart3, Factory, MapPin, Bot, Coins, ClipboardList, Rocket, RefreshCw, Target, Clock, Shield, Circle, Heart, Sparkles, ChevronRight } from "lucide-react"
 import { calculateMatchScore, ScoredSubsidy } from "@/hooks/useRecommendedSubsidies"
 import { MaSubventionProProfile, Subsidy } from "@/types"
 
@@ -1962,89 +1962,82 @@ const LandingPage = () => {
                 </div>
               )})()}
 
-              {/* Type Selection */}
+              {/* Type Selection - Two Column Layout */}
               {!profileType && !showResults && !isAnalyzing && (
-                <div className="space-y-4 max-w-lg mx-auto">
-                  {/* Option 1: Entreprise existante */}
-                  <button
-                    onClick={() => setProfileType('entreprise')}
-                    className="w-full p-6 border-2 border-slate-200 rounded-xl text-left hover:border-blue-800 hover:bg-blue-50/50 transition-all group"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="w-14 h-14 bg-gradient-to-br from-blue-800 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <Building2 className="w-7 h-7 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-blue-800">Entreprise</h4>
-                        <p className="text-slate-500 text-sm mb-3">Vous avez déjà une entreprise immatriculée</p>
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2 text-sm text-slate-600">
-                            <Check className="w-4 h-4 text-emerald-600" />
-                            <span>Enrichissement automatique SIRET</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-slate-600">
-                            <Check className="w-4 h-4 text-emerald-600" />
-                            <span>Données pré-remplies</span>
-                          </div>
-                        </div>
-                      </div>
-                      <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-blue-800 transition-colors mt-1" />
-                    </div>
-                  </button>
+                <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto py-6">
+                  {/* Left: Value Proposition */}
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-10 flex flex-col justify-center min-h-[380px]">
+                    <Sparkles className="w-14 h-14 text-blue-600 mb-6" />
+                    <h3 className="text-3xl font-bold text-slate-900 mb-4">
+                      Trouvez vos aides publiques
+                    </h3>
+                    <p className="text-slate-600 mb-6 text-xl leading-relaxed">
+                      Notre IA analyse des milliers de dispositifs pour identifier les subventions qui correspondent à votre profil. Analyse complète en 5 à 10 minutes.
+                    </p>
+                    <ul className="space-y-4 text-lg text-slate-700">
+                      <li className="flex items-center gap-3">
+                        <Check className="w-6 h-6 text-emerald-600" />
+                        Analyse personnalisée
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <Check className="w-6 h-6 text-emerald-600" />
+                        Scores d'éligibilité
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <Check className="w-6 h-6 text-emerald-600" />
+                        100% gratuit
+                      </li>
+                    </ul>
+                  </div>
 
-                  {/* Option 2: Creation / Reprise */}
-                  <button
-                    onClick={() => setProfileType('creation')}
-                    className="w-full p-6 border-2 border-slate-200 rounded-xl text-left hover:border-emerald-600 hover:bg-emerald-50/50 transition-all group"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="w-14 h-14 bg-gradient-to-br from-emerald-600 to-emerald-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <Rocket className="w-7 h-7 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-emerald-600">Création / Reprise d'entreprise</h4>
-                        <p className="text-slate-500 text-sm mb-3">Vous envisagez de créer ou reprendre une activité</p>
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2 text-sm text-slate-600">
-                            <Check className="w-4 h-4 text-emerald-600" />
-                            <span>Aides à la création incluses</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-slate-600">
-                            <Check className="w-4 h-4 text-emerald-600" />
-                            <span>Accompagnement personnalisé</span>
-                          </div>
-                        </div>
-                      </div>
-                      <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 transition-colors mt-1" />
-                    </div>
-                  </button>
+                  {/* Right: Selection Options */}
+                  <div className="flex flex-col justify-center space-y-4">
+                    <p className="text-base font-semibold text-slate-700 mb-2">
+                      Sélectionnez votre situation :
+                    </p>
 
-                  {/* Option 3: Association */}
-                  <button
-                    onClick={() => setProfileType('association')}
-                    className="w-full p-6 border-2 border-slate-200 rounded-xl text-left hover:border-purple-600 hover:bg-purple-50/50 transition-all group"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="w-14 h-14 bg-gradient-to-br from-purple-600 to-purple-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <Heart className="w-7 h-7 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-purple-600">Association</h4>
-                        <p className="text-slate-500 text-sm mb-3">Vous gérez une association loi 1901 ou un organisme à but non lucratif</p>
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2 text-sm text-slate-600">
-                            <Check className="w-4 h-4 text-purple-600" />
-                            <span>Recherche par RNA ou SIRET</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-slate-600">
-                            <Check className="w-4 h-4 text-purple-600" />
-                            <span>Subventions spécifiques associations</span>
-                          </div>
+                    {/* Entreprise */}
+                    <button
+                      onClick={() => setProfileType('entreprise')}
+                      className="w-full px-5 py-4 border-2 border-slate-200 rounded-xl text-left hover:border-blue-600 hover:bg-blue-50 transition-all flex items-center justify-between group"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <Building2 className="w-5 h-5 text-blue-600" />
                         </div>
+                        <span className="font-semibold text-slate-900 text-lg">Entreprise</span>
                       </div>
-                      <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-purple-600 transition-colors mt-1" />
-                    </div>
-                  </button>
+                      <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600" />
+                    </button>
+
+                    {/* Création / Reprise */}
+                    <button
+                      onClick={() => setProfileType('creation')}
+                      className="w-full px-5 py-4 border-2 border-slate-200 rounded-xl text-left hover:border-emerald-600 hover:bg-emerald-50 transition-all flex items-center justify-between group"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                          <Rocket className="w-5 h-5 text-emerald-600" />
+                        </div>
+                        <span className="font-semibold text-slate-900 text-lg">Création / Reprise</span>
+                      </div>
+                      <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-600" />
+                    </button>
+
+                    {/* Association */}
+                    <button
+                      onClick={() => setProfileType('association')}
+                      className="w-full px-5 py-4 border-2 border-slate-200 rounded-xl text-left hover:border-purple-600 hover:bg-purple-50 transition-all flex items-center justify-between group"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                          <Heart className="w-5 h-5 text-purple-600" />
+                        </div>
+                        <span className="font-semibold text-slate-900 text-lg">Association</span>
+                      </div>
+                      <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-purple-600" />
+                    </button>
+                  </div>
                 </div>
               )}
 
@@ -2055,7 +2048,7 @@ const LandingPage = () => {
                   <div className="lg:col-span-2 space-y-6">
                     {/* Company Search */}
                     <div>
-                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                      <label className="block mb-2 font-semibold text-slate-900 text-base">
                         Rechercher des entreprises françaises <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
@@ -2067,7 +2060,7 @@ const LandingPage = () => {
                             searchCompany(e.target.value)
                           }}
                           placeholder="Nom d'entreprise, SIRET ou SIREN"
-                          className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg text-base focus:outline-none focus:border-blue-800 transition-colors"
+                          className="w-full px-4 py-4 border-2 border-slate-200 rounded-lg text-lg focus:outline-none focus:border-blue-800 transition-colors"
                         />
                         {isSearchingCompany && (
                           <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
@@ -2086,7 +2079,7 @@ const LandingPage = () => {
                               className="w-full px-4 py-3 text-left hover:bg-slate-50 border-b border-slate-100 last:border-b-0 transition-colors"
                             >
                               <p className="font-semibold text-slate-900">{company.nom_complet || company.nom_raison_sociale}</p>
-                              <p className="text-sm text-slate-500">
+                              <p className="text-base text-slate-500">
                                 {company.siege?.siret} - {company.siege?.libelle_commune}
                               </p>
                             </button>
@@ -2098,17 +2091,17 @@ const LandingPage = () => {
                         <div className="mt-3 bg-emerald-50 border-2 border-emerald-200 rounded-lg p-3">
                           <div className="flex items-center gap-2 text-emerald-700">
                             <Check className="w-4 h-4" />
-                            <span className="font-semibold text-sm">Entreprise sélectionnée</span>
+                            <span className="font-semibold text-base">Entreprise sélectionnée</span>
                           </div>
-                          <p className="text-slate-700 text-sm mt-1">{profileData.companyName}</p>
-                          <p className="text-xs text-slate-500">SIRET: {profileData.siret}</p>
+                          <p className="text-slate-700 text-base mt-1">{profileData.companyName}</p>
+                          <p className="text-sm text-slate-500">SIRET: {profileData.siret}</p>
                         </div>
                       )}
                     </div>
 
                     {/* Website */}
                     <div>
-                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                      <label className="block mb-2 font-semibold text-slate-900 text-base">
                         Site web de l'entreprise <span className="text-slate-400 font-normal">(Recommandé)</span>
                       </label>
                       <input
@@ -2116,13 +2109,13 @@ const LandingPage = () => {
                         value={profileData.website}
                         onChange={(e) => setProfileData({ ...profileData, website: e.target.value })}
                         placeholder="exemple.com"
-                        className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg text-base focus:outline-none focus:border-blue-800 transition-colors"
+                        className="w-full px-4 py-4 border-2 border-slate-200 rounded-lg text-lg focus:outline-none focus:border-blue-800 transition-colors"
                       />
                     </div>
 
                     {/* Description */}
                     <div>
-                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                      <label className="block mb-2 font-semibold text-slate-900 text-base">
                         Description <span className="text-slate-400 font-normal">(Recommandé)</span>
                       </label>
                       <textarea
@@ -2130,21 +2123,21 @@ const LandingPage = () => {
                         onChange={(e) => setProfileData({ ...profileData, description: e.target.value })}
                         placeholder="Brève description de vos activités commerciales..."
                         rows={3}
-                        className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg text-base focus:outline-none focus:border-blue-800 transition-colors resize-none"
+                        className="w-full px-4 py-4 border-2 border-slate-200 rounded-lg text-lg focus:outline-none focus:border-blue-800 transition-colors resize-none"
                       />
                     </div>
 
                     {/* Documents */}
                     <div>
-                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                      <label className="block mb-2 font-semibold text-slate-900 text-base">
                         Documents <span className="text-slate-400 font-normal">(Recommandé)</span>
                       </label>
-                      <p className="text-xs text-slate-500 mb-3">Ajoutez des documents pour enrichir votre profil</p>
+                      <p className="text-sm text-slate-500 mb-3">Ajoutez des documents pour enrichir votre profil</p>
 
                       <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:border-blue-800 hover:bg-blue-50/50 transition-all">
                         <div className="flex flex-col items-center justify-center">
                           <Upload className="w-6 h-6 text-slate-400 mb-1" />
-                          <p className="text-sm text-slate-500">Business plan, presentation, Kbis... (PDF, Word, max 10 Mo)</p>
+                          <p className="text-base text-slate-500">Business plan, presentation, Kbis... (PDF, Word, max 10 Mo)</p>
                         </div>
                         <input
                           type="file"
@@ -2162,8 +2155,8 @@ const LandingPage = () => {
                             <div key={index} className="flex items-center justify-between bg-slate-50 px-3 py-2 rounded-lg">
                               <div className="flex items-center gap-2">
                                 <FileText className="w-4 h-4 text-blue-800" />
-                                <span className="text-sm text-slate-700 truncate max-w-[200px]">{file.name}</span>
-                                <span className="text-xs text-slate-400">({(file.size / 1024 / 1024).toFixed(1)} Mo)</span>
+                                <span className="text-base text-slate-700 truncate max-w-[200px]">{file.name}</span>
+                                <span className="text-sm text-slate-400">({(file.size / 1024 / 1024).toFixed(1)} Mo)</span>
                               </div>
                               <button
                                 onClick={() => removeDocument(index)}
@@ -2182,40 +2175,40 @@ const LandingPage = () => {
                   <div className="space-y-4">
                     <div className="bg-slate-50 rounded-xl p-4">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-semibold text-slate-700">Étapes</span>
-                        <span className="text-sm font-bold text-blue-800">{entrepriseCompletion()}/4</span>
+                        <span className="text-base font-semibold text-slate-700">Étapes</span>
+                        <span className="text-base font-bold text-blue-800">{entrepriseCompletion()}/4</span>
                       </div>
 
                       <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-sm">
+                        <div className="flex items-center gap-2 text-base">
                           <span className={`font-medium flex items-center gap-1.5 ${profileData.siret ? 'text-emerald-600' : 'text-slate-500'}`}>
                             {profileData.siret ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} SIRET
                           </span>
-                          <span className="text-red-500 text-xs">Obligatoire</span>
+                          <span className="text-red-500 text-sm">Obligatoire</span>
                         </div>
-                        <div className="flex items-center gap-2 text-sm">
+                        <div className="flex items-center gap-2 text-base">
                           <span className={`font-medium flex items-center gap-1.5 ${profileData.website ? 'text-emerald-600' : 'text-slate-400'}`}>
                             {profileData.website ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Site web
                           </span>
-                          <span className="text-slate-400 text-xs">Recommande</span>
+                          <span className="text-slate-400 text-sm">Recommande</span>
                         </div>
-                        <div className="flex items-center gap-2 text-sm">
+                        <div className="flex items-center gap-2 text-base">
                           <span className={`font-medium flex items-center gap-1.5 ${profileData.description ? 'text-emerald-600' : 'text-slate-400'}`}>
                             {profileData.description ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Description
                           </span>
-                          <span className="text-slate-400 text-xs">Recommande</span>
+                          <span className="text-slate-400 text-sm">Recommande</span>
                         </div>
-                        <div className="flex items-center gap-2 text-sm">
+                        <div className="flex items-center gap-2 text-base">
                           <span className={`font-medium flex items-center gap-1.5 ${documents.length > 0 ? 'text-emerald-600' : 'text-slate-400'}`}>
                             {documents.length > 0 ? <Check className="w-4 h-4" /> : <Circle className="w-4 h-4" />} Documents
                           </span>
-                          <span className="text-slate-400 text-xs">Recommande</span>
+                          <span className="text-slate-400 text-sm">Recommande</span>
                         </div>
                       </div>
                     </div>
 
                     <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                      <p className="text-sm text-amber-800">
+                      <p className="text-base text-amber-800">
                         <span className="font-bold">Conseil :</span> Un profil complet peut doubler le nombre de subventions pertinentes trouvées.
                       </p>
                     </div>
@@ -2230,7 +2223,7 @@ const LandingPage = () => {
                   <div className="lg:col-span-2 space-y-6">
                     {/* Company Name */}
                     <div>
-                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                      <label className="block mb-2 font-semibold text-slate-900 text-base">
                         1. Nom prévu pour l'entreprise en création ou reprise <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -2238,19 +2231,19 @@ const LandingPage = () => {
                         value={profileData.companyName}
                         onChange={(e) => setProfileData({ ...profileData, companyName: e.target.value })}
                         placeholder="Ex: EcoTech Solutions"
-                        className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg text-base focus:outline-none focus:border-blue-800 transition-colors"
+                        className="w-full px-4 py-4 border-2 border-slate-200 rounded-lg text-lg focus:outline-none focus:border-blue-800 transition-colors"
                       />
                     </div>
 
                     {/* Sector */}
                     <div>
-                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                      <label className="block mb-2 font-semibold text-slate-900 text-base">
                         2. Secteur d'activité <span className="text-red-500">*</span>
                       </label>
                       <select
                         value={profileData.sector}
                         onChange={(e) => setProfileData({ ...profileData, sector: e.target.value })}
-                        className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg text-base focus:outline-none focus:border-blue-800 transition-colors appearance-none bg-white"
+                        className="w-full px-4 py-4 border-2 border-slate-200 rounded-lg text-lg focus:outline-none focus:border-blue-800 transition-colors appearance-none bg-white"
                       >
                         <option value="">Sélectionnez le secteur</option>
                         {sectors.map((s) => (
@@ -2261,13 +2254,13 @@ const LandingPage = () => {
 
                     {/* Region */}
                     <div>
-                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                      <label className="block mb-2 font-semibold text-slate-900 text-base">
                         3. Région d'implantation <span className="text-red-500">*</span>
                       </label>
                       <select
                         value={profileData.region}
                         onChange={(e) => setProfileData({ ...profileData, region: e.target.value })}
-                        className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg text-base focus:outline-none focus:border-blue-800 transition-colors appearance-none bg-white"
+                        className="w-full px-4 py-4 border-2 border-slate-200 rounded-lg text-lg focus:outline-none focus:border-blue-800 transition-colors appearance-none bg-white"
                       >
                         <option value="">Sélectionnez la région</option>
                         <option value="À déterminer">À déterminer</option>
@@ -2279,7 +2272,7 @@ const LandingPage = () => {
 
                     {/* Website */}
                     <div>
-                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                      <label className="block mb-2 font-semibold text-slate-900 text-base">
                         4. Site web de l'entreprise <span className="text-slate-400 font-normal">(Recommandé)</span>
                       </label>
                       <input
@@ -2287,13 +2280,13 @@ const LandingPage = () => {
                         value={profileData.website}
                         onChange={(e) => setProfileData({ ...profileData, website: e.target.value })}
                         placeholder="www.exemple.com"
-                        className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg text-base focus:outline-none focus:border-blue-800 transition-colors"
+                        className="w-full px-4 py-4 border-2 border-slate-200 rounded-lg text-lg focus:outline-none focus:border-blue-800 transition-colors"
                       />
                     </div>
 
                     {/* Description */}
                     <div>
-                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                      <label className="block mb-2 font-semibold text-slate-900 text-base">
                         5. Description <span className="text-slate-400 font-normal">(Recommandé)</span>
                       </label>
                       <textarea
@@ -2301,21 +2294,21 @@ const LandingPage = () => {
                         onChange={(e) => setProfileData({ ...profileData, description: e.target.value })}
                         placeholder="Brève description des activités commerciales..."
                         rows={3}
-                        className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg text-base focus:outline-none focus:border-blue-800 transition-colors resize-none"
+                        className="w-full px-4 py-4 border-2 border-slate-200 rounded-lg text-lg focus:outline-none focus:border-blue-800 transition-colors resize-none"
                       />
                     </div>
 
                     {/* Documents */}
                     <div>
-                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                      <label className="block mb-2 font-semibold text-slate-900 text-base">
                         6. Documents <span className="text-slate-400 font-normal">(Recommandé)</span>
                       </label>
-                      <p className="text-xs text-slate-500 mb-3">Ajoutez des documents pour enrichir le profil</p>
+                      <p className="text-sm text-slate-500 mb-3">Ajoutez des documents pour enrichir le profil</p>
 
                       <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:border-blue-800 hover:bg-blue-50/50 transition-all">
                         <div className="flex flex-col items-center justify-center">
                           <Upload className="w-6 h-6 text-slate-400 mb-1" />
-                          <p className="text-sm text-slate-500">Business plan, presentation, Kbis... (PDF, Word, max 10 Mo)</p>
+                          <p className="text-base text-slate-500">Business plan, presentation, Kbis... (PDF, Word, max 10 Mo)</p>
                         </div>
                         <input
                           type="file"
@@ -2333,8 +2326,8 @@ const LandingPage = () => {
                             <div key={index} className="flex items-center justify-between bg-slate-50 px-3 py-2 rounded-lg">
                               <div className="flex items-center gap-2">
                                 <FileText className="w-4 h-4 text-blue-800" />
-                                <span className="text-sm text-slate-700 truncate max-w-[200px]">{file.name}</span>
-                                <span className="text-xs text-slate-400">({(file.size / 1024 / 1024).toFixed(1)} Mo)</span>
+                                <span className="text-base text-slate-700 truncate max-w-[200px]">{file.name}</span>
+                                <span className="text-sm text-slate-400">({(file.size / 1024 / 1024).toFixed(1)} Mo)</span>
                               </div>
                               <button
                                 onClick={() => removeDocument(index)}
@@ -2353,8 +2346,8 @@ const LandingPage = () => {
                   <div className="space-y-4">
                     <div className="bg-slate-50 rounded-xl p-4">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-semibold text-slate-700">Étapes</span>
-                        <span className="text-sm font-bold text-blue-800">{creationCompletion()}/6</span>
+                        <span className="text-base font-semibold text-slate-700">Étapes</span>
+                        <span className="text-base font-bold text-blue-800">{creationCompletion()}/6</span>
                       </div>
 
                       <div className="space-y-2">
@@ -2402,7 +2395,7 @@ const LandingPage = () => {
                     </div>
 
                     <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                      <p className="text-sm text-amber-800">
+                      <p className="text-base text-amber-800">
                         <span className="font-bold">Conseil :</span> Un profil complet peut doubler le nombre de subventions pertinentes trouvées.
                       </p>
                     </div>
@@ -2417,7 +2410,7 @@ const LandingPage = () => {
                   <div className="lg:col-span-2 space-y-6">
                     {/* Association Search */}
                     <div>
-                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                      <label className="block mb-2 font-semibold text-slate-900 text-base">
                         Rechercher votre association <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
@@ -2482,7 +2475,7 @@ const LandingPage = () => {
 
                     {/* Sector */}
                     <div>
-                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                      <label className="block mb-2 font-semibold text-slate-900 text-base">
                         Domaine d'activité <span className="text-red-500">*</span>
                       </label>
                       <select
@@ -2503,7 +2496,7 @@ const LandingPage = () => {
 
                     {/* Description */}
                     <div>
-                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                      <label className="block mb-2 font-semibold text-slate-900 text-base">
                         Objet / Mission de l'association
                       </label>
                       <textarea
@@ -2517,7 +2510,7 @@ const LandingPage = () => {
 
                     {/* Website */}
                     <div>
-                      <label className="block mb-2 font-semibold text-slate-900 text-sm">
+                      <label className="block mb-2 font-semibold text-slate-900 text-base">
                         Site web <span className="text-slate-400 text-xs ml-2">Recommandé</span>
                       </label>
                       <input
@@ -2558,7 +2551,7 @@ const LandingPage = () => {
                     </div>
 
                     <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                      <p className="text-sm text-amber-800">
+                      <p className="text-base text-amber-800">
                         <span className="font-bold">Astuce :</span> Détaillez l'objet de votre association pour trouver des aides ciblées sur votre domaine d'activité.
                       </p>
                     </div>

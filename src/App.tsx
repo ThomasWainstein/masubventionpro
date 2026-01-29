@@ -19,6 +19,7 @@ const EmailConfirmationPage = lazy(() => import('./pages/EmailConfirmationPage')
 const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const SubsidyDisplayDemo = lazy(() => import('./pages/SubsidyDisplayDemo'))
+const SimulationUXDemoPage = lazy(() => import('./pages/SimulationUXDemoPage'))
 
 // Legal pages (lazy)
 const MentionsLegalesPage = lazy(() => import('./pages/MentionsLegalesPage'))
@@ -59,6 +60,7 @@ function App() {
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/success" element={<SuccessPage />} />
         <Route path="/demo/display" element={<SubsidyDisplayDemo />} />
+        <Route path="/demo/simulation-ux" element={<SimulationUXDemoPage />} />
 
         {/* Legal pages */}
         <Route path="/mentions-legales" element={<MentionsLegalesPage />} />
