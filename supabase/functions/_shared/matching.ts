@@ -13,12 +13,15 @@ export interface ProfileInput {
   id: string;
   company_name: string;
   siret?: string;
+  siren?: string;
   naf_code?: string;
   naf_label?: string;
   sector?: string;
   sub_sector?: string;
   region?: string;
   department?: string;
+  city?: string;
+  postal_code?: string;
   employees?: string;
   annual_turnover?: number;
   year_created?: number;
@@ -27,7 +30,19 @@ export interface ProfileInput {
   project_types?: string[];
   certifications?: string[];
   description?: string;
+  website_url?: string;
   website_intelligence?: WebsiteIntelligence;
+  // Association-specific fields
+  is_association?: boolean;
+  association_type?: string;
+  association_purpose?: string;
+  rna_number?: string;
+  agrement_esus?: boolean;
+  // Additional business data
+  capital_social?: number;
+  nombre_etablissements?: number;
+  convention_collective?: string[];
+  dirigeants?: any;
 }
 
 export interface WebsiteIntelligence {
@@ -52,6 +67,15 @@ export interface AnalyzedProfile {
   region: string | null;
   companyAge: number | null;
   annualTurnover: number | null;
+  // Export activity data
+  exportScore: number | null;
+  exportMarkets: string[];
+  // Mapped funding types from project_types
+  fundingTypes: string[];
+  // Association-specific
+  isAssociation: boolean;
+  associationType: string | null;
+  hasESUSAgreement: boolean;
 }
 
 export interface SubsidyCandidate {
@@ -442,6 +466,59 @@ const LEGAL_FORM_TO_ENTITY: Record<string, string[]> = {
 };
 
 // ============================================================================
+// FUNDING TYPE MAPPING
+// Maps profile project_types to subsidy funding_type values
+// ============================================================================
+
+const PROJECT_TO_FUNDING_TYPE: Record<string, string[]> = {
+  // Innovation projects
+  'Innovation': ['R&D', 'Innovation', 'Recherche', 'Développement', 'Prototype', 'Expérimentation', 'Brevet'],
+  'R&D': ['R&D', 'Recherche', 'Innovation', 'Développement', 'Laboratoire'],
+  'Recherche': ['R&D', 'Recherche', 'Innovation', 'Laboratoire'],
+
+  // Growth & Investment
+  'Investissement': ['Investissement', 'Équipement', 'Immobilier', 'Modernisation', 'Acquisition'],
+  'Croissance': ['Investissement', 'Développement', 'Croissance', 'Expansion'],
+  'Développement': ['Développement', 'Investissement', 'Croissance', 'Expansion'],
+
+  // International
+  'Export': ['Export', 'International', 'Développement international', 'Prospection'],
+  'International': ['Export', 'International', 'Développement international', 'Prospection', 'Implantation'],
+
+  // Sustainability
+  'Développement durable': ['Transition écologique', 'Environnement', 'RSE', 'Décarbonation', 'Énergie', 'Économie circulaire'],
+  'Transition écologique': ['Transition écologique', 'Environnement', 'Décarbonation', 'Énergie renouvelable', 'Économie circulaire'],
+  'Environnement': ['Environnement', 'Transition écologique', 'Décarbonation', 'Biodiversité', 'Économie circulaire'],
+
+  // Digital
+  'Numérique': ['Numérique', 'Digital', 'Digitalisation', 'Transformation digitale', 'Informatique'],
+  'Digital': ['Numérique', 'Digital', 'Digitalisation', 'Transformation digitale'],
+  'Transformation digitale': ['Numérique', 'Digital', 'Digitalisation', 'Transformation digitale', 'IA'],
+
+  // Employment
+  'Embauche': ['Emploi', 'Embauche', 'Recrutement', 'Formation', 'Apprentissage'],
+  'Recrutement': ['Emploi', 'Embauche', 'Recrutement', 'Formation'],
+  'Formation': ['Formation', 'Compétences', 'Apprentissage', 'Emploi'],
+
+  // Creation & Transmission
+  'Création': ['Création', 'Amorçage', 'Startup', 'Création d\'entreprise'],
+  'Reprise': ['Reprise', 'Transmission', 'Rachat'],
+  'Transmission': ['Reprise', 'Transmission', 'Cession'],
+};
+
+// ============================================================================
+// EXPORT/INTERNATIONAL KEYWORDS
+// Used to boost subsidies for companies with export activity
+// ============================================================================
+
+const EXPORT_SUBSIDY_KEYWORDS: string[] = [
+  'export', 'international', 'prospection', 'implantation',
+  'développement international', 'business france', 'commerce extérieur',
+  'marché étranger', 'hors france', 'pays tiers', 'zone euro',
+  'europe', 'asie', 'amérique', 'afrique', 'moyen-orient',
+];
+
+// ============================================================================
 // PROFILE ANALYSIS
 // ============================================================================
 
@@ -700,7 +777,77 @@ export function extractThematicKeywords(profile: ProfileInput): string[] {
     }
   }
 
+  // === Association-specific keywords ===
+  const isAssociation = profile.is_association === true ||
+    (profile.legal_form?.toLowerCase().includes('association') ?? false) ||
+    (profile.legal_form?.toLowerCase().includes('loi 1901') ?? false);
+
+  if (isAssociation) {
+    keywords.push('association', 'associatif', 'organisme à but non lucratif', 'obnl');
+    keywords.push('ess', 'économie sociale et solidaire', 'intérêt général');
+
+    // Add ESUS-specific keywords if applicable
+    if (profile.agrement_esus) {
+      keywords.push('esus', 'agrément esus', 'utilité sociale', 'entreprise solidaire');
+    }
+
+    // Add association type-specific keywords
+    if (profile.association_type) {
+      const assocType = profile.association_type.toLowerCase();
+      if (assocType.includes('sportif') || assocType.includes('sport')) {
+        keywords.push('sport', 'sportif', 'club sportif', 'activités sportives');
+      }
+      if (assocType.includes('culturel') || assocType.includes('culture')) {
+        keywords.push('culture', 'culturel', 'activités culturelles', 'art');
+      }
+      if (assocType.includes('social') || assocType.includes('humanitaire')) {
+        keywords.push('social', 'action sociale', 'solidarité', 'humanitaire');
+      }
+      if (assocType.includes('environnement') || assocType.includes('écolog')) {
+        keywords.push('environnement', 'écologie', 'protection de la nature');
+      }
+      if (assocType.includes('éducation') || assocType.includes('formation')) {
+        keywords.push('éducation', 'formation', 'pédagogie', 'jeunesse');
+      }
+    }
+
+    // Add keywords from association purpose
+    if (profile.association_purpose) {
+      const purpose = profile.association_purpose.toLowerCase();
+      if (purpose.includes('insertion')) keywords.push('insertion', 'insertion professionnelle');
+      if (purpose.includes('emploi')) keywords.push('emploi', 'accompagnement emploi');
+      if (purpose.includes('handicap')) keywords.push('handicap', 'accessibilité', 'inclusion');
+      if (purpose.includes('santé')) keywords.push('santé', 'prévention santé');
+      if (purpose.includes('jeune') || purpose.includes('jeunesse')) keywords.push('jeunesse', 'jeunes');
+      if (purpose.includes('senior') || purpose.includes('âgé')) keywords.push('seniors', 'personnes âgées');
+    }
+  }
+
   return [...new Set(keywords)];
+}
+
+/**
+ * Extract funding types from project_types using mapping
+ */
+function extractFundingTypes(projectTypes: string[] | undefined): string[] {
+  if (!projectTypes || projectTypes.length === 0) return [];
+
+  const fundingTypes: string[] = [];
+  for (const pt of projectTypes) {
+    // Try exact match first
+    if (PROJECT_TO_FUNDING_TYPE[pt]) {
+      fundingTypes.push(...PROJECT_TO_FUNDING_TYPE[pt]);
+    }
+    // Try case-insensitive partial match
+    for (const [key, values] of Object.entries(PROJECT_TO_FUNDING_TYPE)) {
+      if (pt.toLowerCase().includes(key.toLowerCase()) ||
+          key.toLowerCase().includes(pt.toLowerCase())) {
+        fundingTypes.push(...values);
+      }
+    }
+  }
+
+  return [...new Set(fundingTypes)];
 }
 
 /**
@@ -709,6 +856,15 @@ export function extractThematicKeywords(profile: ProfileInput): string[] {
 export function analyzeProfile(profile: ProfileInput): AnalyzedProfile {
   const sector = profile.sector || getSectorFromNafCode(profile.naf_code || '');
   const currentYear = new Date().getFullYear();
+
+  // Extract export data from website intelligence
+  const exportScore = profile.website_intelligence?.export?.score ?? null;
+  const exportMarkets = profile.website_intelligence?.export?.markets || [];
+
+  // Determine if this is an association (from is_association field or legal form)
+  const isAssociation = profile.is_association === true ||
+    (profile.legal_form?.toLowerCase().includes('association') ?? false) ||
+    (profile.legal_form?.toLowerCase().includes('loi 1901') ?? false);
 
   return {
     sector,
@@ -722,6 +878,15 @@ export function analyzeProfile(profile: ProfileInput): AnalyzedProfile {
     region: profile.region || null,
     companyAge: profile.year_created ? currentYear - profile.year_created : null,
     annualTurnover: profile.annual_turnover || null,
+    // Export activity data
+    exportScore,
+    exportMarkets,
+    // Mapped funding types
+    fundingTypes: extractFundingTypes(profile.project_types),
+    // Association-specific fields
+    isAssociation,
+    associationType: profile.association_type || null,
+    hasESUSAgreement: profile.agrement_esus === true,
   };
 }
 
@@ -1010,6 +1175,64 @@ export function calculatePreScore(
           }
         }
         break;
+      }
+    }
+  }
+
+  // 11. Funding type match (0-15 pts) - NEW
+  // Match profile's project types to subsidy's funding_type
+  if (subsidy.funding_type && analyzedProfile.fundingTypes.length > 0) {
+    const subsidyFundingLower = subsidy.funding_type.toLowerCase();
+    const matchingFundingTypes = analyzedProfile.fundingTypes.filter(ft =>
+      subsidyFundingLower.includes(ft.toLowerCase()) ||
+      ft.toLowerCase().includes(subsidyFundingLower)
+    );
+    if (matchingFundingTypes.length > 0) {
+      score += 15;
+      reasons.push(`Type financement: ${subsidy.funding_type}`);
+    }
+  }
+  // Also check funding_type keywords in subsidy text
+  if (analyzedProfile.fundingTypes.length > 0) {
+    const fundingMatches = analyzedProfile.fundingTypes.filter(ft =>
+      subsidyText.includes(ft.toLowerCase())
+    );
+    if (fundingMatches.length >= 2) {
+      score += 10;
+      reasons.push(`Projets: ${fundingMatches.slice(0, 2).join(', ')}`);
+    } else if (fundingMatches.length === 1) {
+      score += 5;
+      reasons.push(`Projet: ${fundingMatches[0]}`);
+    }
+  }
+
+  // 12. Export market bonus (0-15 pts) - NEW
+  // Boost international/export subsidies for companies with export activity
+  if (analyzedProfile.exportScore !== null && analyzedProfile.exportScore >= 40) {
+    const hasExportKeywords = EXPORT_SUBSIDY_KEYWORDS.some(kw =>
+      subsidyText.includes(kw)
+    );
+    if (hasExportKeywords) {
+      // Score boost based on export readiness
+      if (analyzedProfile.exportScore >= 70) {
+        score += 15;
+        reasons.push(`Export (score ${analyzedProfile.exportScore})`);
+      } else if (analyzedProfile.exportScore >= 50) {
+        score += 10;
+        reasons.push(`Export potentiel (score ${analyzedProfile.exportScore})`);
+      } else {
+        score += 5;
+        reasons.push('Activité export détectée');
+      }
+    }
+  }
+  // Also boost if company already exports to specific markets mentioned in subsidy
+  if (analyzedProfile.exportMarkets.length > 0) {
+    for (const market of analyzedProfile.exportMarkets) {
+      if (subsidyText.includes(market.toLowerCase())) {
+        score += 5;
+        reasons.push(`Marché: ${market}`);
+        break; // Only count once
       }
     }
   }

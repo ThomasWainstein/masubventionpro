@@ -245,17 +245,20 @@ serve(async (req) => {
         throw new Error(`Profile not found: ${profileError?.message || 'Unknown error'}`);
       }
 
-      // Map database profile to ProfileInput format
+      // Map database profile to ProfileInput format - include ALL relevant fields
       profile = {
         id: fetchedProfile.id,
         company_name: fetchedProfile.company_name,
         siret: fetchedProfile.siret,
+        siren: fetchedProfile.siren,
         naf_code: fetchedProfile.naf_code,
         naf_label: fetchedProfile.naf_label,
         sector: fetchedProfile.sector,
         sub_sector: fetchedProfile.sub_sector,
         region: fetchedProfile.region,
         department: fetchedProfile.department,
+        city: fetchedProfile.city,
+        postal_code: fetchedProfile.postal_code,
         employees: fetchedProfile.employees,
         annual_turnover: fetchedProfile.annual_turnover,
         year_created: fetchedProfile.year_created,
@@ -264,10 +267,23 @@ serve(async (req) => {
         project_types: fetchedProfile.project_types,
         certifications: fetchedProfile.certifications,
         description: fetchedProfile.description,
+        website_url: fetchedProfile.website_url,
         website_intelligence: fetchedProfile.website_intelligence,
+        // Association-specific fields
+        is_association: fetchedProfile.is_association,
+        association_type: fetchedProfile.association_type,
+        association_purpose: fetchedProfile.association_purpose,
+        rna_number: fetchedProfile.rna_number,
+        agrement_esus: fetchedProfile.agrement_esus,
+        // Additional business data
+        capital_social: fetchedProfile.capital_social,
+        nombre_etablissements: fetchedProfile.nombre_etablissements,
+        convention_collective: fetchedProfile.convention_collective,
+        dirigeants: fetchedProfile.dirigeants,
       };
 
       console.log(`[V5] Fetched profile: ${profile.company_name}, sector=${profile.sector}, region=${profile.region}`);
+      console.log(`[V5] Association: ${profile.is_association ? 'Yes' : 'No'}, Legal form: ${profile.legal_form}`);
       if (profile.website_intelligence) {
         console.log(`[V5] Website intelligence available: innovation=${profile.website_intelligence.innovations?.score}, sustainability=${profile.website_intelligence.sustainability?.score}`);
       }
