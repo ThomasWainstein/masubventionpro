@@ -1,6 +1,6 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Helmet } from "react-helmet-async"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -90,9 +90,16 @@ const pricingPlans = [
 
 const OnboardingWizard = () => {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [currentStep, setCurrentStep] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Get plan from URL parameter if provided
+  const planFromUrl = searchParams.get("plan") as "decouverte" | "business" | "premium" | null
+  const validPlan = planFromUrl && ["decouverte", "business", "premium"].includes(planFromUrl)
+    ? planFromUrl
+    : null
 
   const [data, setData] = useState<OnboardingData>({
     email: "",
@@ -100,8 +107,15 @@ const OnboardingWizard = () => {
     firstName: "",
     lastName: "",
     companyName: "",
-    selectedPlan: null,
+    selectedPlan: validPlan,
   })
+
+  // Update selected plan if URL parameter changes
+  useEffect(() => {
+    if (validPlan && data.selectedPlan !== validPlan) {
+      setData(prev => ({ ...prev, selectedPlan: validPlan }))
+    }
+  }, [validPlan])
 
   const updateData = (updates: Partial<OnboardingData>) => {
     setData((prev) => ({ ...prev, ...updates }))
