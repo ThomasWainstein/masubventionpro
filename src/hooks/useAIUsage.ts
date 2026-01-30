@@ -94,36 +94,17 @@ export function useAIUsage(): UseAIUsageReturn {
   const fetchUsageSummary = useCallback(async (): Promise<AIUsageSummary | null> => {
     if (!user) return null;
 
-    try {
-      const { data, error: fetchError } = await supabase
-        .from('ai_usage_summary')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-
-      if (fetchError && fetchError.code !== 'PGRST116') {
-        // PGRST116 = no rows found (new user)
-        throw fetchError;
-      }
-
-      // Return default values for new users
-      if (!data) {
-        return {
-          user_id: user.id,
-          daily_cost_eur: 0,
-          weekly_cost_eur: 0,
-          yearly_cost_eur: 0,
-          daily_requests: 0,
-          weekly_requests: 0,
-          total_requests: 0,
-        };
-      }
-
-      return data;
-    } catch (err) {
-      console.error('[useAIUsage] Error fetching summary:', err);
-      return null;
-    }
+    // Return default values - ai_usage_summary view not yet implemented
+    // TODO: Create ai_usage_summary view in database for proper usage tracking
+    return {
+      user_id: user.id,
+      daily_cost_eur: 0,
+      weekly_cost_eur: 0,
+      yearly_cost_eur: 0,
+      daily_requests: 0,
+      weekly_requests: 0,
+      total_requests: 0,
+    };
   }, [user]);
 
   // Calculate status from summary

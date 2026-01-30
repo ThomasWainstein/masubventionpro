@@ -41,13 +41,11 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       if (fetchError) {
         if (fetchError.code === 'PGRST116') {
           // No profile found - this is expected for new users
-          console.log('[ProfileContext] No profile found for user (PGRST116)');
           setProfile(null);
         } else {
           throw fetchError;
         }
       } else {
-        console.log('[ProfileContext] Profile loaded:', { id: data?.id, company_name: data?.company_name });
         setProfile(data);
       }
     } catch (err: any) {

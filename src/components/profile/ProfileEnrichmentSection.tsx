@@ -84,7 +84,7 @@ export function ProfileEnrichmentSection({ onEnrichmentComplete }: ProfileEnrich
     try {
       // Get current session token
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) {
+      if (!session?.access_token || !session?.user?.id) {
         throw new Error('Non authentifie');
       }
 
@@ -98,10 +98,9 @@ export function ProfileEnrichmentSection({ onEnrichmentComplete }: ProfileEnrich
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            url: validUrl,
-            profileId: profile?.id,
-            language: 'fr',
-            profileTable: 'masubventionpro_profiles',
+            website_url: validUrl,
+            profile_id: profile?.id,
+            user_id: session.user.id,
           }),
         }
       );
@@ -118,8 +117,8 @@ export function ProfileEnrichmentSection({ onEnrichmentComplete }: ProfileEnrich
       }
 
       // Log AI usage (estimate tokens from URL and result)
-      const inputTokens = result.usage?.input_tokens || estimateTokens(validUrl);
-      const outputTokens = result.usage?.output_tokens || estimateTokens(JSON.stringify(result.data));
+      const inputTokens = result.tokens_used?.input || estimateTokens(validUrl);
+      const outputTokens = result.tokens_used?.output || estimateTokens(JSON.stringify(result.intelligence));
       logUsage({
         function_name: 'analyze-company-website',
         input_tokens: inputTokens,
@@ -129,12 +128,12 @@ export function ProfileEnrichmentSection({ onEnrichmentComplete }: ProfileEnrich
       });
 
       // Store the intelligence data
-      setWebsiteIntelligence(result.data);
+      setWebsiteIntelligence(result.intelligence);
 
       // Update profile with website URL and intelligence data
       await updateProfile({
         website_url: validUrl,
-        website_intelligence: result.data,
+        website_intelligence: result.intelligence,
       });
 
       // Close dialog after success
@@ -278,7 +277,7 @@ export function ProfileEnrichmentSection({ onEnrichmentComplete }: ProfileEnrich
                     Limite d'utilisation atteinte. Passez a un forfait superieur pour continuer.
                   </p>
                 )}
-                {!usageStatus?.isBlocked && usageStatus?.percentage && usageStatus.percentage > 80 && (
+                {!usageStatus?.isBlocked && (usageStatus?.percentage ?? 0) > 80 && (
                   <p className="text-xs text-amber-600 text-center">
                     Attention: Vous approchez de votre limite d'utilisation IA
                   </p>
