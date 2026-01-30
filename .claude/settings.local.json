@@ -47,7 +47,29 @@
       "Bash( comm -23 /tmp/s360-logos.txt /tmp/msp-logos.txt)",
       "mcp__supabase__query",
       "Read(//c/Users/thoma/.claude/**)",
-      "Read(//d/ClaudeData/.claude/**)"
+      "Read(//d/ClaudeData/.claude/**)",
+      "Bash(find:*)",
+      "Bash(gh search:*)",
+      "Bash(powershell -Command \"\n$headers = @{\n    ''apikey'' = ''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlic3Ftd3ZoeGx2c3Z0amtlbnV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwOTY5MDcsImV4cCI6MjA2MzY3MjkwN30.lWA0i6puhrcVBrBoLH_0fpoeSdtTnWl6n_U_FjgY6WQ''\n    ''Prefer'' = ''count=exact''\n}\n\n# Total active\n$total = Invoke-RestMethod -Uri ''https://ybsqmwvhxlvsvtjkenux.supabase.co/rest/v1/subsidies?select=id&is_active=eq.true'' -Headers $headers\nWrite-Host ''Total active subsidies:'' $total.Count\n\n# National\n$national = Invoke-RestMethod -Uri ''https://ybsqmwvhxlvsvtjkenux.supabase.co/rest/v1/subsidies?select=id,title,region&is_active=eq.true&region=cs.{\"\"National\"\"}'' -Headers $headers\nWrite-Host ''National subsidies:'' $national.Count\n\n# Regional \\(not national\\)\n$regional = Invoke-RestMethod -Uri ''https://ybsqmwvhxlvsvtjkenux.supabase.co/rest/v1/subsidies?select=id,title,region&is_active=eq.true&region=not.cs.{\"\"National\"\"}'' -Headers $headers\nWrite-Host ''Regional subsidies:'' $regional.Count\n\")",
+      "Bash(powershell -Command \"\n$headers = @{\n    ''apikey'' = ''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd2Zmd2Ynp0YWdhZmp5a25jd3RvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODcwODE3MywiZXhwIjoyMDY0Mjg0MTczfQ.j3KEkFJLrDKbmyCHPPHW67zjzMlua4Gff4hzvqW_LZY''\n    ''Authorization'' = ''Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd2Zmd2Ynp0YWdhZmp5a25jd3RvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODcwODE3MywiZXhwIjoyMDY0Mjg0MTczfQ.j3KEkFJLrDKbmyCHPPHW67zjzMlua4Gff4hzvqW_LZY''\n    ''Prefer'' = ''count=exact''\n}\n\nWrite-Host ''Querying Supabase...''\n\n# Total active\n$response = Invoke-WebRequest -Uri ''https://gvfgvbztagafjykncwto.supabase.co/rest/v1/subsidies?select=id&is_active=eq.true'' -Headers $headers -UseBasicParsing\nWrite-Host ''Total active:'' $response.Headers[''Content-Range'']\n\n# National\n$response2 = Invoke-WebRequest -Uri ''https://gvfgvbztagafjykncwto.supabase.co/rest/v1/subsidies?select=id&is_active=eq.true&region=cs.{%22National%22}'' -Headers $headers -UseBasicParsing\nWrite-Host ''National:'' $response2.Headers[''Content-Range'']\n\n# Regional\n$response3 = Invoke-WebRequest -Uri ''https://gvfgvbztagafjykncwto.supabase.co/rest/v1/subsidies?select=id&is_active=eq.true&region=not.cs.{%22National%22}'' -Headers $headers -UseBasicParsing\nWrite-Host ''Regional:'' $response3.Headers[''Content-Range'']\n\")",
+      "Bash(powershell -Command \"\n$headers = @{\n    ''apikey'' = ''sb_secret_XVNRlU9NJmxoCsTCTiO3dQ_4huj6Hqn''\n    ''Authorization'' = ''Bearer sb_secret_XVNRlU9NJmxoCsTCTiO3dQ_4huj6Hqn''\n    ''Prefer'' = ''count=exact''\n}\n\nWrite-Host ''Querying with secret key...''\n\n$response = Invoke-WebRequest -Uri ''https://gvfgvbztagafjykncwto.supabase.co/rest/v1/subsidies?select=id&is_active=eq.true'' -Headers $headers -UseBasicParsing\nWrite-Host ''Total active:'' $response.Headers[''Content-Range'']\n\n$response2 = Invoke-WebRequest -Uri ''https://gvfgvbztagafjykncwto.supabase.co/rest/v1/subsidies?select=id&is_active=eq.true&region=cs.{%22National%22}'' -Headers $headers -UseBasicParsing\nWrite-Host ''National:'' $response2.Headers[''Content-Range'']\n\n$response3 = Invoke-WebRequest -Uri ''https://gvfgvbztagafjykncwto.supabase.co/rest/v1/subsidies?select=id&is_active=eq.true&region=not.cs.{%22National%22}'' -Headers $headers -UseBasicParsing\nWrite-Host ''Regional:'' $response3.Headers[''Content-Range'']\n\")",
+      "WebFetch(domain:supabase.com)",
+      "Bash(powershell -Command \"\n$headers = @{\n    ''Authorization'' = ''Bearer sbp_b42ecc4db1f7e83591427c2f8ad4e9d515d7c4b4''\n    ''Content-Type'' = ''application/json''\n}\n\n$body = @{\n    query = ''SELECT COUNT\\(*\\) as total FROM subsidies WHERE is_active = true''\n} | ConvertTo-Json\n\n$response = Invoke-RestMethod -Uri ''https://api.supabase.com/v1/projects/gvfgvbztagafjykncwto/database/query'' -Method POST -Headers $headers -Body $body\n$response | ConvertTo-Json\n\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File d:/GitHub/masubventionpro/query-db.ps1)",
+      "WebFetch(domain:www.aides-entreprises.fr)",
+      "WebFetch(domain:www.bpifrance.fr)",
+      "Bash(powershell -ExecutionPolicy Bypass -Command \"$headers = @{ ''Authorization'' = ''Bearer sbp_b42ecc4db1f7e83591427c2f8ad4e9d515d7c4b4''; ''Content-Type'' = ''application/json'' }; $body = @{ query = ''SELECT id, title, agency, source_url FROM subsidies WHERE is_active = true AND is_universal_sector = true AND \\(deadline IS NULL OR deadline >= CURRENT_DATE\\) ORDER BY agency, title LIMIT 20'' } | ConvertTo-Json; $r = Invoke-RestMethod -Uri ''https://api.supabase.com/v1/projects/gvfgvbztagafjykncwto/database/query'' -Method POST -Headers $headers -Body $body; Write-Host ''Count:'' $r.Count; $r | ConvertTo-Json -Depth 3\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File query-db.ps1:*)",
+      "WebFetch(domain:www.les-scop.coop)",
+      "WebFetch(domain:www.ameli.fr)",
+      "WebFetch(domain:www.bourgognefranchecomte.fr)",
+      "WebFetch(domain:guide-aides.hautsdefrance.fr)",
+      "WebFetch(domain:www.laregion.fr)",
+      "WebFetch(domain:www.urssaf.fr)",
+      "WebFetch(domain:www.reseau-entreprendre.org)"
+    ],
+    "additionalDirectories": [
+      "d:\\GitHub\\masubventionpro\\.claude"
     ]
   },
   "mcpServers": {

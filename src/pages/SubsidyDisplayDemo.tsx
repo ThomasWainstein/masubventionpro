@@ -19,6 +19,7 @@ import {
   Trash2,
   Circle,
   RotateCcw,
+  Heart,
 } from 'lucide-react';
 
 type SimulationStep = 'choice' | 'form' | 'processing' | 'results';
@@ -368,99 +369,192 @@ const SubsidyDisplayDemo = () => {
 
           {/* Modal Content */}
           <div className="p-6">
-            {/* Type Selection */}
+            {/* Type Selection - Two Column Layout (matching Landing Page) */}
             {step === 'choice' && (
-              <div className="space-y-6 max-w-2xl mx-auto">
-                <p className="text-center text-slate-500">Choisissez votre situation pour démarrer</p>
-
-                {/* Option 1: Entreprise existante */}
-                <button
-                  onClick={() => handleTypeSelection('entreprise')}
-                  className="w-full p-6 border-2 border-slate-200 rounded-xl text-left hover:border-blue-800 hover:bg-blue-50/50 transition-all group"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-14 h-14 bg-gradient-to-br from-blue-800 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <Building2 className="w-7 h-7 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-blue-800">Entreprise</h4>
-                      <p className="text-slate-500 text-sm mb-3">Vous avez déjà une entreprise immatriculée</p>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-sm text-slate-600">
-                          <Check className="w-4 h-4 text-emerald-600" />
-                          <span>Enrichissement automatique SIRET</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-slate-600">
-                          <Check className="w-4 h-4 text-emerald-600" />
-                          <span>Données pré-remplies</span>
-                        </div>
-                      </div>
-                    </div>
-                    <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-blue-800 transition-colors mt-1" />
+              <div className="grid md:grid-cols-2 gap-10 items-stretch max-w-5xl mx-auto py-6">
+                {/* Left: Roadmap - What you get */}
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 flex flex-col">
+                  {/* Badges */}
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold">Gratuit</span>
+                    <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold">Sans engagement</span>
+                    <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-semibold">5 min</span>
                   </div>
-                </button>
 
-                {/* Option 2: Creation / Reprise */}
-                <button
-                  onClick={() => handleTypeSelection('creation')}
-                  className="w-full p-6 border-2 border-slate-200 rounded-xl text-left hover:border-emerald-600 hover:bg-emerald-50/50 transition-all group"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-14 h-14 bg-gradient-to-br from-emerald-600 to-emerald-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <Rocket className="w-7 h-7 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-emerald-600">Création / Reprise d'entreprise</h4>
-                      <p className="text-slate-500 text-sm mb-3">Vous envisagez de créer ou reprendre une activité</p>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-sm text-slate-600">
-                          <Check className="w-4 h-4 text-emerald-600" />
-                          <span>Aides à la création incluses</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-slate-600">
-                          <Check className="w-4 h-4 text-emerald-600" />
-                          <span>Accompagnement personnalisé</span>
-                        </div>
-                      </div>
-                    </div>
-                    <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 transition-colors mt-1" />
-                  </div>
-                </button>
-
-                {/* Value Proposition - Why this simulation matters */}
-                <div className="bg-gradient-to-br from-blue-50 to-emerald-50 border-2 border-blue-200 rounded-xl p-6">
-                  <div className="text-center mb-4">
-                    <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-blue-600 to-emerald-500 rounded-full mb-3">
-                      <TrendingUp className="w-7 h-7 text-white" />
-                    </div>
-                    <h4 className="font-bold text-slate-900 text-lg">
-                      Découvrez combien d'aides vous pouvez obtenir
-                    </h4>
-                    <p className="text-slate-600 mt-2">
-                      En moyenne, nos utilisateurs découvrent <strong className="text-blue-700">7 à 15 aides</strong> auxquelles ils ne pensaient pas être éligibles.
+                  {/* Purpose - Opportunity focused */}
+                  <div className="text-center mb-5">
+                    <h3 className="text-xl font-bold text-slate-900 mb-2">
+                      Passez-vous à côté d'aides financières ?
+                    </h3>
+                    <p className="text-sm text-slate-600">
+                      En 5 minutes, découvrez combien d'aides existent pour votre profil — et leur montant estimé.
                     </p>
                   </div>
 
-                  <div className="bg-white/70 rounded-lg p-4 mt-4">
-                    <p className="text-sm text-slate-700 text-center">
-                      <strong>Cette simulation gratuite vous révèle :</strong>
-                    </p>
-                    <div className="flex flex-wrap justify-center gap-3 mt-3">
-                      <span className="inline-flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full text-sm text-slate-700 border border-slate-200">
-                        <Check className="w-4 h-4 text-emerald-600" />
-                        Le nombre exact d'aides
-                      </span>
-                      <span className="inline-flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full text-sm text-slate-700 border border-slate-200">
-                        <Check className="w-4 h-4 text-emerald-600" />
-                        Les catégories disponibles
-                      </span>
-                      <span className="inline-flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full text-sm text-slate-700 border border-slate-200">
-                        <Check className="w-4 h-4 text-emerald-600" />
-                        Un aperçu des aides
-                      </span>
+                  {/* Visual Roadmap */}
+                  <div className="space-y-3 flex-1">
+                    {/* Step 1 - Profile */}
+                    <div className="bg-white rounded-xl p-4 shadow-sm">
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">1</div>
+                        <div className="flex-1">
+                          <p className="font-bold text-slate-900 text-sm">Parlez-nous de vous</p>
+                          <ul className="text-xs text-slate-500 mt-1.5 space-y-0.5">
+                            <li>• Votre activité et localisation</li>
+                            <li>• Vos projets (recrutement, investissement, R&D...)</li>
+                          </ul>
+                          <div className="bg-blue-50 rounded-lg p-2 mt-2">
+                            <p className="text-xs text-blue-700">
+                              <strong>Astuce :</strong> Ajoutez votre site web ou des documents (business plan, Kbis...) pour que l'IA trouve des aides plus ciblées.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-xs text-slate-500 text-center mt-3">
-                      Vous pourrez ensuite choisir d'accéder aux détails complets (noms, montants, contacts) si les résultats vous intéressent.
+
+                    {/* Step 2 - AI Analysis */}
+                    <div className="bg-white rounded-xl p-4 shadow-sm">
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">2</div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between">
+                            <p className="font-bold text-slate-900 text-sm">Notre IA analyse votre profil</p>
+                            <span className="bg-amber-100 text-amber-700 px-2 py-1 rounded-lg text-sm font-semibold">~5 min</span>
+                          </div>
+                          <ul className="text-xs text-slate-500 mt-1.5 space-y-0.5">
+                            <li>• Scan de 10 000+ aides (État, Région, Europe)</li>
+                            <li>• Vérification des critères d'éligibilité</li>
+                            <li>• Calcul des montants potentiels</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Step 3 - FREE Results */}
+                    <div className="bg-emerald-50 rounded-xl p-4 shadow-sm border-2 border-emerald-200">
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white flex-shrink-0">
+                          <Check className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className="font-bold text-slate-900 text-sm">Votre bilan gratuit</p>
+                            <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-xs font-semibold">OFFERT</span>
+                          </div>
+                          <ul className="text-xs text-slate-600 mt-2 space-y-1">
+                            <li className="flex items-center gap-1.5">
+                              <Check className="w-3 h-3 text-emerald-600" />
+                              Combien d'aides vous correspondent
+                            </li>
+                            <li className="flex items-center gap-1.5">
+                              <Check className="w-3 h-3 text-emerald-600" />
+                              Estimation du montant total
+                            </li>
+                            <li className="flex items-center gap-1.5">
+                              <Check className="w-3 h-3 text-emerald-600" />
+                              Qui finance (BPI, ADEME, Région...)
+                            </li>
+                            <li className="flex items-center gap-1.5">
+                              <Check className="w-3 h-3 text-emerald-600" />
+                              Aperçu de 3 aides avec leurs deadlines
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Step 4 - PAID Access */}
+                    <div className="bg-slate-100 rounded-xl p-4 shadow-sm border border-slate-200">
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 bg-slate-400 rounded-full flex items-center justify-center text-white flex-shrink-0">
+                          <Lock className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className="font-bold text-slate-700 text-sm">Pour aller plus loin</p>
+                            <span className="bg-slate-200 text-slate-600 px-2 py-0.5 rounded text-xs font-semibold">PAYANT</span>
+                          </div>
+                          <ul className="text-xs text-slate-500 mt-2 space-y-1">
+                            <li className="flex items-center gap-1.5">
+                              <ArrowRight className="w-3 h-3" />
+                              Les montants exacts de chaque aide
+                            </li>
+                            <li className="flex items-center gap-1.5">
+                              <ArrowRight className="w-3 h-3" />
+                              La liste complète (pas juste 3)
+                            </li>
+                            <li className="flex items-center gap-1.5">
+                              <ArrowRight className="w-3 h-3" />
+                              Comment faire votre demande
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right: Selection Options */}
+                <div className="flex flex-col justify-center space-y-4">
+                  <p className="text-base font-semibold text-slate-700 mb-2">
+                    Sélectionnez votre situation :
+                  </p>
+
+                  {/* Entreprise */}
+                  <button
+                    onClick={() => handleTypeSelection('entreprise')}
+                    className="w-full px-5 py-4 border-2 border-slate-200 rounded-xl text-left hover:border-blue-600 hover:bg-blue-50 transition-all flex items-center justify-between group"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Building2 className="w-6 h-6 text-blue-600" />
+                      </div>
+                      <div>
+                        <span className="font-semibold text-slate-900 text-lg block">Entreprise</span>
+                        <span className="text-sm text-slate-500">Vous avez déjà votre numéro SIRET</span>
+                      </div>
+                    </div>
+                    <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600" />
+                  </button>
+
+                  {/* Création / Reprise */}
+                  <button
+                    onClick={() => handleTypeSelection('creation')}
+                    className="w-full px-5 py-4 border-2 border-slate-200 rounded-xl text-left hover:border-emerald-600 hover:bg-emerald-50 transition-all flex items-center justify-between group"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
+                        <Rocket className="w-6 h-6 text-emerald-600" />
+                      </div>
+                      <div>
+                        <span className="font-semibold text-slate-900 text-lg block">Création / Reprise</span>
+                        <span className="text-sm text-slate-500">Vous lancez ou reprenez une activité</span>
+                      </div>
+                    </div>
+                    <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-600" />
+                  </button>
+
+                  {/* Association */}
+                  <button
+                    onClick={() => handleTypeSelection('entreprise')}
+                    className="w-full px-5 py-4 border-2 border-slate-200 rounded-xl text-left hover:border-purple-600 hover:bg-purple-50 transition-all flex items-center justify-between group"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <Heart className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <div>
+                        <span className="font-semibold text-slate-900 text-lg block">Association</span>
+                        <span className="text-sm text-slate-500">Structure à but non lucratif</span>
+                      </div>
+                    </div>
+                    <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-purple-600" />
+                  </button>
+
+                  {/* Why 5 minutes? */}
+                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mt-4">
+                    <p className="text-sm text-amber-800">
+                      <strong>Pourquoi 5 minutes ?</strong> Notre IA ne fait pas une simple recherche par mot-clé. Elle croise votre profil (secteur, taille, localisation, projets) avec les critères légaux de 10 000+ dispositifs publics.
                     </p>
                   </div>
                 </div>

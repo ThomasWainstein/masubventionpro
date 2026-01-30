@@ -536,16 +536,24 @@ const LandingPage = () => {
           // Count subsidies with no deadline
           supabase
             .from("subsidies")
-            .select("*", { count: "exact", head: true })
+            .select("id", { count: "exact", head: true })
             .eq('is_active', true)
             .is('deadline', null),
           // Count subsidies with future deadline
           supabase
             .from("subsidies")
-            .select("*", { count: "exact", head: true })
+            .select("id", { count: "exact", head: true })
             .eq('is_active', true)
             .gte('deadline', today)
         ])
+
+        // Check for errors in the responses
+        if (nullDeadlineResult.error) {
+          console.error("Error fetching null deadline count:", nullDeadlineResult.error)
+        }
+        if (futureDeadlineResult.error) {
+          console.error("Error fetching future deadline count:", futureDeadlineResult.error)
+        }
 
         const nullCount = nullDeadlineResult.count || 0
         const futureCount = futureDeadlineResult.count || 0
@@ -988,7 +996,7 @@ const LandingPage = () => {
                   <div className="text-sm text-slate-300">Mise à jour des données</div>
                 </div>
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
-                  <div className="text-3xl font-bold text-blue-400 mb-1">National</div>
+                  <div className="text-3xl font-bold text-blue-400 mb-1">Toutes les sources officielles</div>
                   <div className="text-sm text-slate-300">de la Commune à l'Europe</div>
                 </div>
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 text-center">
@@ -1101,7 +1109,29 @@ const LandingPage = () => {
 
           {/* Propulsé par subvention360 */}
           <p className="text-slate-500 text-center flex items-center justify-center gap-2">
-            Propulsé par <picture><source srcSet="/logo-subvention360.webp" type="image/webp" /><img src="/logo-subvention360.png" alt="subvention360" className="h-7 inline-block" width="28" height="28" /></picture><span className="text-2xl font-bold text-black">subvention360</span>
+            Propulsé par <a href="http://subvention360.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:opacity-80 transition-opacity"><picture><source srcSet="/logo-subvention360.webp" type="image/webp" /><img src="/logo-subvention360.png" alt="subvention360" className="h-7 inline-block" width="28" height="28" /></picture><span className="text-2xl font-bold text-black">subvention360</span></a>
+          </p>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="bg-gradient-to-b from-white to-slate-50 py-16 px-8">
+        <div className="max-w-[1400px] mx-auto text-center">
+          <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-900 mb-4">
+            Explorez nos aides
+          </h2>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-8">
+            Découvrez toutes les aides disponibles pour votre entreprise, sans restriction.
+          </p>
+          <button
+            onClick={() => navigate('/app/search')}
+            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-br from-blue-800 to-blue-600 text-white rounded-xl font-semibold text-lg shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-800/30 transition-all"
+          >
+            Explorer toutes les aides
+            <ArrowRight className="w-5 h-5" />
+          </button>
+          <p className="text-sm text-slate-500 mt-3">
+            Plus de {subsidyCount} dispositifs disponibles
           </p>
         </div>
       </section>
@@ -2005,25 +2035,50 @@ const LandingPage = () => {
 
               {/* Type Selection - Two Column Layout */}
               {!profileType && !showResults && !isAnalyzing && (
-                <div className="grid md:grid-cols-[7fr_3fr] gap-10 items-center max-w-6xl mx-auto py-6">
-                  {/* Left: Storytelling explanation */}
-                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-10 flex flex-col justify-center min-h-[420px]">
-                    <h3 className="text-2xl font-bold text-slate-900 mb-6">
-                      Votre simulation en quelques minutes
-                    </h3>
-                    <div className="space-y-5 text-slate-700 text-base leading-relaxed">
-                      <p>
-                        Commencez par nous indiquer votre situation : êtes-vous une entreprise existante, un porteur de projet en création, ou une association ? Cette première étape nous permet d'orienter l'analyse vers les dispositifs adaptés à votre structure.
+                <div className="grid md:grid-cols-2 gap-10 items-center max-w-5xl mx-auto py-6">
+                  {/* Left: Explanation */}
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 flex flex-col justify-center">
+                    <div className="flex items-center justify-center gap-2 mb-4">
+                      <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold">Gratuit</span>
+                      <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold">Sans engagement</span>
+                      <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-semibold">5 min</span>
+                    </div>
+
+                    {/* Purpose */}
+                    <div className="text-center mb-5">
+                      <h3 className="text-xl font-bold text-slate-900 mb-2">
+                        Vérifiez avant de payer
+                      </h3>
+                      <p className="text-sm text-slate-600">
+                        Cette simulation vous permet de savoir s'il existe des aides pour votre profil — avant de souscrire à un abonnement.
                       </p>
-                      <p>
-                        Ensuite, vous renseignez quelques informations sur votre activité. Pour une entreprise, votre numéro SIRET suffit : nous récupérons automatiquement votre secteur, votre localisation et votre taille depuis les bases officielles. Pour un projet en création, vous décrivez simplement votre future activité.
-                      </p>
-                      <p>
-                        Notre système croise ensuite votre profil avec des milliers de dispositifs d'aides publiques — subventions de l'État, aides régionales, fonds européens, prêts à taux zéro, exonérations fiscales. Cette analyse prend entre 5 et 10 minutes.
-                      </p>
-                      <p>
-                        À la fin, vous découvrez <span className="font-semibold">combien d'aides correspondent à votre profil</span>, leur <span className="font-semibold">montant potentiel total</span>, et un aperçu des principaux dispositifs identifiés — le tout gratuitement et sans engagement.
-                      </p>
+                    </div>
+
+                    <div className="space-y-4">
+                      {/* Step 1 - Provide info */}
+                      <div className="bg-white rounded-xl p-4 shadow-sm">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xs">1</div>
+                          <p className="font-bold text-slate-900 text-sm">Décrivez votre activité</p>
+                        </div>
+                        <div className="ml-8 space-y-1.5 text-xs text-slate-600">
+                          <p>Selon votre situation, indiquez votre SIRET, votre secteur ou votre région d'implantation.</p>
+                          <p className="text-slate-500 italic">Ajoutez votre site web ou vos projets pour des résultats plus précis.</p>
+                        </div>
+                      </div>
+
+                      {/* Step 2 - Results */}
+                      <div className="bg-white rounded-xl p-4 shadow-sm border-2 border-emerald-200">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center text-white">
+                            <Check className="w-3 h-3" />
+                          </div>
+                          <p className="font-bold text-slate-900 text-sm">Découvrez vos résultats</p>
+                        </div>
+                        <p className="ml-8 text-xs text-slate-600">
+                          Nombre d'aides correspondant à votre profil, estimation du montant accessible, et types de financement disponibles.
+                        </p>
+                      </div>
                     </div>
                   </div>
 

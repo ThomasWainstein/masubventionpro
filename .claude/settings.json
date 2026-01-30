@@ -1,0 +1,108 @@
+{
+  "permissions": {
+    "allow": [
+      "// === GIT OPERATIONS ===",
+      "Bash(git:*)",
+
+      "// === NODE/NPM ===",
+      "Bash(node:*)",
+      "Bash(npm:*)",
+      "Bash(npx:*)",
+
+      "// === SUPABASE CLI ===",
+      "Bash(npx supabase:*)",
+      "Bash(supabase:*)",
+
+      "// === FILE OPERATIONS ===",
+      "Bash(ls:*)",
+      "Bash(dir:*)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(head:*)",
+      "Bash(wc:*)",
+      "Bash(copy:*)",
+      "Bash(xcopy:*)",
+      "Bash(del:*)",
+      "Bash(mkdir:*)",
+      "Bash(move:*)",
+      "Bash(tree:*)",
+
+      "// === SYSTEM INFO ===",
+      "Bash(echo:*)",
+      "Bash(where:*)",
+      "Bash(tasklist:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(timeout:*)",
+
+      "// === CURL/FETCH ===",
+      "Bash(curl:*)",
+
+      "// === POWERSHELL (Windows) ===",
+      "Bash(powershell:*)",
+
+      "// === ENV VARS WITH SUPABASE ===",
+      "Bash(SUPABASE_URL=*)",
+      "Bash(SUPABASE_SERVICE_ROLE_KEY=*)",
+      "Bash(STRIPE_SECRET_KEY=*)",
+
+      "// === GITHUB CLI ===",
+      "Bash(gh:*)",
+
+      "// === SKILLS ===",
+      "Skill(quick-deploy)",
+      "Skill(quick-deploy:*)",
+      "Skill(auto-commit-push)",
+      "Skill(auto-commit-push:*)",
+      "Skill(new-edge-function)",
+      "Skill(new-edge-function:*)",
+      "Skill(deploy)",
+      "Skill(deploy:*)",
+      "Skill(db-stats)",
+      "Skill(db-stats:*)",
+
+      "// === MCP SERVERS ===",
+      "mcp__supabase__query"
+    ],
+    "deny": [
+      "// === DANGEROUS OPERATIONS ===",
+      "Bash(rm -rf /*)",
+      "Bash(del /s /q C:*)",
+      "Bash(format:*)",
+      "Bash(shutdown:*)",
+      "Bash(reboot:*)"
+    ]
+  },
+  "context": {
+    "maxTokens": 4000,
+    "progressFile": "PROGRESS.md",
+    "referenceFile": "REFERENCES.md"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/detect-secrets.js"
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/doc-reminder.cjs"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/detect-secrets.js"
+          }
+        ]
+      }
+    ]
+  }
+}
