@@ -13,7 +13,6 @@ import {
   Circle,
   Search,
   MapPin,
-  BarChart3,
   Factory,
   Bot,
   ClipboardList,
@@ -77,45 +76,34 @@ const initialProfileData: ProfileData = {
   description: '',
 };
 
-// Analysis steps with timing
-const analysisSteps = [
-  {
-    title: 'Vérification de votre profil',
-    description: 'Nous validons les informations de votre entreprise...',
-    duration: 800,
-    icon: <Search className="w-5 h-5" />,
-  },
-  {
-    title: 'Enrichissement des données',
-    description: 'Récupération des données complémentaires...',
-    duration: 1000,
-    icon: <BarChart3 className="w-5 h-5" />,
-  },
-  {
-    title: 'Analyse sectorielle',
-    description: 'Identification des dispositifs spécifiques à votre secteur...',
-    duration: 1200,
-    icon: <Factory className="w-5 h-5" />,
-  },
-  {
-    title: 'Analyse géographique',
-    description: 'Recherche des aides régionales et locales...',
-    duration: 1000,
-    icon: <MapPin className="w-5 h-5" />,
-  },
-  {
-    title: 'Configuration du matching IA',
-    description: 'Préparation de votre profil pour les recommandations...',
-    duration: 800,
-    icon: <Bot className="w-5 h-5" />,
-  },
-  {
-    title: 'Finalisation',
-    description: 'Enregistrement de votre profil...',
-    duration: 600,
-    icon: <ClipboardList className="w-5 h-5" />,
-  },
-];
+// Analysis step definitions - dynamic based on what's being done
+interface AnalysisStepDef {
+  id: string;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+}
+
+const STEP_SAVE_PROFILE: AnalysisStepDef = {
+  id: 'save',
+  title: 'Création de votre profil',
+  description: 'Enregistrement des informations de votre entreprise...',
+  icon: <ClipboardList className="w-5 h-5" />,
+};
+
+const STEP_ANALYZE_WEBSITE: AnalysisStepDef = {
+  id: 'website',
+  title: 'Analyse de votre site web',
+  description: 'Extraction automatique des informations par IA...',
+  icon: <Bot className="w-5 h-5" />,
+};
+
+const STEP_COMPLETE: AnalysisStepDef = {
+  id: 'complete',
+  title: 'Configuration terminée',
+  description: 'Votre profil est prêt !',
+  icon: <Search className="w-5 h-5" />,
+};
 
 export function ProfileSetupPage() {
   const navigate = useNavigate();
@@ -137,9 +125,10 @@ export function ProfileSetupPage() {
   const [companySelected, setCompanySelected] = useState(false);
 
   // Analysis state
-  const [analysisStep, setAnalysisStep] = useState(0);
-  const [analysisProgress, setAnalysisProgress] = useState(0);
-  const [, setIsLoading] = useState(false);
+  const [analysisSteps, setAnalysisSteps] = useState<AnalysisStepDef[]>([]);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [stepStatus, setStepStatus] = useState<Record<string, 'pending' | 'running' | 'done' | 'error'>>({});
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
 
   // Handle company search
   const handleSearch = useCallback(async () => {
@@ -194,31 +183,39 @@ export function ProfileSetupPage() {
   // Calculate completion for sidebar
   const getCompletion = () => {
     let count = 0;
-    if (profileData.siret || profileData.companyName) count++;
+    // For entreprise: count SIRET only when company is selected
+    // For creation: count when companyName is filled
+    if (profileType === 'entreprise' ? companySelected : profileData.companyName) count++;
     if (profileData.region) count++;
     if (profileData.website) count++;
     if (profileData.description) count++;
     return count;
   };
 
-  // Run analysis animation
+  // Run REAL analysis - create profile first, then optionally analyze website
   const runAnalysis = async () => {
+    // Determine which steps we'll run
+    const hasWebsite = profileData.website && profileData.website.trim().length > 0;
+    const steps: AnalysisStepDef[] = [
+      STEP_SAVE_PROFILE,
+      ...(hasWebsite ? [STEP_ANALYZE_WEBSITE] : []),
+      STEP_COMPLETE,
+    ];
+
+    setAnalysisSteps(steps);
+    setCurrentStepIndex(0);
+    setStepStatus({ save: 'pending', website: 'pending', complete: 'pending' });
+    setAnalysisError(null);
     setStep('analyzing');
-    setAnalysisStep(0);
-    setAnalysisProgress(0);
 
-    const progressPerStep = 100 / analysisSteps.length;
+    let createdProfile: any = null;
 
-    for (let i = 0; i < analysisSteps.length; i++) {
-      setAnalysisStep(i);
-      await new Promise((resolve) => setTimeout(resolve, analysisSteps[i].duration));
-      setAnalysisProgress((i + 1) * progressPerStep);
-    }
+    // Step 1: Create profile
+    setStepStatus(prev => ({ ...prev, save: 'running' }));
+    setCurrentStepIndex(0);
 
-    // Create profile after analysis
-    setIsLoading(true);
     try {
-      await createProfile({
+      createdProfile = await createProfile({
         company_name: profileData.companyName,
         siret: profileData.siret || null,
         siren: profileData.siren || null,
@@ -238,13 +235,69 @@ export function ProfileSetupPage() {
         description: profileData.description || null,
         project_types: profileType === 'creation' ? ['creation'] : [],
       });
-      navigate('/app');
-    } catch (error) {
+      setStepStatus(prev => ({ ...prev, save: 'done' }));
+    } catch (error: any) {
       console.error('Error creating profile:', error);
-      setStep('details');
-    } finally {
-      setIsLoading(false);
+      setStepStatus(prev => ({ ...prev, save: 'error' }));
+      setAnalysisError(error.message || 'Erreur lors de la création du profil');
+      return;
     }
+
+    // Step 2: Analyze website (if URL provided)
+    if (hasWebsite && createdProfile?.id) {
+      setStepStatus(prev => ({ ...prev, website: 'running' }));
+      setCurrentStepIndex(1);
+
+      try {
+        // Get auth session for the API call
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (session?.access_token && session?.user?.id) {
+          // Ensure URL has protocol
+          let websiteUrl = profileData.website;
+          if (!websiteUrl.startsWith('http://') && !websiteUrl.startsWith('https://')) {
+            websiteUrl = 'https://' + websiteUrl;
+          }
+
+          const response = await fetch(
+            `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-company-website`,
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${session.access_token}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                website_url: websiteUrl,
+                profile_id: createdProfile.id,
+                user_id: session.user.id,
+              }),
+            }
+          );
+
+          if (response.ok) {
+            const result = await response.json();
+            if (result.success) {
+              console.log('Website analysis completed:', result.intelligence);
+            }
+          }
+          // Don't fail the whole flow if website analysis fails - profile is already created
+        }
+        setStepStatus(prev => ({ ...prev, website: 'done' }));
+      } catch (error) {
+        console.error('Website analysis failed (non-blocking):', error);
+        // Mark as done anyway - profile is already created
+        setStepStatus(prev => ({ ...prev, website: 'done' }));
+      }
+    }
+
+    // Step 3: Complete
+    setCurrentStepIndex(steps.length - 1);
+    setStepStatus(prev => ({ ...prev, complete: 'done' }));
+
+    // Short delay to show completion, then navigate
+    await new Promise(resolve => setTimeout(resolve, 800));
+    navigate('/app');
   };
 
   // Handle form submission
@@ -543,10 +596,10 @@ export function ProfileSetupPage() {
                       <div className="flex items-center gap-2 text-sm">
                         <span
                           className={`font-medium flex items-center gap-1.5 ${
-                            profileData.siret || profileData.companyName ? 'text-emerald-600' : 'text-slate-500'
+                            (profileType === 'entreprise' ? companySelected : profileData.companyName) ? 'text-emerald-600' : 'text-slate-500'
                           }`}
                         >
-                          {profileData.siret || profileData.companyName ? (
+                          {(profileType === 'entreprise' ? companySelected : profileData.companyName) ? (
                             <Check className="w-4 h-4" />
                           ) : (
                             <Circle className="w-4 h-4" />
@@ -773,114 +826,167 @@ export function ProfileSetupPage() {
             </div>
           )}
 
-          {/* Step 4: Analyzing */}
+          {/* Step 4: Analyzing - REAL WORK */}
           {step === 'analyzing' && (
             <div className="p-8 py-12">
+              {/* Error Alert */}
+              {analysisError && (
+                <div className="max-w-lg mx-auto mb-6 bg-red-50 border border-red-200 rounded-xl p-4">
+                  <p className="text-red-700 text-sm">{analysisError}</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-3"
+                    onClick={() => setStep('details')}
+                  >
+                    Retour
+                  </Button>
+                </div>
+              )}
+
               {/* Progress Bar */}
               <div className="max-w-lg mx-auto mb-8">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-semibold text-slate-700">Progression globale</span>
-                  <span className="text-sm font-bold text-blue-800">{Math.round(analysisProgress)}%</span>
+                  <span className="text-sm font-semibold text-slate-700">Configuration en cours</span>
+                  <span className="text-sm font-bold text-blue-800">
+                    {currentStepIndex + 1}/{analysisSteps.length}
+                  </span>
                 </div>
                 <div className="h-3 bg-slate-200 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-blue-600 to-emerald-500 rounded-full transition-all duration-500 ease-out"
-                    style={{ width: `${analysisProgress}%` }}
+                    style={{ width: `${analysisSteps.length > 0 ? ((currentStepIndex + 1) / analysisSteps.length) * 100 : 0}%` }}
                   />
-                </div>
-                <div className="flex items-center justify-between mt-2">
-                  <span className="text-xs text-slate-500">
-                    Étape {analysisStep + 1} sur {analysisSteps.length}
-                  </span>
                 </div>
               </div>
 
               {/* Current Step */}
-              <div className="max-w-lg mx-auto mb-8">
-                <div className="bg-gradient-to-br from-blue-50 to-emerald-50 border-2 border-blue-200 rounded-xl p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center text-blue-600 shadow-sm flex-shrink-0">
-                      {analysisSteps[analysisStep]?.icon}
+              {analysisSteps[currentStepIndex] && (
+                <div className="max-w-lg mx-auto mb-8">
+                  <div className={`border-2 rounded-xl p-6 ${
+                    stepStatus[analysisSteps[currentStepIndex].id] === 'error'
+                      ? 'bg-red-50 border-red-200'
+                      : stepStatus[analysisSteps[currentStepIndex].id] === 'done'
+                      ? 'bg-emerald-50 border-emerald-200'
+                      : 'bg-gradient-to-br from-blue-50 to-emerald-50 border-blue-200'
+                  }`}>
+                    <div className="flex items-start gap-4">
+                      <div className={`w-14 h-14 rounded-xl flex items-center justify-center shadow-sm flex-shrink-0 ${
+                        stepStatus[analysisSteps[currentStepIndex].id] === 'done'
+                          ? 'bg-emerald-500 text-white'
+                          : 'bg-white text-blue-600'
+                      }`}>
+                        {stepStatus[analysisSteps[currentStepIndex].id] === 'done' ? (
+                          <Check className="w-6 h-6" />
+                        ) : (
+                          analysisSteps[currentStepIndex].icon
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-bold text-slate-900 mb-1">
+                          {analysisSteps[currentStepIndex].title}
+                        </h4>
+                        <p className="text-slate-600 text-sm">
+                          {analysisSteps[currentStepIndex].description}
+                        </p>
+                      </div>
+                      {stepStatus[analysisSteps[currentStepIndex].id] === 'running' && (
+                        <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                      )}
                     </div>
-                    <div className="flex-1">
-                      <h4 className="font-bold text-slate-900 mb-1">{analysisSteps[analysisStep]?.title}</h4>
-                      <p className="text-slate-600 text-sm">{analysisSteps[analysisStep]?.description}</p>
-                    </div>
-                    <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin flex-shrink-0" />
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Steps Timeline */}
               <div className="max-w-lg mx-auto bg-slate-50 border border-slate-200 rounded-xl p-4">
-                <h4 className="text-sm font-bold text-slate-700 mb-3">Étapes de l'analyse</h4>
+                <h4 className="text-sm font-bold text-slate-700 mb-3">Étapes</h4>
                 <div className="space-y-2">
-                  {analysisSteps.map((stepItem, index) => (
-                    <div
-                      key={index}
-                      className={`flex items-center gap-3 p-2 rounded-lg transition-all ${
-                        index === analysisStep
-                          ? 'bg-blue-50 border border-blue-200'
-                          : index < analysisStep
-                          ? 'bg-emerald-50/50'
-                          : ''
-                      }`}
-                    >
-                      {/* Status Icon */}
+                  {analysisSteps.map((stepItem, index) => {
+                    const status = stepStatus[stepItem.id] || 'pending';
+                    return (
                       <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 ${
-                          index < analysisStep
-                            ? 'bg-emerald-500 text-white'
-                            : index === analysisStep
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-slate-200 text-slate-400'
+                        key={stepItem.id}
+                        className={`flex items-center gap-3 p-2 rounded-lg transition-all ${
+                          status === 'running'
+                            ? 'bg-blue-50 border border-blue-200'
+                            : status === 'done'
+                            ? 'bg-emerald-50/50'
+                            : status === 'error'
+                            ? 'bg-red-50/50'
+                            : ''
                         }`}
                       >
-                        {index < analysisStep ? (
-                          <Check className="w-4 h-4" />
-                        ) : index === analysisStep ? (
-                          <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        ) : (
-                          <span className="text-xs">{index + 1}</span>
-                        )}
-                      </div>
+                        {/* Status Icon */}
+                        <div
+                          className={`w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 ${
+                            status === 'done'
+                              ? 'bg-emerald-500 text-white'
+                              : status === 'running'
+                              ? 'bg-blue-600 text-white'
+                              : status === 'error'
+                              ? 'bg-red-500 text-white'
+                              : 'bg-slate-200 text-slate-400'
+                          }`}
+                        >
+                          {status === 'done' ? (
+                            <Check className="w-4 h-4" />
+                          ) : status === 'running' ? (
+                            <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            <span className="text-xs">{index + 1}</span>
+                          )}
+                        </div>
 
-                      {/* Step Info */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="text-blue-600">{stepItem.icon}</span>
-                          <span
-                            className={`text-sm font-medium truncate ${
-                              index < analysisStep
-                                ? 'text-emerald-700'
-                                : index === analysisStep
-                                ? 'text-blue-800'
-                                : 'text-slate-400'
-                            }`}
-                          >
-                            {stepItem.title}
-                          </span>
+                        {/* Step Info */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className={status === 'running' ? 'text-blue-600' : 'text-slate-500'}>
+                              {stepItem.icon}
+                            </span>
+                            <span
+                              className={`text-sm font-medium truncate ${
+                                status === 'done'
+                                  ? 'text-emerald-700'
+                                  : status === 'running'
+                                  ? 'text-blue-800'
+                                  : 'text-slate-400'
+                              }`}
+                            >
+                              {stepItem.title}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Status Badge */}
+                        <div className="flex-shrink-0">
+                          {status === 'done' && (
+                            <span className="text-xs text-emerald-600 font-medium">Terminé</span>
+                          )}
+                          {status === 'running' && (
+                            <span className="text-xs text-blue-600 font-medium animate-pulse">En cours...</span>
+                          )}
+                          {status === 'pending' && (
+                            <span className="text-xs text-slate-400">En attente</span>
+                          )}
                         </div>
                       </div>
-
-                      {/* Status Badge */}
-                      <div className="flex-shrink-0">
-                        {index < analysisStep && (
-                          <span className="text-xs text-emerald-600 font-medium">Terminé</span>
-                        )}
-                        {index === analysisStep && (
-                          <span className="text-xs text-blue-600 font-medium animate-pulse">En cours...</span>
-                        )}
-                        {index > analysisStep && <span className="text-xs text-slate-400">En attente</span>}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Don't close warning */}
+              {/* Helpful message */}
               <div className="max-w-lg mx-auto mt-4 text-center">
-                <p className="text-slate-400 text-xs">Ne fermez pas cette fenêtre pendant l'analyse</p>
+                {profileData.website ? (
+                  <p className="text-slate-500 text-xs">
+                    L'analyse de votre site web peut prendre quelques secondes...
+                  </p>
+                ) : (
+                  <p className="text-slate-400 text-xs">
+                    Création de votre profil en cours...
+                  </p>
+                )}
               </div>
             </div>
           )}

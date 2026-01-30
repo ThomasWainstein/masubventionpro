@@ -920,7 +920,7 @@ const LandingPage = () => {
               onClick={openProfileModal}
               className="px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-800/30 transition-all"
             >
-              Découvrir mes aides
+              Lancer ma simulation
             </button>
           </nav>
 
@@ -949,7 +949,7 @@ const LandingPage = () => {
               onClick={() => { setMobileMenuOpen(false); openProfileModal(); }}
               className="block w-full text-center px-6 py-3 bg-gradient-to-br from-blue-800 to-blue-500 text-white rounded-lg font-semibold"
             >
-              Découvrir mes aides
+              Lancer ma simulation
             </button>
           </div>
         )}
@@ -1010,7 +1010,7 @@ const LandingPage = () => {
                 onClick={openProfileModal}
                 className="w-full mt-6 px-8 py-5 bg-gradient-to-br from-blue-600 to-blue-400 text-white rounded-xl font-semibold text-xl shadow-lg shadow-blue-600/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-600/40 transition-all flex items-center justify-center gap-3"
               >
-                Découvrir mes aides gratuitement
+                Lancer ma simulation gratuitement
                 <ArrowRight className="w-6 h-6" />
               </button>
 

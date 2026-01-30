@@ -5,9 +5,11 @@ import { useProfile } from '@/contexts/ProfileContext';
 import { useSavedSubsidies } from '@/hooks/useSavedSubsidies';
 import { useNewSubsidies } from '@/hooks/useNewSubsidies';
 import { useRecommendedSubsidies } from '@/hooks/useRecommendedSubsidies';
+import { useCompanyProfiles } from '@/hooks/useCompanyProfiles';
 import { Button } from '@/components/ui/button';
 import { SubsidyCard } from '@/components/search/SubsidyCard';
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed';
+import { CompanyCard, AddCompanyCard } from '@/components/dashboard/CompanyCard';
 import { getSubsidyTitle } from '@/types';
 import {
   Search,
@@ -24,13 +26,28 @@ import {
   Euro,
   Bell,
   CalendarClock,
+  Upload,
+  Plus,
 } from 'lucide-react';
 
 export function DashboardPage() {
   const { user } = useAuth();
-  const { profile, loading: profileLoading, hasProfile } = useProfile();
+  const { profile, loading: profileLoading, hasProfile, setActiveProfile, deleteProfile } = useProfile();
   const { savedSubsidies, isSaved, toggleSave } = useSavedSubsidies();
   const { newCount, hasNew } = useNewSubsidies();
+
+  // Multi-company support
+  const {
+    profiles: companyProfiles,
+    loading: profilesLoading,
+    maxCompanies,
+    canAddMore,
+    planType,
+  } = useCompanyProfiles();
+
+  // Determine if multi-company mode (Premium = 5+, Business with addon, or multiple profiles)
+  const isMultiCompanyPlan = planType === 'premium' || (planType === 'business' && maxCompanies > 1);
+  const showMultiCompanyView = isMultiCompanyPlan || companyProfiles.length > 1 || companyProfiles.length === 0;
 
   // V5 Hybrid Matcher - Profile-based recommendations with AI scoring
   const {
@@ -160,8 +177,8 @@ export function DashboardPage() {
         </div>
       )}
 
-      {/* Profile Complétion Alert */}
-      {!hasProfile && (
+      {/* Profile Complétion Alert - Only for single company mode */}
+      {!hasProfile && !showMultiCompanyView && (
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-4">
           <div className="flex-shrink-0">
             <AlertCircle className="h-6 w-6 text-amber-600" />
@@ -247,48 +264,147 @@ export function DashboardPage() {
         </div>
       )}
 
-      {/* Profile Card */}
-      <div className="bg-white rounded-xl border border-slate-200 p-5">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 bg-slate-100 rounded-lg">
-              <Building2 className="h-5 w-5 text-slate-600" />
-            </div>
+      {/* Multi-Company Portfolio Section */}
+      {showMultiCompanyView ? (
+        <div>
+          <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="text-sm text-slate-600">Mon entreprise</p>
-              <p className="text-lg font-semibold text-slate-900">
-                {hasProfile ? profile?.company_name : 'Non configuré'}
-              </p>
+              <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                <Building2 className="h-5 w-5 text-slate-600" />
+                Mes Sociétés
+                <span className="text-sm font-normal text-slate-500">
+                  ({companyProfiles.length}/{maxCompanies})
+                </span>
+              </h2>
+              {planType && (
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Forfait {planType === 'premium' ? 'Premium Groupe' : planType === 'business' ? 'Business' : 'Découverte'}
+                </p>
+              )}
             </div>
-          </div>
-          <Link to={hasProfile ? '/app/profile' : '/app/profile/setup'}>
-            <Button variant="outline" size="sm">
-              {hasProfile ? 'Voir le profil' : 'Configurer'}
-            </Button>
-          </Link>
-        </div>
-        {hasProfile && profileComplétion < 100 && (
-          <div className="pt-3 border-t border-slate-100">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-slate-500">Complétion du profil</span>
-              <span className={`text-xs font-semibold ${profileComplétion >= 80 ? 'text-emerald-600' : profileComplétion >= 50 ? 'text-amber-600' : 'text-slate-600'}`}>
-                {profileComplétion}%
-              </span>
-            </div>
-            <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all ${profileComplétion >= 80 ? 'bg-emerald-500' : profileComplétion >= 50 ? 'bg-amber-500' : 'bg-blue-500'}`}
-                style={{ width: `${profileComplétion}%` }}
-              />
-            </div>
-            {profileComplétion < 80 && (
-              <p className="text-xs text-slate-500 mt-2">
-                Complétez votre profil pour de meilleures recommandations
-              </p>
+            {canAddMore && (
+              <div className="flex gap-2">
+                <Link to="/app/import">
+                  <Button variant="outline" size="sm">
+                    <Upload className="mr-1 h-4 w-4" />
+                    Import
+                  </Button>
+                </Link>
+                <Link to="/app/profile/setup">
+                  <Button size="sm">
+                    <Plus className="mr-1 h-4 w-4" />
+                    Ajouter
+                  </Button>
+                </Link>
+              </div>
             )}
           </div>
-        )}
-      </div>
+
+          {profilesLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+            </div>
+          ) : companyProfiles.length === 0 ? (
+            /* Empty state - No companies yet */
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border-2 border-dashed border-blue-200 p-8 text-center">
+              <div className="flex items-center justify-center w-16 h-16 bg-white rounded-full shadow-sm mx-auto mb-4">
+                <Building2 className="h-8 w-8 text-blue-500" />
+              </div>
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                Ajoutez votre première société
+              </h3>
+              <p className="text-slate-600 text-sm mb-6 max-w-md mx-auto">
+                Votre forfait inclut jusqu'à {maxCompanies} société{maxCompanies > 1 ? 's' : ''}.
+                Commencez par ajouter votre première entreprise pour découvrir les aides disponibles.
+              </p>
+              <div className="flex flex-wrap gap-3 justify-center">
+                <Link to="/app/profile/setup">
+                  <Button>
+                    <Search className="mr-2 h-4 w-4" />
+                    Rechercher par SIRET
+                  </Button>
+                </Link>
+                <Link to="/app/import">
+                  <Button variant="outline">
+                    <Upload className="mr-2 h-4 w-4" />
+                    Importer un fichier
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            /* Company cards grid */
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {companyProfiles.map((company) => (
+                <CompanyCard
+                  key={company.id}
+                  id={company.id}
+                  companyName={company.company_name}
+                  sector={company.sector}
+                  region={company.region}
+                  employees={company.employees}
+                  legalForm={company.legal_form}
+                  hasWebsiteIntelligence={!!company.website_intelligence}
+                  isActive={profile?.id === company.id}
+                  canDelete={companyProfiles.length > 1}
+                  onSelect={() => setActiveProfile(company.id)}
+                  onDelete={companyProfiles.length > 1 ? () => {
+                    if (window.confirm(`Êtes-vous sûr de vouloir supprimer ${company.company_name} ?`)) {
+                      deleteProfile(company.id);
+                    }
+                  } : undefined}
+                />
+              ))}
+              {canAddMore && (
+                <AddCompanyCard remainingSlots={maxCompanies - companyProfiles.length} />
+              )}
+            </div>
+          )}
+        </div>
+      ) : (
+        /* Single company view (original) */
+        <div className="bg-white rounded-xl border border-slate-200 p-5">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-10 h-10 bg-slate-100 rounded-lg">
+                <Building2 className="h-5 w-5 text-slate-600" />
+              </div>
+              <div>
+                <p className="text-sm text-slate-600">Mon entreprise</p>
+                <p className="text-lg font-semibold text-slate-900">
+                  {hasProfile ? profile?.company_name : 'Non configuré'}
+                </p>
+              </div>
+            </div>
+            <Link to={hasProfile ? '/app/profile' : '/app/profile/setup'}>
+              <Button variant="outline" size="sm">
+                {hasProfile ? 'Voir le profil' : 'Configurer'}
+              </Button>
+            </Link>
+          </div>
+          {hasProfile && profileComplétion < 100 && (
+            <div className="pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-slate-500">Complétion du profil</span>
+                <span className={`text-xs font-semibold ${profileComplétion >= 80 ? 'text-emerald-600' : profileComplétion >= 50 ? 'text-amber-600' : 'text-slate-600'}`}>
+                  {profileComplétion}%
+                </span>
+              </div>
+              <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all ${profileComplétion >= 80 ? 'bg-emerald-500' : profileComplétion >= 50 ? 'bg-amber-500' : 'bg-blue-500'}`}
+                  style={{ width: `${profileComplétion}%` }}
+                />
+              </div>
+              {profileComplétion < 80 && (
+                <p className="text-xs text-slate-500 mt-2">
+                  Complétez votre profil pour de meilleures recommandations
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Quick Actions */}
       <div>

@@ -1,29 +1,45 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from './AuthContext';
 import { MaSubventionProProfile } from '@/types';
 
+const ACTIVE_PROFILE_KEY = 'msp_active_profile_id';
+
 interface ProfileContextType {
   profile: MaSubventionProProfile | null;
+  profiles: MaSubventionProProfile[];
   loading: boolean;
   error: string | null;
   hasProfile: boolean;
+  activeProfileId: string | null;
+  setActiveProfile: (profileId: string) => void;
   refreshProfile: () => Promise<void>;
   updateProfile: (data: Partial<MaSubventionProProfile>) => Promise<void>;
-  createProfile: (data: Partial<MaSubventionProProfile>) => Promise<void>;
+  createProfile: (data: Partial<MaSubventionProProfile>) => Promise<MaSubventionProProfile>;
+  deleteProfile: (profileId: string) => Promise<void>;
 }
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export function ProfileProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
-  const [profile, setProfile] = useState<MaSubventionProProfile | null>(null);
+  const [profiles, setProfiles] = useState<MaSubventionProProfile[]>([]);
+  const [activeProfileId, setActiveProfileId] = useState<string | null>(() => {
+    // Initialize from localStorage
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(ACTIVE_PROFILE_KEY);
+    }
+    return null;
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchProfile = async () => {
+  // Derive active profile from profiles array
+  const profile = profiles.find(p => p.id === activeProfileId) || profiles[0] || null;
+
+  const fetchProfiles = async () => {
     if (!user) {
-      setProfile(null);
+      setProfiles([]);
       setLoading(false);
       return;
     }
@@ -36,35 +52,46 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
         .from('masubventionpro_profiles')
         .select('*')
         .eq('user_id', user.id)
-        .single();
+        .order('created_at', { ascending: true });
 
       if (fetchError) {
-        if (fetchError.code === 'PGRST116') {
-          // No profile found - this is expected for new users
-          setProfile(null);
-        } else {
-          throw fetchError;
-        }
-      } else {
-        setProfile(data);
+        throw fetchError;
+      }
+
+      setProfiles(data || []);
+
+      // If we have profiles but no active one, set the first one
+      if (data && data.length > 0 && !activeProfileId) {
+        setActiveProfileId(data[0].id);
+        localStorage.setItem(ACTIVE_PROFILE_KEY, data[0].id);
+      }
+      // If active profile doesn't exist in data, reset to first
+      else if (data && data.length > 0 && activeProfileId && !data.find(p => p.id === activeProfileId)) {
+        setActiveProfileId(data[0].id);
+        localStorage.setItem(ACTIVE_PROFILE_KEY, data[0].id);
       }
     } catch (err: any) {
-      console.error('Error fetching profile:', err);
-      setError(err.message || 'Erreur lors du chargement du profil');
+      console.error('Error fetching profiles:', err);
+      setError(err.message || 'Erreur lors du chargement des profils');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchProfile();
+    fetchProfiles();
   }, [user]);
 
+  const setActiveProfile = useCallback((profileId: string) => {
+    setActiveProfileId(profileId);
+    localStorage.setItem(ACTIVE_PROFILE_KEY, profileId);
+  }, []);
+
   const refreshProfile = async () => {
-    await fetchProfile();
+    await fetchProfiles();
   };
 
-  const createProfile = async (data: Partial<MaSubventionProProfile>) => {
+  const createProfile = async (data: Partial<MaSubventionProProfile>): Promise<MaSubventionProProfile> => {
     if (!user) throw new Error('Non authentifié');
 
     try {
@@ -107,7 +134,12 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
 
       if (createError) throw createError;
 
-      setProfile(newProfile);
+      // Add to profiles list and set as active
+      setProfiles(prev => [...prev, newProfile]);
+      setActiveProfileId(newProfile.id);
+      localStorage.setItem(ACTIVE_PROFILE_KEY, newProfile.id);
+
+      return newProfile;
     } catch (err: any) {
       console.error('Error creating profile:', err);
       setError(err.message || 'Erreur lors de la création du profil');
@@ -133,10 +165,44 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
 
       if (updateError) throw updateError;
 
-      setProfile(updatedProfile);
+      // Update the profile in the profiles list
+      setProfiles(prev => prev.map(p => p.id === profile.id ? updatedProfile : p));
     } catch (err: any) {
       console.error('Error updating profile:', err);
       setError(err.message || 'Erreur lors de la mise à jour du profil');
+      throw err;
+    }
+  };
+
+  const deleteProfile = async (profileId: string) => {
+    if (!user) throw new Error('Non authentifié');
+
+    try {
+      setError(null);
+
+      const { error: deleteError } = await supabase
+        .from('masubventionpro_profiles')
+        .delete()
+        .eq('id', profileId)
+        .eq('user_id', user.id);
+
+      if (deleteError) throw deleteError;
+
+      // Remove from profiles list
+      const newProfiles = profiles.filter(p => p.id !== profileId);
+      setProfiles(newProfiles);
+
+      // If we deleted the active profile, switch to the first remaining one
+      if (activeProfileId === profileId && newProfiles.length > 0) {
+        setActiveProfileId(newProfiles[0].id);
+        localStorage.setItem(ACTIVE_PROFILE_KEY, newProfiles[0].id);
+      } else if (newProfiles.length === 0) {
+        setActiveProfileId(null);
+        localStorage.removeItem(ACTIVE_PROFILE_KEY);
+      }
+    } catch (err: any) {
+      console.error('Error deleting profile:', err);
+      setError(err.message || 'Erreur lors de la suppression du profil');
       throw err;
     }
   };
@@ -145,12 +211,16 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     <ProfileContext.Provider
       value={{
         profile,
+        profiles,
         loading,
         error,
         hasProfile: !!profile,
+        activeProfileId,
+        setActiveProfile,
         refreshProfile,
         updateProfile,
         createProfile,
+        deleteProfile,
       }}
     >
       {children}
