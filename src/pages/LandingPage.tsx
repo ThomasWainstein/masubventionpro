@@ -1114,28 +1114,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="bg-gradient-to-b from-white to-slate-50 py-16 px-8">
-        <div className="max-w-[1400px] mx-auto text-center">
-          <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-900 mb-4">
-            Explorez nos aides
-          </h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-8">
-            Découvrez toutes les aides disponibles pour votre entreprise, sans restriction.
-          </p>
-          <button
-            onClick={() => navigate('/app/search')}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-br from-blue-800 to-blue-600 text-white rounded-xl font-semibold text-lg shadow-lg shadow-blue-800/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-800/30 transition-all"
-          >
-            Explorer toutes les aides
-            <ArrowRight className="w-5 h-5" />
-          </button>
-          <p className="text-sm text-slate-500 mt-3">
-            Plus de {subsidyCount} dispositifs disponibles
-          </p>
-        </div>
-      </section>
-
       {/* Features Section */}
       <section id="fonctionnalites" className="bg-slate-50 pt-10 pb-12 px-8">
         <div className="max-w-[1400px] mx-auto">
