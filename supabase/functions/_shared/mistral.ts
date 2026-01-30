@@ -91,6 +91,48 @@ export async function createMistralCompletion(
 }
 
 /**
+ * Create a Mistral chat completion with retry/backoff for rate limits
+ * Automatically retries on 429 (rate limit) errors with exponential backoff
+ */
+export async function createMistralCompletionWithRetry(
+  apiKey: string,
+  request: MistralChatRequest,
+  maxRetries: number = 3
+): Promise<MistralChatResponse> {
+  let lastError: Error | null = null;
+
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      return await createMistralCompletion(apiKey, request);
+    } catch (error) {
+      lastError = error as Error;
+      const errorMessage = lastError.message || '';
+
+      // Only retry on rate limit (429) or server errors (5xx)
+      if (errorMessage.includes('429') || errorMessage.includes('529')) {
+        const backoffMs = Math.min(1000 * Math.pow(2, attempt), 10000);
+        console.log(`[Mistral] Rate limited, retry ${attempt + 1}/${maxRetries} in ${backoffMs}ms`);
+        await new Promise(r => setTimeout(r, backoffMs));
+        continue;
+      }
+
+      // 503 Service Unavailable - also retry
+      if (errorMessage.includes('503')) {
+        const backoffMs = Math.min(2000 * Math.pow(2, attempt), 15000);
+        console.log(`[Mistral] Service unavailable, retry ${attempt + 1}/${maxRetries} in ${backoffMs}ms`);
+        await new Promise(r => setTimeout(r, backoffMs));
+        continue;
+      }
+
+      // Non-retryable error - throw immediately
+      throw error;
+    }
+  }
+
+  throw lastError || new Error('Max retries exceeded');
+}
+
+/**
  * Create a streaming Mistral chat completion
  */
 export async function createMistralStreamingCompletion(
@@ -137,16 +179,41 @@ export function estimateTokens(text: string): number {
  * System prompt for subsidy matching
  */
 export function buildSubsidyMatchingSystemPrompt(): string {
-  return `Tu es un expert en aides publiques et subventions françaises et européennes.
-Tu aides les entreprises à identifier les dispositifs d'aide auxquels elles pourraient être éligibles.
+  return `Tu es un expert en éligibilité aux aides publiques françaises. Ta mission est d'évaluer la correspondance entre un profil d'entreprise et des subventions.
 
-Règles importantes:
-- Sois précis et factuel dans tes réponses
-- Cite toujours les sources officielles quand c'est possible
-- Indique clairement quand tu n'es pas sûr d'une information
-- Ne garantis jamais l'obtention d'une aide - l'éligibilité réelle dépend de l'organisme financeur
-- Réponds en français
-- Sois concis mais complet`;
+CRITÈRES DE MATCHING (par ordre d'importance):
+
+1. ÉLIGIBILITÉ LÉGALE (bloquant):
+   - legal_entities: L'entreprise doit correspondre aux types éligibles
+   - Ex: Si subsidy.legal_entities = ["PME", "ETI"], une grande entreprise n'est PAS éligible
+
+2. ZONE GÉOGRAPHIQUE (important):
+   - La région/département de l'entreprise doit être dans subsidy.region
+   - "National" ou région vide = toutes régions éligibles
+
+3. SECTEUR D'ACTIVITÉ (important):
+   - Le secteur de l'entreprise doit correspondre à subsidy.primary_sector ou categories
+   - Certaines aides sont multi-secteurs (is_universal_sector = true)
+
+4. TAILLE DE L'ENTREPRISE (si spécifié):
+   - Vérifier employees vs restrictions de taille dans eligibility_criteria
+   - TPE < 10, PME < 250, ETI < 5000, GE >= 5000
+
+5. PROJET/OBJECTIF (contextuel):
+   - Les project_types de l'entreprise doivent correspondre au funding_type de l'aide
+
+SCORING (0-100):
+- 90-100: Éligibilité quasi-certaine (tous critères remplis)
+- 70-89: Forte probabilité (critères majeurs remplis, mineurs incertains)
+- 50-69: Possible (certains critères manquants mais pas bloquants)
+- 30-49: Faible (critères importants manquants)
+- 0-29: Non éligible (critère bloquant non rempli)
+
+RÈGLES STRICTES:
+- Ne JAMAIS scorer > 50 si legal_entities ne correspond pas
+- Ne JAMAIS scorer > 70 si la région ne correspond pas (sauf aide nationale)
+- Toujours expliquer les critères manquants
+- En cas de doute sur un critère, le mettre dans missing_criteria`;
 }
 
 /**
