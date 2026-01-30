@@ -207,18 +207,73 @@ serve(async (req) => {
       throw new Error('Supabase configuration missing');
     }
 
-    // Parse request body
-    const { profile, limit = 20 } = await req.json() as {
-      profile: ProfileInput;
+    // Parse request body - supports both profile object and profile_id
+    const body = await req.json();
+    const {
+      profile: providedProfile,
+      profile_id,
+      profile_table = 'masubventionpro_profiles',
+      limit = 20,
+    } = body as {
+      profile?: ProfileInput;
+      profile_id?: string;
+      profile_table?: string;
       limit?: number;
     };
 
-    if (!profile || !profile.id) {
-      throw new Error('Profile is required');
-    }
-
     // Create Supabase client
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Get profile - either from provided object or fetch by ID
+    let profile: ProfileInput;
+
+    if (providedProfile && providedProfile.id) {
+      // Use provided profile directly
+      profile = providedProfile;
+      console.log('[V5] Using provided profile object');
+    } else if (profile_id) {
+      // Fetch profile from database
+      console.log(`[V5] Fetching profile ${profile_id} from ${profile_table}...`);
+
+      const { data: fetchedProfile, error: profileError } = await supabase
+        .from(profile_table)
+        .select('*')
+        .eq('id', profile_id)
+        .single();
+
+      if (profileError || !fetchedProfile) {
+        throw new Error(`Profile not found: ${profileError?.message || 'Unknown error'}`);
+      }
+
+      // Map database profile to ProfileInput format
+      profile = {
+        id: fetchedProfile.id,
+        company_name: fetchedProfile.company_name,
+        siret: fetchedProfile.siret,
+        naf_code: fetchedProfile.naf_code,
+        naf_label: fetchedProfile.naf_label,
+        sector: fetchedProfile.sector,
+        sub_sector: fetchedProfile.sub_sector,
+        region: fetchedProfile.region,
+        department: fetchedProfile.department,
+        employees: fetchedProfile.employees,
+        annual_turnover: fetchedProfile.annual_turnover,
+        year_created: fetchedProfile.year_created,
+        legal_form: fetchedProfile.legal_form,
+        company_category: fetchedProfile.company_category,
+        project_types: fetchedProfile.project_types,
+        certifications: fetchedProfile.certifications,
+        description: fetchedProfile.description,
+        website_intelligence: fetchedProfile.website_intelligence,
+      };
+
+      console.log(`[V5] Fetched profile: ${profile.company_name}, sector=${profile.sector}, region=${profile.region}`);
+      if (profile.website_intelligence) {
+        console.log(`[V5] Website intelligence available: innovation=${profile.website_intelligence.innovations?.score}, sustainability=${profile.website_intelligence.sustainability?.score}`);
+      }
+    } else {
+      throw new Error('Either profile object or profile_id is required');
+    }
 
     // ========================================================================
     // PHASE 1: PROFILE ANALYSIS
@@ -238,13 +293,18 @@ serve(async (req) => {
 
     let candidates: SubsidyCandidate[] = [];
 
+    // Get today's date for deadline filtering (exclude expired subsidies)
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+
     try {
       // Query A: Region-matched (simple, no complex OR)
+      // Deadline filter: NULL (no deadline) or future deadline
       const regionQuery = supabase
         .from('subsidies')
         .select(CONFIG.SUBSIDY_COLUMNS)
         .eq('is_active', true)
         .eq('is_business_relevant', true)
+        .or(`deadline.is.null,deadline.gte.${today}`)
         .or(profile.region
           ? `region.cs.{"${profile.region}"},region.cs.{"National"},region.is.null`
           : 'region.cs.{"National"},region.is.null')
@@ -257,6 +317,7 @@ serve(async (req) => {
             .select(CONFIG.SUBSIDY_COLUMNS)
             .eq('is_active', true)
             .eq('is_business_relevant', true)
+            .or(`deadline.is.null,deadline.gte.${today}`)
             .ilike('primary_sector', `%${analyzedProfile.sector}%`)
             .limit(60)
         : Promise.resolve({ data: null, error: null });
@@ -267,6 +328,7 @@ serve(async (req) => {
         .select(CONFIG.SUBSIDY_COLUMNS)
         .eq('is_active', true)
         .eq('is_business_relevant', true)
+        .or(`deadline.is.null,deadline.gte.${today}`)
         .contains('region', ['National'])
         .gte('amount_max', 50000)
         .order('amount_max', { ascending: false })
@@ -299,6 +361,7 @@ serve(async (req) => {
         .select(CONFIG.SUBSIDY_COLUMNS)
         .eq('is_active', true)
         .eq('is_business_relevant', true)
+        .or(`deadline.is.null,deadline.gte.${today}`)
         .limit(CONFIG.FALLBACK_LIMIT);
 
       candidates = (data as SubsidyCandidate[]) || [];

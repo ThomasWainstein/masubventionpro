@@ -126,16 +126,15 @@ const V5_MATCHER_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/v5-hyb
 
 /**
  * V5 Match result from edge function
+ * Updated to match actual response format from v5-hybrid-calculate-matches
  */
 interface V5Match {
   subsidy_id: string;
-  llm_score: number;
-  sector_fit: number;
-  project_fit: number;
-  eligibility_score: number;
-  explanation: string;
-  concerns: string[];
-  confidence: 'high' | 'medium' | 'low';
+  match_score: number;
+  success_probability: number;
+  match_reasons: string[];
+  matching_criteria: string[];
+  missing_criteria: string[];
 }
 
 /**
@@ -177,11 +176,19 @@ async function fetchAIRecommendations(
     const result = await response.json();
 
     if (!result.matches || result.matches.length === 0) {
-      console.log('[V5 Matcher] No matches returned');
+      console.log('[V5 Matcher] No matches returned', result);
       return null;
     }
 
-    console.log(`[V5 Matcher] Got ${result.matches.length} matches (version: ${result.version})`);
+    // Log pipeline stats for debugging
+    const stats = result.pipeline_stats;
+    console.log(`[V5 Matcher] Got ${result.matches.length} matches in ${result.processing_time_ms}ms`);
+    if (stats) {
+      console.log(`[V5 Matcher] Pipeline: fetched=${stats.candidates_fetched}, pre-scored=${stats.pre_scored_count}, AI=${stats.ai_evaluated}${stats.fallback_reason ? ` (fallback: ${stats.fallback_reason})` : ''}`);
+    }
+    if (result.tokens_used) {
+      console.log(`[V5 Matcher] Tokens: ${result.tokens_used.input} in / ${result.tokens_used.output} out`);
+    }
 
     // Fetch full subsidy details for the matched IDs
     const subsidyIds = result.matches.map((m: V5Match) => m.subsidy_id);
@@ -204,23 +211,25 @@ async function fetchAIRecommendations(
         const subsidy = subsidyMap.get(match.subsidy_id);
         if (!subsidy) return null;
 
-        // Build match reasons from V5 scores
-        const reasons: string[] = [];
-        if (match.sector_fit >= 70) reasons.push('Secteur excellent');
-        else if (match.sector_fit >= 50) reasons.push('Secteur compatible');
-        if (match.project_fit >= 70) reasons.push('Projet idéal');
-        else if (match.project_fit >= 50) reasons.push('Projet adapté');
-        if (match.eligibility_score >= 70) reasons.push('Éligibilité forte');
-        if (match.confidence === 'high') reasons.push('Confiance élevée');
+        // Use match_reasons from AI, or build from criteria
+        const reasons = match.match_reasons && match.match_reasons.length > 0
+          ? match.match_reasons
+          : match.matching_criteria && match.matching_criteria.length > 0
+            ? match.matching_criteria
+            : ['Recommandation IA'];
+
+        // Determine confidence from success_probability
+        const confidence = match.success_probability >= 60 ? 'high'
+          : match.success_probability >= 40 ? 'medium'
+          : 'low';
 
         return {
           ...subsidy,
-          matchScore: Math.round(match.llm_score),
-          matchReasons: reasons.length > 0 ? reasons : ['Recommandation IA'],
-          successProbability: match.llm_score,
-          similarityScore: match.sector_fit,
-          marketDensityScore: match.eligibility_score,
-          competitiveDensity: match.confidence,
+          matchScore: Math.round(match.match_score),
+          matchReasons: reasons,
+          successProbability: match.success_probability,
+          similarityScore: match.match_score, // Use match_score as similarity
+          competitiveDensity: confidence,
         } as ScoredSubsidy;
       })
       .filter((s: ScoredSubsidy | null): s is ScoredSubsidy => s !== null);
