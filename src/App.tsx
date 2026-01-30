@@ -41,6 +41,7 @@ const SavedSubsidiesPage = lazy(() => import('./pages/SavedSubsidiesPage'))
 const SettingsPage = lazy(() => import('./pages/SettingsPage'))
 const AIAssistantPage = lazy(() => import('./pages/AIAssistantPage'))
 const ComplianceMetricsPage = lazy(() => import('./pages/ComplianceMetricsPage'))
+const BulkImportPage = lazy(() => import('./pages/BulkImportPage'))
 
 // Layout & Auth (keep eager - needed for routing)
 import { ProtectedRoute } from './components/auth/ProtectedRoute'
@@ -75,6 +76,9 @@ function App() {
         <Route element={<ProtectedRoute />}>
           {/* Profile setup (full screen, no sidebar) */}
           <Route path="/app/profile/setup" element={<ProfileSetupPage />} />
+
+          {/* Full screen protected pages (no sidebar) */}
+          <Route path="/app/import" element={<BulkImportPage />} />
 
           {/* App routes with layout */}
           <Route element={<AppLayout />}>
