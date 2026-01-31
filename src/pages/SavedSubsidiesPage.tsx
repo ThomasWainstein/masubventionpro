@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { useSavedSubsidies } from '@/hooks/useSavedSubsidies';
 import { useRecommendedSubsidies } from '@/hooks/useRecommendedSubsidies';
 import { useProfile } from '@/contexts/ProfileContext';
-import { getSubsidyTitle, SavedSubsidy } from '@/types';
+import { getSubsidyTitle, SavedSubsidy, MaSubventionProProfile } from '@/types';
 import { SubsidyCard } from '@/components/search/SubsidyCard';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -36,6 +36,8 @@ import {
   ArrowLeft,
   Send,
   Check,
+  Building2,
+  Users,
 } from 'lucide-react';
 import { SelectionToolbar } from '@/components/export/SelectionToolbar';
 import { EmailComposerModal } from '@/components/export/EmailComposerModal';
@@ -82,8 +84,22 @@ function getDeadlineStatus(deadline: string | null): {
 export function SavedSubsidiesPage() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { savedSubsidies, loading, unsaveSubsidy, updateStatus, updateNotes, isSaved, toggleSave } = useSavedSubsidies();
-  const { profile, hasProfile } = useProfile();
+  const [showAllProfiles, setShowAllProfiles] = useState(true);  // Default to showing all companies
+
+  const {
+    savedSubsidies,
+    allProfileSubsidies,
+    loading,
+    unsaveSubsidy,
+    updateStatus,
+    updateNotes,
+    isSaved,
+    toggleSave,
+    getProfilesForSubsidy,
+  } = useSavedSubsidies({ showAllProfiles });
+
+  const { profile, profiles, hasProfile } = useProfile();
+  const hasMultipleProfiles = profiles.length > 1;
 
   // V5 Hybrid Matcher - Profile-based recommendations
   const {
@@ -234,6 +250,38 @@ export function SavedSubsidiesPage() {
     return recommendations.filter((rec) => !savedSubsidies.some((s) => s.subsidy_id === rec.id));
   }, [recommendations, savedSubsidies]);
 
+  // Calculate shared subsidies (saved across multiple companies)
+  const sharedSubsidies = useMemo(() => {
+    if (!showAllProfiles || profiles.length < 2) return [];
+
+    // Group by subsidy_id and count unique profiles
+    const subsidyProfileMap = new Map<string, Set<string>>();
+    const subsidyDataMap = new Map<string, SavedSubsidy>();
+
+    for (const saved of allProfileSubsidies) {
+      if (!saved.profile_id) continue;
+
+      if (!subsidyProfileMap.has(saved.subsidy_id)) {
+        subsidyProfileMap.set(saved.subsidy_id, new Set());
+        subsidyDataMap.set(saved.subsidy_id, saved);
+      }
+      subsidyProfileMap.get(saved.subsidy_id)!.add(saved.profile_id);
+    }
+
+    // Filter to only those saved for 2+ profiles
+    const shared: Array<{ saved: SavedSubsidy; profileIds: string[] }> = [];
+    for (const [subsidyId, profileIds] of subsidyProfileMap) {
+      if (profileIds.size >= 2) {
+        const saved = subsidyDataMap.get(subsidyId);
+        if (saved) {
+          shared.push({ saved, profileIds: Array.from(profileIds) });
+        }
+      }
+    }
+
+    return shared;
+  }, [allProfileSubsidies, showAllProfiles, profiles.length]);
+
   // Total count of all selectable items (saved + unsaved recommendations)
   const totalSelectableCount = filteredSubsidies.length + (hasProfile ? unsavedRecommendations.slice(0, 12).length : 0);
 
@@ -334,6 +382,125 @@ export function SavedSubsidiesPage() {
           </Link>
         </div>
       </div>
+
+      {/* Multi-company toggle - only show when user has multiple profiles */}
+      {hasMultipleProfiles && (
+        <div className="flex items-center justify-between bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-center gap-3">
+            <Users className="h-5 w-5 text-blue-600" />
+            <div>
+              <p className="font-medium text-slate-900">Vue multi-sociétés</p>
+              <p className="text-sm text-slate-600">
+                {showAllProfiles
+                  ? `Affichage des aides de toutes vos sociétés (${profiles.length})`
+                  : `Affichage des aides de ${profile?.company_name || 'la société active'} uniquement`}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-1 bg-white rounded-lg border border-slate-200 p-1">
+            <button
+              onClick={() => setShowAllProfiles(false)}
+              className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+                !showAllProfiles
+                  ? 'bg-blue-600 text-white'
+                  : 'text-slate-600 hover:bg-slate-100'
+              }`}
+            >
+              <Building2 className="h-4 w-4 inline-block mr-1" />
+              Société active
+            </button>
+            <button
+              onClick={() => setShowAllProfiles(true)}
+              className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+                showAllProfiles
+                  ? 'bg-blue-600 text-white'
+                  : 'text-slate-600 hover:bg-slate-100'
+              }`}
+            >
+              <Users className="h-4 w-4 inline-block mr-1" />
+              Toutes ({profiles.length})
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Shared Subsidies Section - Only shown when viewing all profiles and there are shared subsidies */}
+      {showAllProfiles && sharedSubsidies.length > 0 && (
+        <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl border border-amber-200 p-5">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center justify-center w-10 h-10 bg-amber-100 rounded-lg">
+              <Users className="h-5 w-5 text-amber-600" />
+            </div>
+            <div>
+              <h2 className="font-semibold text-slate-900">
+                Subventions partagées ({sharedSubsidies.length})
+              </h2>
+              <p className="text-sm text-slate-600">
+                Ces aides sont sauvegardées pour plusieurs de vos sociétés
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            {sharedSubsidies.map(({ saved, profileIds }) => {
+              const subsidy = saved.subsidy;
+              if (!subsidy) return null;
+
+              const title = getSubsidyTitle(subsidy);
+              const sharedProfiles = profiles.filter((p) => profileIds.includes(p.id));
+
+              return (
+                <div
+                  key={saved.subsidy_id}
+                  className="bg-white rounded-lg border border-amber-200 p-4 hover:shadow-sm transition-shadow"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <Link
+                        to={`/app/subsidy/${subsidy.id}`}
+                        className="font-medium text-slate-900 hover:text-blue-600 line-clamp-1"
+                      >
+                        {title}
+                      </Link>
+                      {subsidy.agency && (
+                        <p className="text-sm text-slate-500 mt-0.5 truncate">
+                          {subsidy.agency}
+                        </p>
+                      )}
+                    </div>
+                    {subsidy.amount_max && (
+                      <span className="flex-shrink-0 text-sm font-medium text-emerald-600">
+                        {formatAmount(subsidy.amount_max)}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Shared profiles badges */}
+                  <div className="flex flex-wrap items-center gap-1.5 mt-3 pt-3 border-t border-slate-100">
+                    <span className="text-xs text-slate-500">Sauvegardée pour:</span>
+                    {sharedProfiles.map((p) => (
+                      <span
+                        key={p.id}
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${
+                          p.id === profile?.id
+                            ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                            : 'bg-slate-100 text-slate-600'
+                        }`}
+                      >
+                        <Building2 className="h-3 w-3" />
+                        <span className="truncate max-w-[100px]">{p.company_name}</span>
+                      </span>
+                    ))}
+                    <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded text-xs font-medium">
+                      {sharedProfiles.length} sociétés
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Stats / Filter */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -465,8 +632,13 @@ export function SavedSubsidiesPage() {
             const title = getSubsidyTitle(subsidy);
             const statusOption = getStatusOption(saved.status);
             const aiData = aiScoresMap.get(subsidy.id);
-
             const isSelected = selectedSubsidies.has(saved.subsidy_id);
+
+            // Get all profiles that have saved this subsidy (for multi-company view)
+            const savedForProfiles = showAllProfiles
+              ? getProfilesForSubsidy(saved.subsidy_id)
+              : [];
+            const isSharedAcrossProfiles = savedForProfiles.length > 1;
 
             return (
               <div
@@ -518,6 +690,31 @@ export function SavedSubsidiesPage() {
                         </div>
                       )}
                     </div>
+                    {/* Company badges - show which companies have saved this subsidy */}
+                    {showAllProfiles && savedForProfiles.length > 0 && (
+                      <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                        <span className="text-xs text-slate-500">Sociétés:</span>
+                        {savedForProfiles.map((p) => (
+                          <span
+                            key={p.id}
+                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${
+                              p.id === profile?.id
+                                ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                                : 'bg-slate-100 text-slate-600'
+                            }`}
+                            title={p.company_name}
+                          >
+                            <Building2 className="h-3 w-3" />
+                            <span className="truncate max-w-[80px]">{p.company_name}</span>
+                          </span>
+                        ))}
+                        {isSharedAcrossProfiles && (
+                          <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded text-xs font-medium">
+                            Partagée
+                          </span>
+                        )}
+                      </div>
+                    )}
                     {/* AI Match Reasons */}
                     {aiData?.matchReasons && aiData.matchReasons.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-2">

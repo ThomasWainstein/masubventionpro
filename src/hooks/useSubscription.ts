@@ -19,6 +19,7 @@ interface UseSubscriptionReturn {
   refresh: () => Promise<void>;
   openBillingPortal: () => Promise<void>;
   createUpgrade: (targetPlan: 'business' | 'premium', addonCompanies?: number) => Promise<void>;
+  addAddonCompanies: (quantity?: number) => Promise<void>;
 }
 
 const PLAN_INFO = {
@@ -262,6 +263,57 @@ export function useSubscription(): UseSubscriptionReturn {
     [user, openBillingPortal]
   );
 
+  const addAddonCompanies = useCallback(
+    async (quantity = 1) => {
+      if (!user) {
+        throw new Error('Non authentifié');
+      }
+
+      if (!subscription) {
+        throw new Error('Aucun abonnement actif');
+      }
+
+      if (subscription.plan_type !== 'premium' && subscription.plan_type !== 'business') {
+        throw new Error('Votre forfait ne permet pas d\'ajouter des sociétés supplémentaires');
+      }
+
+      try {
+        const { data: sessionData } = await supabase.auth.getSession();
+        const token = sessionData.session?.access_token;
+
+        if (!token) {
+          throw new Error('Session expirée');
+        }
+
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/msp-add-addon-companies`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ quantity }),
+          }
+        );
+
+        const result = await response.json();
+
+        if (result.error) {
+          throw new Error(result.error);
+        }
+
+        if (result.url) {
+          window.location.href = result.url;
+        }
+      } catch (err: any) {
+        console.error('Error adding addon companies:', err);
+        throw err;
+      }
+    },
+    [user, subscription]
+  );
+
   return {
     subscription,
     loading,
@@ -269,6 +321,7 @@ export function useSubscription(): UseSubscriptionReturn {
     refresh: fetchSubscription,
     openBillingPortal,
     createUpgrade,
+    addAddonCompanies,
   };
 }
 

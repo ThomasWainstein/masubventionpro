@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Building2, MapPin, Users, ArrowRight, Sparkles, Trash2, Pencil } from 'lucide-react';
+import { Building2, MapPin, Users, ArrowRight, Sparkles, Trash2, Pencil, Plus, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface CompanyCardProps {
@@ -40,38 +40,40 @@ export function CompanyCard({
       }`}
     >
       {/* Header */}
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-3">
-          <div
-            className={`flex items-center justify-center w-10 h-10 rounded-lg ${
-              isActive ? 'bg-blue-100' : 'bg-slate-100'
-            }`}
-          >
-            <Building2 className={`h-5 w-5 ${isActive ? 'text-blue-600' : 'text-slate-600'}`} />
-          </div>
-          <div className="min-w-0">
-            <h3 className="font-semibold text-slate-900 truncate">{companyName}</h3>
-            {legalForm && (
-              <p className="text-xs text-slate-500 truncate">{legalForm}</p>
-            )}
-          </div>
+      <div className="flex items-start gap-3 mb-3">
+        <div
+          className={`flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg ${
+            isActive ? 'bg-blue-100' : 'bg-slate-100'
+          }`}
+        >
+          <Building2 className={`h-5 w-5 ${isActive ? 'text-blue-600' : 'text-slate-600'}`} />
         </div>
-        <div className="flex items-center gap-1">
-          <Link to={`/app/profile/edit?id=${id}`}>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Modifier">
-              <Pencil className="h-4 w-4 text-slate-400 hover:text-slate-600" />
-            </Button>
-          </Link>
-          {canDelete && onDelete && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0"
-              title="Supprimer"
-              onClick={onDelete}
-            >
-              <Trash2 className="h-4 w-4 text-slate-400 hover:text-red-500" />
-            </Button>
+        <div className="flex-1 min-w-0 overflow-hidden">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-semibold text-slate-900 truncate" title={companyName}>
+              {companyName}
+            </h3>
+            <div className="flex-shrink-0 flex items-center gap-1">
+              <Link to={`/app/profile/edit?id=${id}`}>
+                <Button variant="ghost" size="sm" className="h-7 w-7 p-0" title="Modifier">
+                  <Pencil className="h-3.5 w-3.5 text-slate-400 hover:text-slate-600" />
+                </Button>
+              </Link>
+              {canDelete && onDelete && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-7 p-0"
+                  title="Supprimer"
+                  onClick={onDelete}
+                >
+                  <Trash2 className="h-3.5 w-3.5 text-slate-400 hover:text-red-500" />
+                </Button>
+              )}
+            </div>
+          </div>
+          {legalForm && (
+            <p className="text-xs text-slate-500 truncate">{legalForm}</p>
           )}
         </div>
       </div>
@@ -164,6 +166,55 @@ export function AddCompanyCard({
           </Button>
         </Link>
       </div>
+    </div>
+  );
+}
+
+interface BuyMoreCompaniesCardProps {
+  planType: 'business' | 'premium';
+  onBuy: () => void;
+  loading?: boolean;
+}
+
+export function BuyMoreCompaniesCard({
+  planType,
+  onBuy,
+  loading = false,
+}: BuyMoreCompaniesCardProps) {
+  const isPremium = planType === 'premium';
+  const price = 99;
+  const companiesPerPack = isPremium ? 5 : 1;
+
+  return (
+    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border-2 border-dashed border-blue-300 p-5 flex flex-col items-center justify-center min-h-[200px] hover:border-blue-400 transition-colors">
+      <div className="flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-sm mb-3">
+        <Plus className="h-6 w-6 text-blue-500" />
+      </div>
+      <p className="text-sm font-medium text-slate-700 mb-1">Capacité atteinte</p>
+      <p className="text-xs text-slate-600 text-center mb-2 max-w-[180px]">
+        Ajoutez {isPremium ? 'un pack de 5 sociétés' : 'une société'} supplémentaire{isPremium ? 's' : ''}
+      </p>
+      <p className="text-lg font-bold text-blue-600 mb-3">
+        +{price}€ HT{isPremium ? '' : '/société'}
+      </p>
+      <Button
+        size="sm"
+        onClick={onBuy}
+        disabled={loading}
+        className="bg-blue-600 hover:bg-blue-700"
+      >
+        {loading ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Chargement...
+          </>
+        ) : (
+          <>
+            <Plus className="mr-1 h-4 w-4" />
+            Acheter {companiesPerPack} place{companiesPerPack > 1 ? 's' : ''}
+          </>
+        )}
+      </Button>
     </div>
   );
 }

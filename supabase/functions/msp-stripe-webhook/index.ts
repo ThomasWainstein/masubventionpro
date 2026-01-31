@@ -135,6 +135,7 @@ async function handleCheckoutCompleted(
   const metadata = session.metadata || {}
   const planType = metadata.planType || "business"
   const userId = metadata.userId
+  const source = metadata.source || ""
 
   // Get user by email if userId not in metadata
   let targetUserId = userId
@@ -146,6 +147,12 @@ async function handleCheckoutCompleted(
 
   if (!targetUserId) {
     console.error("[MSP Webhook] No user found for checkout:", session.customer_email)
+    return
+  }
+
+  // Handle addon company purchase
+  if (source === "masubventionpro_addon") {
+    await handleAddonPurchase(session, supabase, targetUserId, metadata)
     return
   }
 
@@ -398,6 +405,96 @@ async function handlePaymentFailed(
     .eq("stripe_subscription_id", invoice.subscription as string)
 
   console.log("[MSP Webhook] Subscription marked as past_due")
+}
+
+/**
+ * Handle addon company purchase
+ */
+async function handleAddonPurchase(
+  session: Stripe.Checkout.Session,
+  supabase: any,
+  userId: string,
+  metadata: Record<string, string>
+) {
+  console.log("[MSP Webhook] Processing addon purchase:", session.id)
+
+  const addonQuantity = parseInt(metadata.addonQuantity || "1", 10)
+  const subscriptionId = metadata.subscriptionId
+
+  if (!subscriptionId) {
+    // Find active subscription for user
+    const { data: activeSub } = await supabase
+      .from("masubventionpro_subscriptions")
+      .select("id, addon_companies")
+      .eq("user_id", userId)
+      .in("status", ["active", "trialing"])
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single()
+
+    if (!activeSub) {
+      console.error("[MSP Webhook] No active subscription found for addon purchase")
+      return
+    }
+
+    const currentAddon = activeSub.addon_companies || 0
+    const newAddon = currentAddon + addonQuantity
+
+    await supabase
+      .from("masubventionpro_subscriptions")
+      .update({
+        addon_companies: newAddon,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", activeSub.id)
+
+    console.log(
+      "[MSP Webhook] Addon companies updated:",
+      currentAddon,
+      "->",
+      newAddon
+    )
+  } else {
+    // Use provided subscription ID
+    const { data: existingSub } = await supabase
+      .from("masubventionpro_subscriptions")
+      .select("addon_companies")
+      .eq("id", subscriptionId)
+      .single()
+
+    const currentAddon = existingSub?.addon_companies || 0
+    const newAddon = currentAddon + addonQuantity
+
+    await supabase
+      .from("masubventionpro_subscriptions")
+      .update({
+        addon_companies: newAddon,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", subscriptionId)
+
+    console.log(
+      "[MSP Webhook] Addon companies updated (by ID):",
+      currentAddon,
+      "->",
+      newAddon
+    )
+  }
+
+  // Record the addon payment
+  await supabase.from("masubventionpro_payments").insert({
+    user_id: userId,
+    stripe_checkout_id: session.id,
+    stripe_payment_intent_id: session.payment_intent as string,
+    amount: session.amount_total || 9900,
+    currency: session.currency || "eur",
+    status: "succeeded",
+    plan_type: metadata.planType || "premium",
+    payment_type: "addon_companies",
+    addon_quantity: addonQuantity,
+  })
+
+  console.log("[MSP Webhook] Addon payment recorded, quantity:", addonQuantity)
 }
 
 /**

@@ -84,6 +84,9 @@ export interface MaSubventionProProfile {
   rup_date: string | null;                 // Date of RUP recognition (if applicable)
   agrement_esus: boolean | null;           // ESUS (Entreprise Solidaire d'Utilité Sociale) certification
   rna_number: string | null;               // RNA number (W + 9 digits) for associations
+  // Recommendation system fields
+  last_subsidy_refresh_at: string | null;  // When recommendations were last calculated
+  recommendation_count: number | null;      // Cached count of active recommendations
   created_at: string;
   updated_at: string;
 }
@@ -106,12 +109,14 @@ export interface ProfileDocument {
 export interface SavedSubsidy {
   id: string;
   user_id: string;
+  profile_id: string | null;  // Company profile this save belongs to
   subsidy_id: string;
   status: 'saved' | 'interested' | 'applied' | 'received' | 'rejected';
   notes: string | null;
   created_at: string;
   updated_at: string;
   subsidy?: Subsidy;
+  profile?: MaSubventionProProfile;  // For multi-company view
 }
 
 export interface Subsidy {

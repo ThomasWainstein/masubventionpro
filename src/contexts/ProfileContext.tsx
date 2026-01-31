@@ -37,6 +37,17 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   // Derive active profile from profiles array
   const profile = profiles.find(p => p.id === activeProfileId) || profiles[0] || null;
 
+  // Debug: Log when active profile changes
+  useEffect(() => {
+    if (profile) {
+      console.log('[ProfileContext] Active profile changed:', {
+        id: profile.id,
+        company: profile.company_name,
+        activeProfileId,
+      });
+    }
+  }, [profile?.id, activeProfileId]);
+
   const fetchProfiles = async () => {
     if (!user) {
       setProfiles([]);
@@ -83,9 +94,15 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const setActiveProfile = useCallback((profileId: string) => {
+    const targetProfile = profiles.find(p => p.id === profileId);
+    console.log('[ProfileContext] setActiveProfile called:', {
+      profileId,
+      targetCompany: targetProfile?.company_name,
+      currentActiveId: activeProfileId,
+    });
     setActiveProfileId(profileId);
     localStorage.setItem(ACTIVE_PROFILE_KEY, profileId);
-  }, []);
+  }, [profiles, activeProfileId]);
 
   const refreshProfile = async () => {
     await fetchProfiles();
@@ -138,6 +155,24 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       setProfiles(prev => [...prev, newProfile]);
       setActiveProfileId(newProfile.id);
       localStorage.setItem(ACTIVE_PROFILE_KEY, newProfile.id);
+
+      // Trigger recommendation calculation in background (don't await)
+      supabase.functions
+        .invoke('calculate-profile-recommendations', {
+          body: { profile_id: newProfile.id, mode: 'full' },
+        })
+        .then((res) => {
+          if (res.error) {
+            console.error('[ProfileContext] Failed to calculate recommendations:', res.error);
+          } else {
+            console.log('[ProfileContext] Recommendations calculated:', res.data);
+            // Refresh profile to get updated recommendation_count
+            fetchProfiles();
+          }
+        })
+        .catch((err) => {
+          console.error('[ProfileContext] Error calling recommendation function:', err);
+        });
 
       return newProfile;
     } catch (err: any) {

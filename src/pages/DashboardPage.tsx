@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '@/contexts/AuthContext';
@@ -6,10 +7,11 @@ import { useSavedSubsidies } from '@/hooks/useSavedSubsidies';
 import { useNewSubsidies } from '@/hooks/useNewSubsidies';
 import { useRecommendedSubsidies } from '@/hooks/useRecommendedSubsidies';
 import { useCompanyProfiles } from '@/hooks/useCompanyProfiles';
+import { useSubscription } from '@/hooks/useSubscription';
 import { Button } from '@/components/ui/button';
 import { SubsidyCard } from '@/components/search/SubsidyCard';
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed';
-import { CompanyCard, AddCompanyCard } from '@/components/dashboard/CompanyCard';
+import { CompanyCard, AddCompanyCard, BuyMoreCompaniesCard } from '@/components/dashboard/CompanyCard';
 import { getSubsidyTitle } from '@/types';
 import {
   Search,
@@ -40,14 +42,48 @@ export function DashboardPage() {
   const {
     profiles: companyProfiles,
     loading: profilesLoading,
+    subscriptionLoading,
     maxCompanies,
     canAddMore,
     planType,
   } = useCompanyProfiles();
 
+  // Subscription for addon purchase
+  const { addAddonCompanies } = useSubscription();
+  const [buyingAddon, setBuyingAddon] = useState(false);
+
+  // Handle addon purchase
+  const handleBuyMoreCompanies = async () => {
+    try {
+      setBuyingAddon(true);
+      await addAddonCompanies(1); // 1 pack at a time
+    } catch (err: any) {
+      console.error('Error buying addon:', err);
+      alert(err.message || 'Erreur lors de l\'achat');
+    } finally {
+      setBuyingAddon(false);
+    }
+  };
+
+  // Check if at capacity and can buy more
+  const isAtCapacity = !canAddMore && companyProfiles.length >= maxCompanies;
+  const canBuyMore = isAtCapacity && (planType === 'premium' || planType === 'business');
+
   // Determine if multi-company mode (Premium = 5+, Business with addon, or multiple profiles)
+  // When subscription is loading, be optimistic and show multi-company view if user has 1+ companies
   const isMultiCompanyPlan = planType === 'premium' || (planType === 'business' && maxCompanies > 1);
-  const showMultiCompanyView = isMultiCompanyPlan || companyProfiles.length > 1 || companyProfiles.length === 0;
+  const showMultiCompanyView = isMultiCompanyPlan || companyProfiles.length > 1 || companyProfiles.length === 0 || (subscriptionLoading && companyProfiles.length >= 1);
+
+  // Debug logging for multi-company view
+  console.log('[Dashboard] Multi-company debug:', {
+    planType,
+    maxCompanies,
+    canAddMore,
+    subscriptionLoading,
+    profilesCount: companyProfiles.length,
+    isMultiCompanyPlan,
+    showMultiCompanyView,
+  });
 
   // V5 Hybrid Matcher - Profile-based recommendations with AI scoring
   const {
@@ -357,6 +393,13 @@ export function DashboardPage() {
               ))}
               {canAddMore && (
                 <AddCompanyCard remainingSlots={maxCompanies - companyProfiles.length} />
+              )}
+              {canBuyMore && (
+                <BuyMoreCompaniesCard
+                  planType={planType!}
+                  onBuy={handleBuyMoreCompanies}
+                  loading={buyingAddon}
+                />
               )}
             </div>
           )}

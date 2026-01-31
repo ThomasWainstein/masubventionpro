@@ -11,8 +11,12 @@ import { useSubscription } from './useSubscription';
  */
 export function getPlanCompanyLimit(
   planType: 'decouverte' | 'business' | 'premium' | null,
-  addonCompanies: number = 0
+  addonCompanies: number = 0,
+  subscriptionLoading: boolean = false
 ): number {
+  // When subscription is still loading, return a high default to allow UI to show "Add" button
+  // The actual limit will be enforced once subscription loads
+  if (subscriptionLoading) return 5;
   if (!planType) return 1;
 
   switch (planType) {
@@ -33,9 +37,10 @@ export function getPlanCompanyLimit(
 export function canAddCompany(
   planType: 'decouverte' | 'business' | 'premium' | null,
   addonCompanies: number,
-  currentCount: number
+  currentCount: number,
+  subscriptionLoading: boolean = false
 ): boolean {
-  const limit = getPlanCompanyLimit(planType, addonCompanies);
+  const limit = getPlanCompanyLimit(planType, addonCompanies, subscriptionLoading);
   return currentCount < limit;
 }
 
@@ -74,6 +79,7 @@ interface CompanyProfileSummary {
 interface UseCompanyProfilesReturn {
   profiles: CompanyProfileSummary[];
   loading: boolean;
+  subscriptionLoading: boolean;
   error: string | null;
   // Plan info
   maxCompanies: number;
@@ -86,15 +92,19 @@ interface UseCompanyProfilesReturn {
 
 export function useCompanyProfiles(): UseCompanyProfilesReturn {
   const { user } = useAuth();
-  const { subscription } = useSubscription();
+  const { subscription, loading: subscriptionLoading } = useSubscription();
   const [profiles, setProfiles] = useState<CompanyProfileSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const planType = subscription?.plan_type || null;
+  // Fall back to user metadata for plan type (same as SettingsPage)
+  const planType = subscription?.plan_type ||
+    (user?.user_metadata?.selected_plan as 'decouverte' | 'business' | 'premium' | undefined) ||
+    null;
   const addonCompanies = subscription?.addon_companies || 0;
-  const maxCompanies = getPlanCompanyLimit(planType, addonCompanies);
-  const canAddMore = canAddCompany(planType, addonCompanies, profiles.length);
+  // Pass subscriptionLoading to allow optimistic UI when subscription is loading
+  const maxCompanies = getPlanCompanyLimit(planType, addonCompanies, subscriptionLoading);
+  const canAddMore = canAddCompany(planType, addonCompanies, profiles.length, subscriptionLoading);
 
   const fetchProfiles = useCallback(async () => {
     if (!user) {
@@ -169,6 +179,7 @@ export function useCompanyProfiles(): UseCompanyProfilesReturn {
   return {
     profiles,
     loading,
+    subscriptionLoading,
     error,
     maxCompanies,
     canAddMore,
