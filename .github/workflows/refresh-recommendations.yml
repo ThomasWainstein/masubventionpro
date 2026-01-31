@@ -1,0 +1,45 @@
+name: Refresh Profile Recommendations
+
+on:
+  schedule:
+    # Run daily at 6:00 UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    # Allow manual trigger with optional partition override
+    inputs:
+      partition:
+        description: 'Partition to process (0-6, or "auto" for day-based)'
+        required: false
+        default: 'auto'
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Refresh recommendations for today's partition
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          PARTITION="${{ github.event.inputs.partition || 'auto' }}"
+
+          echo "Triggering recommendation refresh with partition: $PARTITION"
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "${SUPABASE_URL}/functions/v1/cron-refresh-recommendations" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Content-Type: application/json" \
+            -d "{\"partition\": \"${PARTITION}\"}")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | head -n -1)
+
+          echo "Response (HTTP $HTTP_CODE):"
+          echo "$BODY" | jq . 2>/dev/null || echo "$BODY"
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "Error: Request failed with status $HTTP_CODE"
+            exit 1
+          fi
+
+          echo "✅ Refresh completed successfully"
